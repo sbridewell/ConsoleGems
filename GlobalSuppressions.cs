@@ -3,6 +3,8 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
+using System.Diagnostics.CodeAnalysis;
+
 [assembly: SuppressMessage(
     "StyleCop.CSharp.ReadabilityRules",
     "SA1124:DoNotUseRegions",
