@@ -19,7 +19,7 @@ namespace Sde.ConsoleGems.AutoCompleteDemo
         {
             if (keyInfo.Modifiers.HasFlag(ConsoleModifiers.Shift))
             {
-                autoCompleter.MoveCursorLeft(); ;
+                autoCompleter.MoveCursorLeft();
             }
             else
             {

@@ -81,10 +81,15 @@ namespace Sde.ConsoleGems
         /// </summary>
         /// <typeparam name="TMenu">The type of the menu.</typeparam>
         /// <returns>The updated options.</returns>
-        public ConsoleGemsOptions SetMainMenu<TMenu>()
+        public ConsoleGemsOptions UseMainMenu<TMenu>()
             where TMenu : IMenu
         {
             this.MainMenu = typeof(TMenu);
+            if (this.AutoCompleteKeyPressMappings == null)
+            {
+                this.UseAutoComplete();
+            }
+
             return this;
         }
 
@@ -136,7 +141,7 @@ namespace Sde.ConsoleGems
         /// The type of <see cref="ISharedMenuItemsProvider"/> to add.
         /// </typeparam>
         /// <returns>The updated options.</returns>
-        public ConsoleGemsOptions AddSharedMenuItemsProvider<TSharedMenuItemsProvider>()
+        public ConsoleGemsOptions UseSharedMenuItemsProvider<TSharedMenuItemsProvider>()
             where TSharedMenuItemsProvider : class, ISharedMenuItemsProvider
         {
             this.SharedMenuItemsProvider = typeof(TSharedMenuItemsProvider);

@@ -164,7 +164,7 @@ namespace Sde.ConsoleGems.Test
         {
             // Arrange
             var options = new ConsoleGemsOptions()
-                .AddSharedMenuItemsProvider<SharedMenuItemsProvider>();
+                .UseSharedMenuItemsProvider<SharedMenuItemsProvider>();
 
             // Act
             var provider = BuildServiceProvider(options);
@@ -184,16 +184,15 @@ namespace Sde.ConsoleGems.Test
         {
             // Arrange
             var options = new ConsoleGemsOptions()
-                .UseBuiltInPrompters() // because some of the commands in DemoMenu need them
-                .SetMainMenu<DemoMenu>();
+                .UseMainMenu<ChildMenu>();
 
             // Act
             var provider = BuildServiceProvider(options);
 
             // Assert
             AssertMonochromeConsole(provider);
-            AssertBuiltInPrompters(provider);
-            AssertDemoMenu(provider);
+            AssertAutoCompleter(provider);
+            AssertService(provider, typeof(ChildMenu), typeof(ChildMenu));
             AssertService(provider, typeof(IMenuWriter), typeof(MenuWriter));
             AssertService(provider, typeof(IGlobalMenuItemsProvider), typeof(GlobalMenuItemsProvider));
         }
@@ -207,17 +206,18 @@ namespace Sde.ConsoleGems.Test
         {
             // Arrange
             var options = new ConsoleGemsOptions()
-                .UseBuiltInPrompters() // because some of the commands in DemoMenu need them
-                .SetMainMenu<MenuWithChildMenus>();
+                .UseMainMenu<MenuWithChildMenus>();
 
             // Act
             var provider = BuildServiceProvider(options);
 
             // Assert
             AssertMonochromeConsole(provider);
-            AssertBuiltInPrompters(provider);
+            AssertAutoCompleter(provider);
             AssertService(provider, typeof(MenuWithChildMenus), typeof(MenuWithChildMenus));
-            AssertDemoMenu(provider);
+            AssertService(provider, typeof(ChildMenu), typeof(ChildMenu));
+            AssertService(provider, typeof(IMenuWriter), typeof(MenuWriter));
+            AssertService(provider, typeof(IGlobalMenuItemsProvider), typeof(GlobalMenuItemsProvider));
         }
 
         private static void AssertAutoCompleter(IServiceProvider serviceProvider)
@@ -258,15 +258,6 @@ namespace Sde.ConsoleGems.Test
             AssertNoService(serviceProvider, typeof(IBooleanPrompter));
             AssertNoService(serviceProvider, typeof(IFilePrompter));
             AssertNoService(serviceProvider, typeof(IDirectoryPrompter));
-        }
-
-        private static void AssertDemoMenu(IServiceProvider serviceProvider)
-        {
-            AssertService(serviceProvider, typeof(DemoMenu), typeof(DemoMenu));
-            AssertService(serviceProvider, typeof(GetADrinkCommand), typeof(GetADrinkCommand));
-            AssertService(serviceProvider, typeof(SelectAFileCommand), typeof(SelectAFileCommand));
-            AssertService(serviceProvider, typeof(ThrowExceptionCommand), typeof(ThrowExceptionCommand));
-            AssertService(serviceProvider, typeof(ExitProgramCommand), typeof(ExitProgramCommand));
         }
 
         /// <summary>
@@ -320,12 +311,12 @@ namespace Sde.ConsoleGems.Test
         }
 
         private class MenuWithChildMenus(
-            DemoMenu demoMenu,
+            ChildMenu childMenu,
             IAutoCompleter autoCompleter,
-            IMenuWriter consoleMenuWriter,
+            IMenuWriter menuWriter,
             IConsoleErrorWriter consoleErrorWriter,
             ApplicationState applicationState)
-            : AbstractMenu(autoCompleter, consoleMenuWriter, consoleErrorWriter, applicationState)
+            : AbstractMenu(autoCompleter, menuWriter, consoleErrorWriter, applicationState)
         {
             public override string Title => "Menu with child menus";
 
@@ -334,7 +325,24 @@ namespace Sde.ConsoleGems.Test
             public override List<MenuItem> MenuItems =>
             [
                 new () { Key = "a key", Description = "a description", Command = new Mock<ICommand>().Object, },
-                new () { Key = "demo", Description = "Child menu", Command = demoMenu.ShowCommand, },
+                new () { Key = "child", Description = "Child menu", Command = childMenu.ShowCommand, },
+            ];
+        }
+
+        private class ChildMenu(
+            IAutoCompleter autoCompleter,
+            IMenuWriter menuWriter,
+            IConsoleErrorWriter consoleErrorWriter,
+            ApplicationState applicationState)
+            : AbstractMenu(autoCompleter, menuWriter, consoleErrorWriter, applicationState)
+        {
+            public override string Title => "Child menu";
+
+            public override string Description => "A child menu";
+
+            public override List<MenuItem> MenuItems =>
+            [
+                new () { Key = "a key", Description = "a description", Command = new Mock<ICommand>().Object, },
             ];
         }
 
