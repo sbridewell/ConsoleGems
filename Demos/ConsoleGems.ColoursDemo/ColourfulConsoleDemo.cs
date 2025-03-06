@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace ConsoleGems.ColoursDemo
+namespace Sde.ConsoleGems.ColoursDemo
 {
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Consoles.Interfaces;

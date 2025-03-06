@@ -3,10 +3,9 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace ConsoleGems.ColoursDemo
+namespace Sde.ConsoleGems.ColoursDemo
 {
     using Microsoft.Extensions.DependencyInjection;
-    using Sde.ConsoleGems;
 
     /// <summary>
     /// Demonstration of how the ConsoleGems library
