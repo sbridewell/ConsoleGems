@@ -6,6 +6,7 @@
 namespace Sde.ConsoleGems
 {
     using System.Reflection;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems.Menus;
 
@@ -21,85 +22,64 @@ namespace Sde.ConsoleGems
         /// <returns>The service collection.</returns>
         public static IServiceCollection AddConsoleGems(this IServiceCollection services)
         {
-            services.AddSingleton<IConsole, Console>();
+            var defaultOptions = new ConsoleGemsOptions { UseColours = true };
+            return AddConsoleGems(services, defaultOptions);
+        }
+
+        /// <summary>
+        /// Adds ConsoleGems functionality to the service collection.
+        /// </summary>
+        /// <param name="services">Service collection.</param>
+        /// <param name="options">
+        /// Options controlling which ConsoleGems functionality to add.
+        /// </param>
+        /// <returns>The service collection.</returns>
+        public static IServiceCollection AddConsoleGems(this IServiceCollection services, ConsoleGemsOptions options)
+        {
+            if (options.UseColours)
+            {
+                services.AddSingleton<IConsole, ColourfulConsole>();
+                services.AddSingleton<IConsoleColourManager, ConsoleColourManager>();
+            }
+            else
+            {
+                services.AddSingleton<IConsole, Console>();
+            }
+
             services.AddSingleton<IConsoleErrorWriter, ConsoleErrorWriter>();
             services.AddSingleton<ApplicationState>();
-            services.AddSingleton<ISharedMenuItemsProvider, EmptySharedMenuItemsProvider>();
-            return services;
-        }
 
-        // TODO: consider replacing the remaining extension methods with some kind of configuration object
-        // e.g. services.UseConsoleGems(options => options.UseColours().UseAutoComplete().UsePrompters().AddSharedMenuItems<TSharedMenuItemsProvider>().SetMainMenu<TMenu>())
+            if (options.SharedMenuItemsProvider == null)
+            {
+                services.AddSingleton<ISharedMenuItemsProvider, EmptySharedMenuItemsProvider>();
+            }
+            else
+            {
+                services.AddSingleton(typeof(ISharedMenuItemsProvider), options.SharedMenuItemsProvider);
+                services.AddCommands(options.SharedMenuItemsProvider);
+            }
 
-        /// <summary>
-        /// Registers the necessary dependencies for a colourful console application.
-        /// </summary>
-        /// <param name="services">Service collection.</param>
-        /// <returns>The service collection.</returns>
-        public static IServiceCollection UseColours(this IServiceCollection services)
-        {
-            services.AddSingleton<IConsoleColourManager, ConsoleColourManager>();
-            services.AddSingleton<IConsole, ColourfulConsole>();
-            return services;
-        }
+            if (options.AutoCompleteKeyPressMappings != null)
+            {
+                services.AddSingleton<IAutoCompleter, AutoCompleter>();
+                services.AddSingleton(typeof(IAutoCompleteKeyPressMappings), options.AutoCompleteKeyPressMappings);
 
-        /// <summary>
-        /// Registers the necessary dependencies for a console application with auto-complete functionality.
-        /// </summary>
-        /// <param name="services">Service collection.</param>
-        /// <returns>The service collection.</returns>
-        public static IServiceCollection UseAutoComplete(this IServiceCollection services)
-        {
-            services.AddSingleton<IAutoCompleter, AutoCompleter>();
-            services.AddSingleton<IAutoCompleteKeyPressMappings, AutoCompleteKeyPressDefaultMappings>();
-            return services;
-        }
+                // TODO: a way in the options to specify a different IAutoCompleter implementation
+            }
 
-        /// <summary>
-        /// Registers the necessary dependencies for a console application with prompters.
-        /// Calls the <see cref="UseAutoComplete"/> method so you don't need to.
-        /// </summary>
-        /// <param name="services">Service collection.</param>
-        /// <returns>The service collection.</returns>
-        public static IServiceCollection UsePrompters(this IServiceCollection services)
-        {
-            services.UseAutoComplete();
-            services.AddSingleton<IPrompter<bool?>, BooleanPrompter>();
-            services.AddSingleton<IFilePrompter, FilePrompter>();
-            services.AddSingleton<IDirectoryPrompter, DirectoryPrompter>();
-            return services;
-        }
+            if (options.MainMenu != null)
+            {
+                services.UseMenus().AddMenu(options.MainMenu);
+            }
 
-        /// <summary>
-        /// Adds menu items which are shared between all menus in the current application.
-        /// Calls the <see cref="AddCommands"/> method so you don't need to.
-        /// </summary>
-        /// <param name="services">Service collection.</param>
-        /// <typeparam name="TSharedMenuItemsProvider">
-        /// <see cref="ISharedMenuItemsProvider"/> instance which provides the shared
-        /// menu items.
-        /// </typeparam>
-        /// <returns>The service collection.</returns>
-        public static IServiceCollection AddSharedMenuItems<TSharedMenuItemsProvider>(this IServiceCollection services)
-            where TSharedMenuItemsProvider : class, ISharedMenuItemsProvider
-        {
-            services.AddSingleton<ISharedMenuItemsProvider, TSharedMenuItemsProvider>();
-            services.AddCommands(typeof(TSharedMenuItemsProvider));
-            return services;
-        }
+            if (options.Prompters.Any())
+            {
+                foreach (var prompter in options.Prompters)
+                {
+                    services.AddSingleton(prompter.Key, prompter.Value);
+                }
+            }
 
-        /// <summary>
-        /// Sets the main menu for the application.
-        /// </summary>
-        /// <param name="services">Service collection.</param>
-        /// <typeparam name="TMenu">The type of the main menu.</typeparam>
-        /// <returns>The service collection.</returns>
-        public static IServiceCollection SetMainMenu<TMenu>(this IServiceCollection services)
-            where TMenu : class, IMenu
-        {
-            services.UseMenus();
-            services.AddSingleton<TMenu>();
-            services.AddMenu(typeof(TMenu));
             return services;
         }
 
@@ -176,11 +156,9 @@ namespace Sde.ConsoleGems
 
         /// <summary>
         /// Registers the necessary dependencies for a console application with menus.
-        /// Calls the <see cref="UsePrompters"/> method so you don't need to.
         /// </summary>
         private static IServiceCollection UseMenus(this IServiceCollection services)
         {
-            services.UsePrompters();
             services.AddSingleton<IMenuWriter, MenuWriter>();
             services.AddSingleton<IGlobalMenuItemsProvider, GlobalMenuItemsProvider>();
             services.AddCommands(typeof(GlobalMenuItemsProvider));

@@ -56,7 +56,7 @@ namespace Sde.ConsoleGems.Prompters
     /// <summary>
     /// Interface for a prompter which asks the user to enter the name of an existing file.
     /// </summary>
-    public interface IFilePrompter
+    public interface IFilePrompter : IPrompter
     {
         /// <summary>
         /// Prompt the user to enter the name of an existing file.

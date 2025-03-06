@@ -10,8 +10,7 @@ namespace Sde.ConsoleGems.AutoComplete
     /// </summary>
     public class AutoCompleteKeyPressDefaultMappings : IAutoCompleteKeyPressMappings
     {
-        /// <inheritdoc/>
-        public IDictionary<ConsoleKey, IAutoCompleteKeyPressHandler> Mappings => new Dictionary<ConsoleKey, IAutoCompleteKeyPressHandler>
+        private readonly IDictionary<ConsoleKey, IAutoCompleteKeyPressHandler> mappings = new Dictionary<ConsoleKey, IAutoCompleteKeyPressHandler>
         {
             { ConsoleKey.LeftArrow, new ArrowKeyPressHandler() },
             { ConsoleKey.RightArrow, new ArrowKeyPressHandler() },
@@ -22,6 +21,9 @@ namespace Sde.ConsoleGems.AutoComplete
             { ConsoleKey.Tab, new TabKeyPressHandler() },
             { ConsoleKey.V, new VKeyPressHandler() },
         };
+
+        /// <inheritdoc/>
+        public IDictionary<ConsoleKey, IAutoCompleteKeyPressHandler> Mappings => this.mappings;
 
         /// <inheritdoc/>
         public IAutoCompleteKeyPressHandler DefaultHandler => new LiteralKeyPressHandler();

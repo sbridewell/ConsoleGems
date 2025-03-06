@@ -10,94 +10,148 @@ namespace Sde.ConsoleGems.Test
     using Sde.ConsoleGems.Menus;
 
     /// <summary>
-    /// Unit tests for the <see cref="ServiceCollectionExtensions"/> class.
+    /// Unit tests for the <see cref="ServiceCollectionExtensions"/> class,
+    /// focussed mainly on asserting that the correct dependencies have
+    /// been injected. Also tests the <see cref="ConsoleGemsOptions"/>
+    /// class.
     /// </summary>
     public class ServiceCollectionExtensionsTest
     {
         /// <summary>
-        /// Tests that the constructor registers the correct dependencies.
+        /// Tests that when no <see cref="ConsoleGemsOptions"/>
+        /// are passed to the AddConsoleGems method, the correct
+        /// dependencies are registered.
         /// </summary>
         [Fact]
-        public void Constructor_RegistersCorrectDependencies()
+        public void NoOptions_RegistersCorrectDependencies()
         {
             // Arrange
-            Func<IServiceCollection, IServiceCollection> pipeline = (sc) => sc.AddConsoleGems();
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddConsoleGems();
 
             // Act
-            var serviceProvider = BuildServiceProvider(pipeline);
+            var provider = serviceCollection.BuildServiceProvider();
 
             // Assert
-            var console = serviceProvider.GetRequiredService<IConsole>();
-            var consoleErrorWriter = serviceProvider.GetRequiredService<IConsoleErrorWriter>();
-            var applicationState = serviceProvider.GetRequiredService<ApplicationState>();
-            var sharedMenuItemsProvider = serviceProvider.GetRequiredService<ISharedMenuItemsProvider>();
-            console.Should().BeOfType<Console>();
-            consoleErrorWriter.Should().BeOfType<ConsoleErrorWriter>();
-            applicationState.Should().BeOfType<ApplicationState>();
-            sharedMenuItemsProvider.Should().BeOfType<EmptySharedMenuItemsProvider>();
-            sharedMenuItemsProvider.MenuItems.Should().BeEmpty();
+            AssertColourfulConsole(provider);
+            AssertNoAutoComplete(provider);
+            AssertNoBuiltInPrompters(provider);
+            AssertService(provider, typeof(ApplicationState), typeof(ApplicationState));
         }
 
         /// <summary>
-        /// Tests that the UseColours method registers the correct
-        /// console dependency.
+        /// Tests that when a <see cref="ConsoleGemsOptions"/> instance
+        /// with the <see cref="ConsoleGemsOptions.UseColours"/> property
+        /// set to true is passed to the AddConsoleGems method, the correct
+        /// dependencies are registered.
         /// </summary>
         [Fact]
-        public void UseColours_RegistersCorrectDependencies()
+        public void UseColoursTrue_RegistersCorrectDependencies()
         {
             // Arrange
-            Func<IServiceCollection, IServiceCollection> pipeline = (sc) => sc.UseColours();
+            var options = new ConsoleGemsOptions { UseColours = true };
 
             // Act
-            var serviceProvider = BuildServiceProvider(pipeline);
+            var provider = BuildServiceProvider(options);
 
             // Assert
-            var console = serviceProvider.GetRequiredService<IConsole>();
-            console.Should().BeOfType<ColourfulConsole>();
+            AssertColourfulConsole(provider);
+            AssertNoAutoComplete(provider);
+            AssertNoBuiltInPrompters(provider);
+            AssertService(provider, typeof(ApplicationState), typeof(ApplicationState));
         }
 
         /// <summary>
-        /// Tests that the UseAutoComplete method registers the correct
-        /// auto completer dependency.
+        /// Tests that when a <see cref="ConsoleGemsOptions"/> instance
+        /// with the <see cref="ConsoleGemsOptions.UseColours"/> property
+        /// set to false is passed to the AddConsoleGems method, the correct
+        /// dependencies are registered.
         /// </summary>
         [Fact]
-        public void UseAutoComplete_RegistersCorrectIAutoCompleter()
+        public void UseColoursFalse_RegistersCorrectDependencies()
         {
             // Arrange
-            Func<IServiceCollection, IServiceCollection> pipeline = (sc) => sc.AddConsoleGems().UseAutoComplete();
+            var options = new ConsoleGemsOptions { UseColours = false };
 
             // Act
-            var serviceProvider = BuildServiceProvider(pipeline);
+            var provider = BuildServiceProvider(options);
 
             // Assert
-            var autoCompleter = serviceProvider.GetRequiredService<IAutoCompleter>();
-            var autoCompleterKeyPressMappings = serviceProvider.GetRequiredService<IAutoCompleteKeyPressMappings>();
+            AssertMonochromeConsole(provider);
+            AssertNoAutoComplete(provider);
+            AssertNoBuiltInPrompters(provider);
+            AssertService(provider, typeof(ApplicationState), typeof(ApplicationState));
+        }
+
+        /// <summary>
+        /// Tests that when the UseBuiltInPrompters method of a
+        /// <see cref="ConsoleGemsOptions"/> instance is called, the
+        /// correct dependencies are registered.
+        /// </summary>
+        [Fact]
+        public void UseBuiltInPrompters_RegistersCorrectPrompters()
+        {
+            // Arrange
+            var options = new ConsoleGemsOptions()
+                .UseBuiltInPrompters();
+
+            // Act
+            var provider = BuildServiceProvider(options);
+
+            // Assert
+            AssertMonochromeConsole(provider);
+            AssertBuiltInPrompters(provider);
+
+            var autoCompleter = provider.GetRequiredService<IAutoCompleter>();
             autoCompleter.Should().BeOfType<AutoCompleter>();
-            autoCompleterKeyPressMappings.Should().BeOfType<AutoCompleteKeyPressDefaultMappings>();
+            AssertService(provider, typeof(ApplicationState), typeof(ApplicationState));
         }
 
         /// <summary>
-        /// Tests that the UsePrompters method registers the
-        /// correct prompter dependencies.
+        /// Tests that when auto-complete is used, the correct
+        /// dependencies are registered.
         /// </summary>
         [Fact]
-        public void UsePrompters_RegistersCorrectPrompters()
+        public void UseAutoComplete_NoMappingsSupplied_RegistersCorrectDependencies()
         {
             // Arrange
-            Func<IServiceCollection, IServiceCollection> pipeline = (sc) => sc.AddConsoleGems().UsePrompters();
+            var options = new ConsoleGemsOptions()
+                .UseAutoComplete();
 
             // Act
-            var serviceProvider = BuildServiceProvider(pipeline);
+            var provider = BuildServiceProvider(options);
 
             // Assert
-            var filePrompter = serviceProvider.GetRequiredService<IFilePrompter>();
-            var directoryPrompter = serviceProvider.GetRequiredService<IDirectoryPrompter>();
-            var booleanPrompter = serviceProvider.GetRequiredService<IPrompter<bool?>>();
-            var autoCompleter = serviceProvider.GetRequiredService<IAutoCompleter>();
-            filePrompter.Should().BeOfType<FilePrompter>();
-            directoryPrompter.Should().BeOfType<DirectoryPrompter>();
-            booleanPrompter.Should().BeOfType<BooleanPrompter>();
-            autoCompleter.Should().BeOfType<AutoCompleter>();
+            AssertAutoCompleter(provider);
+            AssertNoBuiltInPrompters(provider);
+            AssertService(provider, typeof(IAutoCompleteKeyPressMappings), typeof(AutoCompleteKeyPressDefaultMappings));
+            AssertService(provider, typeof(ApplicationState), typeof(ApplicationState));
+        }
+
+        /// <summary>
+        /// Tests that when auto-complete is used with a
+        /// custom <see cref="IAutoCompleteKeyPressMappings"/>
+        /// implementation, the correct dependencies are registered.
+        /// </summary>
+        [Fact]
+        public void UseAutoComplete_MapppingsSupplied_RegistersCorrectDependencies()
+        {
+            // Arrange
+            var mappings = new AutoCompleteKeyPressDefaultMappings();
+            mappings.Mappings.Add(ConsoleKey.Q, new QKeyPressHandler());
+            var options = new ConsoleGemsOptions()
+                .UseAutoComplete(mappings);
+
+            // Act
+            var provider = BuildServiceProvider(options);
+
+            // Assert
+            AssertAutoCompleter(provider);
+            AssertNoBuiltInPrompters(provider);
+            AssertService(provider, typeof(ApplicationState), typeof(ApplicationState));
+            AssertService(provider, typeof(IAutoCompleteKeyPressMappings), typeof(AutoCompleteKeyPressDefaultMappings));
+            var actualMappings = provider.GetRequiredService<IAutoCompleteKeyPressMappings>();
+            actualMappings.Mappings[ConsoleKey.Q].Should().BeOfType<QKeyPressHandler>();
         }
 
         /// <summary>
@@ -106,17 +160,17 @@ namespace Sde.ConsoleGems.Test
         /// <see cref="ISharedMenuItemsProvider"/> implementation.
         /// </summary>
         [Fact]
-        public void AddSharedMenuItems_RegistersCorrectDependencies()
+        public void AddSharedMenuItemsProvider_RegistersCorrectDependencies()
         {
             // Arrange
-            Func<IServiceCollection, IServiceCollection> pipeline
-                = (sc) => sc.AddSharedMenuItems<SharedMenuItemsProvider>();
+            var options = new ConsoleGemsOptions()
+                .AddSharedMenuItemsProvider<SharedMenuItemsProvider>();
 
             // Act
-            var serviceProvider = BuildServiceProvider(pipeline);
+            var provider = BuildServiceProvider(options);
 
             // Assert
-            var sharedMenuItemsProvider = serviceProvider.GetRequiredService<ISharedMenuItemsProvider>();
+            var sharedMenuItemsProvider = provider.GetRequiredService<ISharedMenuItemsProvider>();
             sharedMenuItemsProvider.Should().BeOfType<SharedMenuItemsProvider>();
             sharedMenuItemsProvider.MenuItems.Should().ContainSingle();
             sharedMenuItemsProvider.MenuItems[0].Key.Should().Be("a key");
@@ -129,27 +183,19 @@ namespace Sde.ConsoleGems.Test
         public void SetMainMenu_RegistersCorrectDependencies()
         {
             // Arrange
-            Func<IServiceCollection, IServiceCollection> pipeline
-                = (sc) => sc.AddConsoleGems().SetMainMenu<DemoMenu>();
+            var options = new ConsoleGemsOptions()
+                .UseBuiltInPrompters() // because some of the commands in DemoMenu need them
+                .SetMainMenu<DemoMenu>();
 
             // Act
-            var serviceProvider = BuildServiceProvider(pipeline);
+            var provider = BuildServiceProvider(options);
 
             // Assert
-            var menuWriter = serviceProvider.GetRequiredService<IMenuWriter>();
-            var globalMenuItemsProvider = serviceProvider.GetRequiredService<IGlobalMenuItemsProvider>();
-            var demoMenu = serviceProvider.GetRequiredService<DemoMenu>();
-            var getADrinkCommand = serviceProvider.GetRequiredService<GetADrinkCommand>();
-            var selectAFileCommand = serviceProvider.GetRequiredService<SelectAFileCommand>();
-            var throwExceptionCommand = serviceProvider.GetRequiredService<ThrowExceptionCommand>();
-            var exitProgramCommand = serviceProvider.GetRequiredService<ExitProgramCommand>();
-            menuWriter.Should().BeOfType<MenuWriter>();
-            globalMenuItemsProvider.Should().BeOfType<GlobalMenuItemsProvider>();
-            demoMenu.Should().BeOfType<DemoMenu>();
-            getADrinkCommand.Should().BeOfType<GetADrinkCommand>();
-            selectAFileCommand.Should().BeOfType<SelectAFileCommand>();
-            throwExceptionCommand.Should().BeOfType<ThrowExceptionCommand>();
-            exitProgramCommand.Should().BeOfType<ExitProgramCommand>();
+            AssertMonochromeConsole(provider);
+            AssertBuiltInPrompters(provider);
+            AssertDemoMenu(provider);
+            AssertService(provider, typeof(IMenuWriter), typeof(MenuWriter));
+            AssertService(provider, typeof(IGlobalMenuItemsProvider), typeof(GlobalMenuItemsProvider));
         }
 
         /// <summary>
@@ -160,23 +206,108 @@ namespace Sde.ConsoleGems.Test
         public void SetMainMenu_MenuHasSubMenus_RegistersCorrectDependencies()
         {
             // Arrange
-            Func<IServiceCollection, IServiceCollection> pipeline
-                = (sc) => sc.AddConsoleGems().SetMainMenu<MenuWithChildMenus>();
+            var options = new ConsoleGemsOptions()
+                .UseBuiltInPrompters() // because some of the commands in DemoMenu need them
+                .SetMainMenu<MenuWithChildMenus>();
 
             // Act
-            var provider = BuildServiceProvider(pipeline);
+            var provider = BuildServiceProvider(options);
 
             // Assert
-            var mainMenu = provider.GetRequiredService<MenuWithChildMenus>();
-            var subMenu = provider.GetRequiredService<DemoMenu>();
-            mainMenu.Should().BeOfType<MenuWithChildMenus>();
-            subMenu.Should().BeOfType<DemoMenu>();
+            AssertMonochromeConsole(provider);
+            AssertBuiltInPrompters(provider);
+            AssertService(provider, typeof(MenuWithChildMenus), typeof(MenuWithChildMenus));
+            AssertDemoMenu(provider);
         }
 
-        private static ServiceProvider BuildServiceProvider(Func<IServiceCollection, IServiceCollection> arrangeAndAct)
+        private static void AssertAutoCompleter(IServiceProvider serviceProvider)
         {
-            var serviceCollection = new ServiceCollection();
-            arrangeAndAct(serviceCollection);
+            AssertService(serviceProvider, typeof(IAutoCompleter), typeof(AutoCompleter));
+            AssertService(serviceProvider, typeof(IAutoCompleteKeyPressMappings), typeof(AutoCompleteKeyPressDefaultMappings));
+        }
+
+        private static void AssertMonochromeConsole(IServiceProvider serviceProvider)
+        {
+            AssertService(serviceProvider, typeof(IConsole), typeof(Console));
+            AssertService(serviceProvider, typeof(IConsoleErrorWriter), typeof(ConsoleErrorWriter));
+            AssertNoService(serviceProvider, typeof(IConsoleColourManager));
+        }
+
+        private static void AssertColourfulConsole(IServiceProvider serviceProvider)
+        {
+            AssertService(serviceProvider, typeof(IConsole), typeof(ColourfulConsole));
+            AssertService(serviceProvider, typeof(IConsoleColourManager), typeof(ConsoleColourManager));
+            AssertService(serviceProvider, typeof(IConsoleErrorWriter), typeof(ConsoleErrorWriter));
+        }
+
+        private static void AssertNoAutoComplete(IServiceProvider serviceProvider)
+        {
+            AssertNoService(serviceProvider, typeof(IAutoCompleter));
+            AssertNoService(serviceProvider, typeof(IAutoCompleteKeyPressMappings));
+        }
+
+        private static void AssertBuiltInPrompters(IServiceProvider serviceProvider)
+        {
+            AssertService(serviceProvider, typeof(IBooleanPrompter), typeof(BooleanPrompter));
+            AssertService(serviceProvider, typeof(IFilePrompter), typeof(FilePrompter));
+            AssertService(serviceProvider, typeof(IDirectoryPrompter), typeof(DirectoryPrompter));
+        }
+
+        private static void AssertNoBuiltInPrompters(IServiceProvider serviceProvider)
+        {
+            AssertNoService(serviceProvider, typeof(IBooleanPrompter));
+            AssertNoService(serviceProvider, typeof(IFilePrompter));
+            AssertNoService(serviceProvider, typeof(IDirectoryPrompter));
+        }
+
+        private static void AssertDemoMenu(IServiceProvider serviceProvider)
+        {
+            AssertService(serviceProvider, typeof(DemoMenu), typeof(DemoMenu));
+            AssertService(serviceProvider, typeof(GetADrinkCommand), typeof(GetADrinkCommand));
+            AssertService(serviceProvider, typeof(SelectAFileCommand), typeof(SelectAFileCommand));
+            AssertService(serviceProvider, typeof(ThrowExceptionCommand), typeof(ThrowExceptionCommand));
+            AssertService(serviceProvider, typeof(ExitProgramCommand), typeof(ExitProgramCommand));
+        }
+
+        /// <summary>
+        /// Asserts that the supplied <see cref="ServiceProvider"/>
+        /// resolves the supplied service type to an instance of the
+        /// supplied implementation type.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="serviceType">The type of service.</param>
+        /// <param name="implementationType">
+        /// The concrete implementation type of the service.
+        /// </param>
+        private static void AssertService(
+            IServiceProvider serviceProvider,
+            Type serviceType,
+            Type implementationType)
+        {
+            var service = serviceProvider.GetRequiredService(serviceType);
+            service.Should().BeOfType(implementationType);
+        }
+
+        /// <summary>
+        /// Asserts that the supplied <see cref="ServiceProvider"/>
+        /// cannot resolve the supplied service type to a concrete
+        /// implementation.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="serviceType">The type of service.</param>
+        private static void AssertNoService(
+            IServiceProvider serviceProvider,
+            Type serviceType)
+        {
+            var action = () => serviceProvider.GetRequiredService(serviceType);
+            var ex = action.Should().ThrowExactly<InvalidOperationException>().Which;
+            ex.Message.Should().Contain($"No service for type '{serviceType}' has been registered.");
+        }
+
+        private static ServiceProvider BuildServiceProvider(ConsoleGemsOptions options)
+        {
+            var serviceCollection = new ServiceCollection()
+                .AddConsoleGems(options);
             return serviceCollection.BuildServiceProvider();
         }
 
@@ -203,8 +334,16 @@ namespace Sde.ConsoleGems.Test
             public override List<MenuItem> MenuItems =>
             [
                 new () { Key = "a key", Description = "a description", Command = new Mock<ICommand>().Object, },
-                        new () { Key = "demo", Description = "Demo menu", Command = demoMenu.ShowCommand, },
-                    ];
+                new () { Key = "demo", Description = "Child menu", Command = demoMenu.ShowCommand, },
+            ];
+        }
+
+        private class QKeyPressHandler : IAutoCompleteKeyPressHandler
+        {
+            public void Handle(ConsoleKeyInfo keyInfo, IAutoCompleter autoCompleter)
+            {
+                autoCompleter.InsertUserInput("comma");
+            }
         }
     }
 }
