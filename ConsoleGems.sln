@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{18D6BC24
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleGems.AutoCompleteDemo", "Demos\ConsoleGems.AutoCompleteDemo\ConsoleGems.AutoCompleteDemo.csproj", "{3BAB1E85-CDD8-4517-B839-12F0AAC5632A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleGems.ColoursDemo", "Demos\ConsoleGems.ColoursDemo\ConsoleGems.ColoursDemo.csproj", "{BDA58840-B487-47E5-BD7B-A7799D4E117C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,11 +39,16 @@ Global
 		{3BAB1E85-CDD8-4517-B839-12F0AAC5632A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BAB1E85-CDD8-4517-B839-12F0AAC5632A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BAB1E85-CDD8-4517-B839-12F0AAC5632A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDA58840-B487-47E5-BD7B-A7799D4E117C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDA58840-B487-47E5-BD7B-A7799D4E117C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDA58840-B487-47E5-BD7B-A7799D4E117C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDA58840-B487-47E5-BD7B-A7799D4E117C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3BAB1E85-CDD8-4517-B839-12F0AAC5632A} = {18D6BC24-D99B-4E24-914F-078BDBCBF253}
+		{BDA58840-B487-47E5-BD7B-A7799D4E117C} = {18D6BC24-D99B-4E24-914F-078BDBCBF253}
 	EndGlobalSection
 EndGlobal
