@@ -39,20 +39,20 @@ namespace Sde.ConsoleGems.Consoles.Concrete
         #region methods
 
         /// <inheritdoc/>
-        public int Read()
+        public virtual int Read()
         {
             return System.Console.Read();
         }
 
         /// <inheritdoc/>.
         [ExcludeFromCodeCoverage(Justification = "It doesn't seem possible to unit test Console.ReadKey")]
-        public ConsoleKeyInfo ReadKey(bool intercept = false)
+        public virtual ConsoleKeyInfo ReadKey(bool intercept = false)
         {
             return System.Console.ReadKey(intercept);
         }
 
         /// <inheritdoc/>.
-        public string ReadLine()
+        public virtual string ReadLine()
         {
             var text = System.Console.ReadLine();
             text ??= string.Empty;

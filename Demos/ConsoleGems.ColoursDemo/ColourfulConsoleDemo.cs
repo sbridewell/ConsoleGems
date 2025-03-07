@@ -39,6 +39,17 @@ namespace Sde.ConsoleGems.ColoursDemo
             console.WriteLine("Menu headers look like this.", ConsoleOutputType.MenuHeader);
             console.WriteLine("User input looks like this.", ConsoleOutputType.UserInput);
             console.WriteLine("And because the output type is an optional parameter, the default colours are used if one isn't supplied.");
+            console.WriteLine();
+            console.Write("Please type something: ", ConsoleOutputType.Prompt);
+            var userInput = console.ReadLine();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                console.WriteLine("You didn't type anything.", ConsoleOutputType.Error);
+            }
+            else
+            {
+                console.WriteLine($"You typed: {userInput}", ConsoleOutputType.Default);
+            }
         }
     }
 }
