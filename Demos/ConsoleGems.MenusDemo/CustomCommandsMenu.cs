@@ -16,10 +16,10 @@ namespace Sde.ConsoleGems.MenusDemo
     public class CustomCommandsMenu(
         IAutoCompleter autoCompleter,
         IMenuWriter menuWriter,
-        IConsoleErrorWriter consoleErrorWriter,
+        IConsole console,
         ApplicationState applicationState,
         RollDiceCommand rollDiceCommand)
-        : AbstractMenu(autoCompleter, menuWriter, consoleErrorWriter, applicationState), IMenu
+        : AbstractMenu(autoCompleter, menuWriter, console, applicationState), IMenu
     {
         /// <inheritdoc/>
         public override string Title => "Custom commands";

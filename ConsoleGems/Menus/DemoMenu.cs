@@ -16,12 +16,12 @@ namespace Sde.ConsoleGems.Menus
         ThrowExceptionCommand throwExceptionCommand,
         IAutoCompleter autoCompleter,
         IMenuWriter menuWriter,
-        IConsoleErrorWriter consoleErrorWriter,
+        IConsole console,
         ApplicationState applicationState)
         : AbstractMenu(
             autoCompleter,
             menuWriter,
-            consoleErrorWriter,
+            console,
             applicationState)
     {
         /// <inheritdoc/>

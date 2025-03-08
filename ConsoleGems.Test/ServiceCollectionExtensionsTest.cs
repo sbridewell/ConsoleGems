@@ -229,7 +229,6 @@ namespace Sde.ConsoleGems.Test
         private static void AssertMonochromeConsole(IServiceProvider serviceProvider)
         {
             AssertService(serviceProvider, typeof(IConsole), typeof(Console));
-            AssertService(serviceProvider, typeof(IConsoleErrorWriter), typeof(ConsoleErrorWriter));
             AssertNoService(serviceProvider, typeof(IConsoleColourManager));
         }
 
@@ -237,7 +236,6 @@ namespace Sde.ConsoleGems.Test
         {
             AssertService(serviceProvider, typeof(IConsole), typeof(ColourfulConsole));
             AssertService(serviceProvider, typeof(IConsoleColourManager), typeof(ConsoleColourManager));
-            AssertService(serviceProvider, typeof(IConsoleErrorWriter), typeof(ConsoleErrorWriter));
         }
 
         private static void AssertNoAutoComplete(IServiceProvider serviceProvider)
@@ -314,9 +312,9 @@ namespace Sde.ConsoleGems.Test
             ChildMenu childMenu,
             IAutoCompleter autoCompleter,
             IMenuWriter menuWriter,
-            IConsoleErrorWriter consoleErrorWriter,
+            IConsole console,
             ApplicationState applicationState)
-            : AbstractMenu(autoCompleter, menuWriter, consoleErrorWriter, applicationState)
+            : AbstractMenu(autoCompleter, menuWriter, console, applicationState)
         {
             public override string Title => "Menu with child menus";
 
@@ -332,9 +330,9 @@ namespace Sde.ConsoleGems.Test
         private class ChildMenu(
             IAutoCompleter autoCompleter,
             IMenuWriter menuWriter,
-            IConsoleErrorWriter consoleErrorWriter,
+            IConsole console,
             ApplicationState applicationState)
-            : AbstractMenu(autoCompleter, menuWriter, consoleErrorWriter, applicationState)
+            : AbstractMenu(autoCompleter, menuWriter, console, applicationState)
         {
             public override string Title => "Child menu";
 

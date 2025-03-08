@@ -9,7 +9,6 @@ namespace Sde.ConsoleGems.Prompters
     /// Class for prompting the user to enter a boolean value into the console window.
     /// </summary>
     public class BooleanPrompter(
-        IConsoleErrorWriter consoleErrorWriter,
         IAutoCompleter autoCompleter,
         IConsole console)
         : IBooleanPrompter
@@ -38,7 +37,7 @@ namespace Sde.ConsoleGems.Prompters
                     break;
                 }
 
-                consoleErrorWriter.WriteError(string.Format(validationMessage, userInput));
+                console.WriteLine(string.Format(validationMessage, userInput), ConsoleOutputType.Error);
             }
 
             console.WriteLine($"Returning {returnValue.Value}");

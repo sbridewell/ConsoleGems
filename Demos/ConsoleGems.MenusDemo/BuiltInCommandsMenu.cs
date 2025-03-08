@@ -17,7 +17,7 @@ namespace Sde.ConsoleGems.MenusDemo
     public class BuiltInCommandsMenu(
         IAutoCompleter autoCompleter,
         IMenuWriter menuWriter,
-        IConsoleErrorWriter consoleErrorWriter,
+        IConsole console,
         ApplicationState applicationState,
         ChangeWorkingDirectoryCommand cwdCommand,
         DirCommand dirCommand,
@@ -25,7 +25,7 @@ namespace Sde.ConsoleGems.MenusDemo
         GetADrinkCommand getADrinkCommand,
         SelectAFileCommand selectAFileCommand,
         ThrowExceptionCommand throwExceptionCommand)
-        : AbstractMenu(autoCompleter, menuWriter, consoleErrorWriter, applicationState), IMenu
+        : AbstractMenu(autoCompleter, menuWriter, console, applicationState), IMenu
     {
         /// <inheritdoc/>
         public override string Title => "Built-in commands";

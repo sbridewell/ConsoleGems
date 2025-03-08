@@ -14,7 +14,6 @@ namespace Sde.ConsoleGems.Test.Menus
         private readonly Mock<IAutoCompleter> mockAutoCompleter = new ();
         private readonly Mock<IConsole> mockConsole = new ();
         private readonly Mock<IMenuWriter> mockConsoleMenuWriter = new ();
-        private readonly Mock<IConsoleErrorWriter> mockConsoleErrorWriter = new ();
         private readonly Mock<IFilePrompter> mockFilePrompter = new ();
         private readonly ApplicationState applicationState = new ();
         private GetADrinkCommand? getADrinkCommand;
@@ -37,7 +36,7 @@ namespace Sde.ConsoleGems.Test.Menus
                 this.throwExceptionCommand!,
                 this.mockAutoCompleter.Object,
                 this.mockConsoleMenuWriter.Object,
-                this.mockConsoleErrorWriter.Object,
+                this.mockConsole.Object,
                 this.applicationState);
 
             // Assert

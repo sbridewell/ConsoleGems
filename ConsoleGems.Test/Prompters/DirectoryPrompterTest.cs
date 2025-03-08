@@ -22,11 +22,11 @@ namespace Sde.ConsoleGems.Test.Prompters
         {
             // Arrange
             var directoryName = "subdir";
-            var autoCompleter = new Mock<IAutoCompleter>();
-            var consoleErrorWriter = new Mock<IConsoleErrorWriter>();
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            var mockConsole = new Mock<IConsole>();
             var prompt = "Enter a filename";
-            autoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt)).Returns(directoryName);
-            var prompter = new DirectoryPrompter(autoCompleter.Object, consoleErrorWriter.Object);
+            mockAutoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt)).Returns(directoryName);
+            var prompter = new DirectoryPrompter(mockAutoCompleter.Object, mockConsole.Object);
 
             // Act
             var result = prompter.Prompt(this.WorkingDirectory, prompt, mustAlreadyExist: true);
@@ -34,9 +34,8 @@ namespace Sde.ConsoleGems.Test.Prompters
             // Assert
             result.Name.Should().Be(directoryName);
             result.FullName.Should().Be(Path.Combine(this.WorkingDirectory.FullName, directoryName));
-            autoCompleter.Verify(ac => ac.ReadLine(new List<string> { "..", "subdir", "subdir2" }, prompt), Times.Once);
-            consoleErrorWriter.Verify(cew => cew.WriteError(It.IsAny<string>()), Times.Never);
-            consoleErrorWriter.Verify(cew => cew.WriteException(It.IsAny<Exception>()), Times.Never);
+            mockAutoCompleter.Verify(ac => ac.ReadLine(new List<string> { "..", "subdir", "subdir2" }, prompt), Times.Once);
+            mockConsole.Verify(c => c.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
         }
 
         /// <summary>
@@ -50,14 +49,14 @@ namespace Sde.ConsoleGems.Test.Prompters
             // Arrange
             var badDirectoryName = "notexist";
             var goodDirectoryName = "subdir";
-            var autoCompleter = new Mock<IAutoCompleter>();
-            var consoleErrorWriter = new Mock<IConsoleErrorWriter>();
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            var mockConsole = new Mock<IConsole>();
             var prompt = "Enter a filename";
-            autoCompleter
+            mockAutoCompleter
                 .SetupSequence(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt))
                 .Returns(badDirectoryName)
                 .Returns(goodDirectoryName);
-            var prompter = new DirectoryPrompter(autoCompleter.Object, consoleErrorWriter.Object);
+            var prompter = new DirectoryPrompter(mockAutoCompleter.Object, mockConsole.Object);
 
             // Act
             var result = prompter.Prompt(this.WorkingDirectory, prompt, mustAlreadyExist: true);
@@ -65,9 +64,12 @@ namespace Sde.ConsoleGems.Test.Prompters
             // Assert
             result.Name.Should().Be(goodDirectoryName);
             result.FullName.Should().Be(Path.Combine(this.WorkingDirectory.FullName, goodDirectoryName));
-            autoCompleter.Verify(ac => ac.ReadLine(new List<string> { "..", "subdir", "subdir2" }, prompt), Times.Exactly(2));
-            consoleErrorWriter.Verify(cew => cew.WriteError($"The directory '{badDirectoryName}' does not exist in the directory '{this.WorkingDirectory.FullName}'."), Times.Once);
-            consoleErrorWriter.Verify(cew => cew.WriteException(It.IsAny<Exception>()), Times.Never);
+            mockAutoCompleter.Verify(ac => ac.ReadLine(new List<string> { "..", "subdir", "subdir2" }, prompt), Times.Exactly(2));
+            mockConsole.Verify(
+                c => c.WriteLine(
+                    $"The directory '{badDirectoryName}' does not exist in the directory '{this.WorkingDirectory.FullName}'.",
+                    ConsoleOutputType.Error),
+                Times.Once);
         }
 
         /// <summary>
@@ -79,13 +81,13 @@ namespace Sde.ConsoleGems.Test.Prompters
         {
             // Arrange
             var badDirectoryName = "notexist";
-            var autoCompleter = new Mock<IAutoCompleter>();
-            var consoleErrorWriter = new Mock<IConsoleErrorWriter>();
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            var mockConsole = new Mock<IConsole>();
             var prompt = "Enter a directory name";
-            autoCompleter
+            mockAutoCompleter
                 .Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt))
                 .Returns(badDirectoryName);
-            var prompter = new DirectoryPrompter(autoCompleter.Object, consoleErrorWriter.Object);
+            var prompter = new DirectoryPrompter(mockAutoCompleter.Object, mockConsole.Object);
 
             // Act
             var result = prompter.Prompt(this.WorkingDirectory, prompt, mustAlreadyExist: false);
@@ -93,9 +95,8 @@ namespace Sde.ConsoleGems.Test.Prompters
             // Assert
             result.Name.Should().Be(badDirectoryName);
             result.FullName.Should().Be(Path.Combine(this.WorkingDirectory.FullName, badDirectoryName));
-            autoCompleter.Verify(ac => ac.ReadLine(new List<string> { "..", "subdir", "subdir2" }, prompt), Times.Once);
-            consoleErrorWriter.Verify(cew => cew.WriteError(It.IsAny<string>()), Times.Never);
-            consoleErrorWriter.Verify(cew => cew.WriteException(It.IsAny<Exception>()), Times.Never);
+            mockAutoCompleter.Verify(ac => ac.ReadLine(new List<string> { "..", "subdir", "subdir2" }, prompt), Times.Once);
+            mockConsole.Verify(c => c.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
         }
     }
 }

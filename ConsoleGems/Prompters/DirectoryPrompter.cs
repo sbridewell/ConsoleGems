@@ -10,7 +10,7 @@ namespace Sde.ConsoleGems.Prompters
     /// </summary>
     public class DirectoryPrompter(
         IAutoCompleter autoCompleter,
-        IConsoleErrorWriter consoleErrorWriter)
+        IConsole console)
         : IDirectoryPrompter
     {
         /// <inheritdoc/>
@@ -40,7 +40,9 @@ namespace Sde.ConsoleGems.Prompters
                     break;
                 }
 
-                consoleErrorWriter.WriteError($"The directory '{directoryName}' does not exist in the directory '{rootDirectory.FullName}'.");
+                console.WriteLine(
+                    $"The directory '{directoryName}' does not exist in the directory '{rootDirectory.FullName}'.",
+                    ConsoleOutputType.Error);
             }
 
             return returnValue;

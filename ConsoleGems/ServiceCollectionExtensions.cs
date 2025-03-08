@@ -46,7 +46,6 @@ namespace Sde.ConsoleGems
                 services.AddSingleton<IConsole, Console>();
             }
 
-            services.AddSingleton<IConsoleErrorWriter, ConsoleErrorWriter>();
             services.AddSingleton<ApplicationState>();
 
             if (options.SharedMenuItemsProvider == null)
