@@ -6,7 +6,7 @@
 namespace Sde.ConsoleGems.MenusDemo
 {
     using Sde.ConsoleGems.Commands;
-    using Sde.ConsoleGems.Consoles.Interfaces;
+    using Sde.ConsoleGems.Consoles;
 
     /// <summary>
     /// A command which simulates rolling two dice.

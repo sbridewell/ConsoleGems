@@ -14,9 +14,7 @@ global using Sde.ConsoleGems.AutoComplete.KeyPressHandlers;
 global using Sde.ConsoleGems.Commands;
 global using Sde.ConsoleGems.Commands.Demo;
 global using Sde.ConsoleGems.Consoles;
-global using Sde.ConsoleGems.Consoles.Concrete;
-global using Sde.ConsoleGems.Consoles.Interfaces;
 global using Sde.ConsoleGems.Menus;
 global using Sde.ConsoleGems.Prompters;
-global using Console = Sde.ConsoleGems.Consoles.Concrete.Console;
+global using Console = Sde.ConsoleGems.Consoles.Console;
 #pragma warning restore SA1200 // Using directives should be placed correctly

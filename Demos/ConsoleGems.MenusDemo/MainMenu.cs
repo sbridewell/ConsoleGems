@@ -7,7 +7,7 @@ namespace Sde.ConsoleGems.MenusDemo
 {
     using System.Collections.Generic;
     using Sde.ConsoleGems.AutoComplete;
-    using Sde.ConsoleGems.Consoles.Interfaces;
+    using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
 
     /// <summary>

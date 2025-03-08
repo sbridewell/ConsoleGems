@@ -6,6 +6,7 @@
 namespace Sde.ConsoleGems.Test.Commands
 {
     using System.Text;
+    using Sde.ConsoleGems.Consoles;
     using Xunit.Abstractions;
 
     /// <summary>

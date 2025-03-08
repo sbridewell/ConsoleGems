@@ -7,6 +7,7 @@ namespace Sde.ConsoleGems.Test
 {
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems;
+    using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
 
     /// <summary>

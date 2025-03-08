@@ -6,7 +6,6 @@
 namespace Sde.ConsoleGems.ColoursDemo
 {
     using Sde.ConsoleGems.Consoles;
-    using Sde.ConsoleGems.Consoles.Interfaces;
 
     /// <summary>
     /// Class to demonstrate how the ConsoleGems library uses colours.

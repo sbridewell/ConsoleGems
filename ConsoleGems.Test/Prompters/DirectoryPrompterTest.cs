@@ -5,6 +5,7 @@
 
 namespace Sde.ConsoleGems.Test.Prompters
 {
+    using Sde.ConsoleGems.Consoles;
     using Xunit.Abstractions;
 
     /// <summary>

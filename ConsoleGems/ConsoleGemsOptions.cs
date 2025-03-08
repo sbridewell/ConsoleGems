@@ -6,6 +6,7 @@
 namespace Sde.ConsoleGems
 {
     using Sde.ConsoleGems.AutoComplete;
+    using Sde.ConsoleGems.Consoles;
 
     /// <summary>
     /// Options for configuring the behaviour of the ConsoleGems library.

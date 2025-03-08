@@ -6,6 +6,7 @@
 namespace Sde.ConsoleGems.Menus
 {
     using Sde.ConsoleGems.Commands.Demo;
+    using Sde.ConsoleGems.Consoles;
 
     /// <summary>
     /// A menu for demonstrating menus.

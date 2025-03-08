@@ -6,7 +6,7 @@
 namespace Sde.ConsoleGems.AutoCompleteDemo
 {
     using Sde.ConsoleGems.AutoComplete;
-    using Sde.ConsoleGems.Consoles.Interfaces;
+    using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Prompters;
 
     /// <summary>

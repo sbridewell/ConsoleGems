@@ -8,7 +8,7 @@ namespace Sde.ConsoleGems.MenusDemo
     using Sde.ConsoleGems.AutoComplete;
     using Sde.ConsoleGems.Commands;
     using Sde.ConsoleGems.Commands.Demo;
-    using Sde.ConsoleGems.Consoles.Interfaces;
+    using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
 
     /// <summary>
