@@ -5,6 +5,8 @@
 
 namespace Sde.ConsoleGems.Consoles
 {
+    using System.Runtime.InteropServices;
+
     /// <summary>
     /// Implementation of <see cref="IConsole"/> which uses
     /// <see cref="System.Console"/>.
@@ -14,9 +16,27 @@ namespace Sde.ConsoleGems.Consoles
         #region properties
 
         /// <inheritdoc/>
-        [SupportedOSPlatform("Windows")]
         [ExcludeFromCodeCoverage]
-        public bool CursorVisible { get => System.Console.CursorVisible; set => System.Console.CursorVisible = value; }
+        public bool CursorVisible
+        {
+            get
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    return System.Console.CursorVisible;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    System.Console.CursorVisible = value;
+                }
+            }
+        }
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
@@ -34,7 +54,7 @@ namespace Sde.ConsoleGems.Consoles
         [ExcludeFromCodeCoverage]
         public int WindowHeight { get => System.Console.WindowHeight; set => System.Console.WindowHeight = value; }
 
-        #endregion
+#endregion
 
         #region methods
 
