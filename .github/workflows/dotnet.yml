@@ -41,3 +41,4 @@ jobs:
         files: D:/a/ConsoleGems/ConsoleGems/TestResults/**/*.xml
         flags: unittests
         name: codecov-umbrella
+        fail_ci_if_error: true
