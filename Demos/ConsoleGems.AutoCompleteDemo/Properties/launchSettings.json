@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleGems.AutoCompleteDemo": {
+      "commandName": "Project",
+      "commandLineArgs": "Because a command line argument is being passed, this debug profile will use colours in the console window."
+    }
+  }
+}

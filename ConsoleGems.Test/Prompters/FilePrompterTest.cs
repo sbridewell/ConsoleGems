@@ -5,6 +5,7 @@
 
 namespace Sde.ConsoleGems.Test.Prompters
 {
+    using Sde.ConsoleGems.Consoles;
     using Xunit.Abstractions;
 
     /// <summary>
@@ -22,11 +23,11 @@ namespace Sde.ConsoleGems.Test.Prompters
         {
             // Arrange
             var filename = "file.txt";
-            var autoCompleter = new Mock<IAutoCompleter>();
-            var consoleErrorWriter = new Mock<IConsoleErrorWriter>();
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            var mockConsole = new Mock<IConsole>();
             var prompt = "Enter a filename";
-            autoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt)).Returns(filename);
-            var prompter = new FilePrompter(autoCompleter.Object, consoleErrorWriter.Object);
+            mockAutoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt)).Returns(filename);
+            var prompter = new FilePrompter(mockAutoCompleter.Object, mockConsole.Object);
 
             // Act
             var result = prompter.Prompt(this.WorkingDirectory, prompt, mustAlreadyExist: true);
@@ -34,9 +35,8 @@ namespace Sde.ConsoleGems.Test.Prompters
             // Assert
             result.Name.Should().Be(filename);
             result.FullName.Should().Be(Path.Combine(this.WorkingDirectory.FullName, filename));
-            autoCompleter.Verify(ac => ac.ReadLine(new List<string> { "file.bmp", "file.log", "file.txt", "file2.txt" }, prompt), Times.Once);
-            consoleErrorWriter.Verify(cew => cew.WriteError(It.IsAny<string>()), Times.Never);
-            consoleErrorWriter.Verify(cew => cew.WriteException(It.IsAny<Exception>()), Times.Never);
+            mockAutoCompleter.Verify(ac => ac.ReadLine(new List<string> { "file.bmp", "file.log", "file.txt", "file2.txt" }, prompt), Times.Once);
+            mockConsole.Verify(c => c.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
         }
 
         /// <summary>
@@ -50,14 +50,14 @@ namespace Sde.ConsoleGems.Test.Prompters
             // Arrange
             var badFilename = "file3.txt";
             var goodFilename = "file.txt";
-            var autoCompleter = new Mock<IAutoCompleter>();
-            var consoleErrorWriter = new Mock<IConsoleErrorWriter>();
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            var mockConsole = new Mock<IConsole>();
             var prompt = "Enter a filename";
-            autoCompleter
+            mockAutoCompleter
                 .SetupSequence(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt))
                 .Returns(badFilename)
                 .Returns(goodFilename);
-            var prompter = new FilePrompter(autoCompleter.Object, consoleErrorWriter.Object);
+            var prompter = new FilePrompter(mockAutoCompleter.Object, mockConsole.Object);
 
             // Act
             var result = prompter.Prompt(this.WorkingDirectory, prompt, mustAlreadyExist: true);
@@ -65,9 +65,12 @@ namespace Sde.ConsoleGems.Test.Prompters
             // Assert
             result.Name.Should().Be(goodFilename);
             result.FullName.Should().Be(Path.Combine(this.WorkingDirectory.FullName, goodFilename));
-            autoCompleter.Verify(ac => ac.ReadLine(new List<string> { "file.bmp", "file.log", "file.txt", "file2.txt" }, prompt), Times.Exactly(2));
-            consoleErrorWriter.Verify(cew => cew.WriteError($"The file '{badFilename}' does not exist in the directory '{this.WorkingDirectory.FullName}'."));
-            consoleErrorWriter.Verify(cew => cew.WriteException(It.IsAny<Exception>()), Times.Never);
+            mockAutoCompleter.Verify(ac => ac.ReadLine(new List<string> { "file.bmp", "file.log", "file.txt", "file2.txt" }, prompt), Times.Exactly(2));
+            mockConsole.Verify(
+                c => c.WriteLine(
+                    $"The file '{badFilename}' does not exist in the directory '{this.WorkingDirectory.FullName}'.",
+                    ConsoleOutputType.Error),
+                Times.Once);
         }
 
         /// <summary>
@@ -79,11 +82,11 @@ namespace Sde.ConsoleGems.Test.Prompters
         {
             // Arrange
             var badFilename = "file3.txt";
-            var autoCompleter = new Mock<IAutoCompleter>();
-            var consoleErrorWriter = new Mock<IConsoleErrorWriter>();
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            var mockConsole = new Mock<IConsole>();
             var prompt = "Enter a filename";
-            autoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt)).Returns(badFilename);
-            var prompter = new FilePrompter(autoCompleter.Object, consoleErrorWriter.Object);
+            mockAutoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt)).Returns(badFilename);
+            var prompter = new FilePrompter(mockAutoCompleter.Object, mockConsole.Object);
 
             // Act
             var result = prompter.Prompt(this.WorkingDirectory, prompt, mustAlreadyExist: false);
@@ -91,9 +94,8 @@ namespace Sde.ConsoleGems.Test.Prompters
             // Assert
             result.Name.Should().Be(badFilename);
             result.FullName.Should().Be(Path.Combine(this.WorkingDirectory.FullName, badFilename));
-            autoCompleter.Verify(ac => ac.ReadLine(new List<string> { "file.bmp", "file.log", "file.txt", "file2.txt" }, prompt), Times.Once);
-            consoleErrorWriter.Verify(cew => cew.WriteError(It.IsAny<string>()), Times.Never);
-            consoleErrorWriter.Verify(cew => cew.WriteException(It.IsAny<Exception>()), Times.Never);
+            mockAutoCompleter.Verify(ac => ac.ReadLine(new List<string> { "file.bmp", "file.log", "file.txt", "file2.txt" }, prompt), Times.Once);
+            mockConsole.Verify(c => c.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
         }
 
         /// <summary>
@@ -105,20 +107,19 @@ namespace Sde.ConsoleGems.Test.Prompters
         public void Prompt_FilterSupplied_FilteredFilenamesArePassedToAutoCompleter()
         {
             // Arrange
-            var autoCompleter = new Mock<IAutoCompleter>();
-            var consoleErrorWriter = new Mock<IConsoleErrorWriter>();
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            var mockConsole = new Mock<IConsole>();
             var prompt = "Enter a filename";
             var filter = "*.log";
-            autoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt)).Returns("file.log");
-            var prompter = new FilePrompter(autoCompleter.Object, consoleErrorWriter.Object);
+            mockAutoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), prompt)).Returns("file.log");
+            var prompter = new FilePrompter(mockAutoCompleter.Object, mockConsole.Object);
 
             // Act
             _ = prompter.Prompt(this.WorkingDirectory, prompt, mustAlreadyExist: true, filter);
 
             // Assert
-            autoCompleter.Verify(ac => ac.ReadLine(new List<string> { "file.log" }, prompt), Times.Once);
-            consoleErrorWriter.Verify(cew => cew.WriteError(It.IsAny<string>()), Times.Never);
-            consoleErrorWriter.Verify(cew => cew.WriteException(It.IsAny<Exception>()), Times.Never);
+            mockAutoCompleter.Verify(ac => ac.ReadLine(new List<string> { "file.log" }, prompt), Times.Once);
+            mockConsole.Verify(c => c.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
         }
     }
 }

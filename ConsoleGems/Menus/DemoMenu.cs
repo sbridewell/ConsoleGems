@@ -6,6 +6,7 @@
 namespace Sde.ConsoleGems.Menus
 {
     using Sde.ConsoleGems.Commands.Demo;
+    using Sde.ConsoleGems.Consoles;
 
     /// <summary>
     /// A menu for demonstrating menus.
@@ -16,12 +17,12 @@ namespace Sde.ConsoleGems.Menus
         ThrowExceptionCommand throwExceptionCommand,
         IAutoCompleter autoCompleter,
         IMenuWriter menuWriter,
-        IConsoleErrorWriter consoleErrorWriter,
+        IConsole console,
         ApplicationState applicationState)
         : AbstractMenu(
             autoCompleter,
             menuWriter,
-            consoleErrorWriter,
+            console,
             applicationState)
     {
         /// <inheritdoc/>

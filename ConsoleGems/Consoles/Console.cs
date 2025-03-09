@@ -3,8 +3,10 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.ConsoleGems.Consoles.Concrete
+namespace Sde.ConsoleGems.Consoles
 {
+    using System.Runtime.InteropServices;
+
     /// <summary>
     /// Implementation of <see cref="IConsole"/> which uses
     /// <see cref="System.Console"/>.
@@ -14,9 +16,27 @@ namespace Sde.ConsoleGems.Consoles.Concrete
         #region properties
 
         /// <inheritdoc/>
-        [SupportedOSPlatform("Windows")]
         [ExcludeFromCodeCoverage]
-        public bool CursorVisible { get => System.Console.CursorVisible; set => System.Console.CursorVisible = value; }
+        public bool CursorVisible
+        {
+            get
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    return System.Console.CursorVisible;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    System.Console.CursorVisible = value;
+                }
+            }
+        }
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
@@ -34,25 +54,25 @@ namespace Sde.ConsoleGems.Consoles.Concrete
         [ExcludeFromCodeCoverage]
         public int WindowHeight { get => System.Console.WindowHeight; set => System.Console.WindowHeight = value; }
 
-        #endregion
+#endregion
 
         #region methods
 
         /// <inheritdoc/>
-        public int Read()
+        public virtual int Read()
         {
             return System.Console.Read();
         }
 
         /// <inheritdoc/>.
         [ExcludeFromCodeCoverage(Justification = "It doesn't seem possible to unit test Console.ReadKey")]
-        public ConsoleKeyInfo ReadKey(bool intercept = false)
+        public virtual ConsoleKeyInfo ReadKey(bool intercept = false)
         {
             return System.Console.ReadKey(intercept);
         }
 
         /// <inheritdoc/>.
-        public string ReadLine()
+        public virtual string ReadLine()
         {
             var text = System.Console.ReadLine();
             text ??= string.Empty;

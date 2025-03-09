@@ -63,6 +63,7 @@ namespace Sde.ConsoleGems.AutoComplete
             // Make sure any subsequent writes appear on a new line rather than overwriting
             // the prompt and user input.
             console.WriteLine();
+            this.SelectNoSuggestion();
             return this.UserInputSB.ToString();
         }
 

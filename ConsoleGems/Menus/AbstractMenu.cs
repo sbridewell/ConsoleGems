@@ -11,7 +11,7 @@ namespace Sde.ConsoleGems.Menus
     public abstract class AbstractMenu(
         IAutoCompleter autoCompleter,
         IMenuWriter menuWriter,
-        IConsoleErrorWriter consoleErrorWriter,
+        IConsole console,
         ApplicationState applicationState)
         : IMenu
     {
@@ -29,7 +29,7 @@ namespace Sde.ConsoleGems.Menus
             this,
             autoCompleter,
             menuWriter,
-            consoleErrorWriter,
+            console,
             applicationState);
     }
 }

@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.ConsoleGems.Consoles.Interfaces
+namespace Sde.ConsoleGems.Consoles
 {
     /// <summary>
     /// Interface for a colourful console.

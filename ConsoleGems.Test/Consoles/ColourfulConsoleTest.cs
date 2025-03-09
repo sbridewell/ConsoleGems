@@ -28,8 +28,54 @@ namespace Sde.ConsoleGems.Test.Consoles
         };
 
         /// <summary>
+        /// Tests that the console colours are set to those for user input
+        /// and then back to the default when the Read method is called.
+        /// </summary>
+        [Fact]
+        public void Read_SetsCorrectConsoleColours()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                // Arrange
+                var console = new ColourfulConsole(this.mockConsoleColourManager.Object);
+                var sr = new StringReader("Hello, world!");
+                System.Console.SetIn(sr);
+
+                // Act
+                console.Read();
+
+                // Assert
+                this.mockConsoleColourManager.Verify(m => m.SetColours(ConsoleColours.UserInput), Times.Once);
+                this.mockConsoleColourManager.Verify(m => m.SetColours(ConsoleColours.Default), Times.Once);
+            }
+        }
+
+        /// <summary>
+        /// Tests that the console colours are set to those for user input
+        /// and then back to the default when the ReadLine method is called.
+        /// </summary>
+        [Fact]
+        public void ReadLine_SetsCorrectConsoleColours()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                // Arrange
+                var console = new ColourfulConsole(this.mockConsoleColourManager.Object);
+                var sr = new StringReader("Hello, world!");
+                System.Console.SetIn(sr);
+
+                // Act
+                console.ReadLine();
+
+                // Assert
+                this.mockConsoleColourManager.Verify(m => m.SetColours(ConsoleColours.UserInput), Times.Once);
+                this.mockConsoleColourManager.Verify(m => m.SetColours(ConsoleColours.Default), Times.Once);
+            }
+        }
+
+        /// <summary>
         /// Tests that the correct <see cref="ConsoleOutputType"/> is passed to the
-        /// <see cref="ConsoleColourManager"/> when non is supplied to the Write
+        /// <see cref="ConsoleColourManager"/> when none is supplied to the Write
         /// method.
         /// </summary>
         [Fact]

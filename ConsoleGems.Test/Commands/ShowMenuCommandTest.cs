@@ -12,7 +12,7 @@ namespace Sde.ConsoleGems.Test.Commands
     {
         private readonly Mock<IAutoCompleter> mockAutoCompleter = new ();
         private readonly Mock<IMenuWriter> mockConsoleMenuWriter = new ();
-        private readonly Mock<IConsoleErrorWriter> mockConsoleErrorWriter = new ();
+        private readonly Mock<IConsole> mockConsole = new ();
         private readonly Mock<ICommand> mockCommand1 = new ();
         private readonly ApplicationState applicationState = new ();
         private readonly ThrowExceptionCommand throwExceptionCommand = new ();
@@ -42,7 +42,7 @@ namespace Sde.ConsoleGems.Test.Commands
             this.applicationState.MenuDepth.Should().Be(0);
             this.mockConsoleMenuWriter.Verify(writer => writer.WriteMenu(this.menu), Times.Exactly(2));
             this.mockAutoCompleter.Verify(ac => ac.ReadLine(expectedSuggestions, expectedPrompt), Times.Exactly(2));
-            this.mockConsoleErrorWriter.Verify(writer => writer.WriteError(It.IsAny<string>()), Times.Never);
+            this.mockConsole.Verify(m => m.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
             this.mockCommand1.Verify(command => command.Execute(), Times.Once);
         }
 
@@ -71,7 +71,7 @@ namespace Sde.ConsoleGems.Test.Commands
             this.applicationState.MenuDepth.Should().Be(0);
             this.mockConsoleMenuWriter.Verify(writer => writer.WriteMenu(this.menu), Times.Exactly(2));
             this.mockAutoCompleter.Verify(ac => ac.ReadLine(expectedSuggestions, expectedPrompt), Times.Exactly(2));
-            this.mockConsoleErrorWriter.Verify(writer => writer.WriteError(expectedError), Times.Once);
+            this.mockConsole.Verify(m => m.WriteLine(expectedError, ConsoleOutputType.Error), Times.Once);
             this.mockCommand1.Verify(command => command.Execute(), Times.Never);
         }
 
@@ -97,7 +97,7 @@ namespace Sde.ConsoleGems.Test.Commands
             this.applicationState.MenuDepth.Should().Be(0);
             this.mockConsoleMenuWriter.Verify(writer => writer.WriteMenu(this.menu), Times.Once);
             this.mockAutoCompleter.Verify(ac => ac.ReadLine(expectedSuggestions, expectedPrompt), Times.Exactly(1));
-            this.mockConsoleErrorWriter.Verify(writer => writer.WriteError(It.IsAny<string>()), Times.Never);
+            this.mockConsole.Verify(m => m.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
             this.mockCommand1.Verify(command => command.Execute(), Times.Never);
         }
 
@@ -126,7 +126,7 @@ namespace Sde.ConsoleGems.Test.Commands
             this.applicationState.MenuDepth.Should().Be(0);
             this.mockConsoleMenuWriter.Verify(writer => writer.WriteMenu(this.menu), Times.Exactly(2));
             this.mockAutoCompleter.Verify(ac => ac.ReadLine(expectedSuggestions, expectedPrompt), Times.Exactly(2));
-            this.mockConsoleErrorWriter.Verify(writer => writer.WriteException(It.IsAny<Exception>()), Times.Once);
+            this.mockConsole.Verify(m => m.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Once);
             this.mockCommand1.Verify(command => command.Execute(), Times.Never);
         }
 
@@ -142,7 +142,7 @@ namespace Sde.ConsoleGems.Test.Commands
             this.menu = new MenuForTesting(
                 this.mockAutoCompleter.Object,
                 this.mockConsoleMenuWriter.Object,
-                this.mockConsoleErrorWriter.Object,
+                this.mockConsole.Object,
                 this.mockCommand1.Object,
                 this.exitCurrentMenuCommand,
                 this.throwExceptionCommand,
@@ -152,7 +152,7 @@ namespace Sde.ConsoleGems.Test.Commands
                 this.menu,
                 this.mockAutoCompleter.Object,
                 this.mockConsoleMenuWriter.Object,
-                this.mockConsoleErrorWriter.Object,
+                this.mockConsole.Object,
                 this.applicationState);
             return command;
         }
@@ -160,7 +160,7 @@ namespace Sde.ConsoleGems.Test.Commands
         private class MenuForTesting(
             IAutoCompleter autoCompleter,
             IMenuWriter consoleMenuWriter,
-            IConsoleErrorWriter consoleErrorWriter,
+            IConsole console,
             ICommand command1,
             ICommand exitCurrentMenuCommand,
             ICommand throwExceptionCommand,
@@ -182,7 +182,7 @@ namespace Sde.ConsoleGems.Test.Commands
                 this,
                 autoCompleter,
                 consoleMenuWriter,
-                consoleErrorWriter,
+                console,
                 applicationState);
         }
     }

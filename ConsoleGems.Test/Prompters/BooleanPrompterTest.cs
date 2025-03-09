@@ -11,7 +11,6 @@ namespace Sde.ConsoleGems.Test.Prompters
     public class BooleanPrompterTest
     {
         private readonly Mock<IConsole> mockConsole = new ();
-        private readonly Mock<IConsoleErrorWriter> mockConsoleErrorWriter = new ();
         private readonly Mock<IAutoCompleter> mockAutoCompleter = new ();
 
         /// <summary>
@@ -44,8 +43,7 @@ namespace Sde.ConsoleGems.Test.Prompters
             this.mockAutoCompleter.Verify(
                 ac => ac.ReadLine(new List<string> { "true", "false", string.Empty }, prompt),
                 Times.Once);
-            this.mockConsoleErrorWriter.Verify(ew => ew.WriteError(It.IsAny<string>()), Times.Never);
-            this.mockConsoleErrorWriter.Verify(ew => ew.WriteException(It.IsAny<Exception>()), Times.Never);
+            this.mockConsole.Verify(m => m.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
         }
 
         /// <summary>
@@ -79,8 +77,7 @@ namespace Sde.ConsoleGems.Test.Prompters
             this.mockAutoCompleter.Verify(
                 ac => ac.ReadLine(new List<string> { "true", "false", string.Empty }, prompt),
                 Times.Once);
-            this.mockConsoleErrorWriter.Verify(ew => ew.WriteError(It.IsAny<string>()), Times.Never);
-            this.mockConsoleErrorWriter.Verify(ew => ew.WriteException(It.IsAny<Exception>()), Times.Never);
+            this.mockConsole.Verify(m => m.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Never);
         }
 
         /// <summary>
@@ -112,10 +109,11 @@ namespace Sde.ConsoleGems.Test.Prompters
             this.mockAutoCompleter.Verify(
                 ac => ac.ReadLine(new List<string> { "true", "false", string.Empty }, prompt),
                 Times.Exactly(2));
-            this.mockConsoleErrorWriter.Verify(
-                ew => ew.WriteError($"{firstUserInput} is not a valid value. Please enter true or false."),
+            this.mockConsole.Verify(
+                m => m.WriteLine(
+                    $"{firstUserInput} is not a valid value. Please enter true or false.",
+                    ConsoleOutputType.Error),
                 Times.Once);
-            this.mockConsoleErrorWriter.Verify(ew => ew.WriteException(It.IsAny<Exception>()), Times.Never);
         }
 
         /// <summary>
@@ -148,16 +146,16 @@ namespace Sde.ConsoleGems.Test.Prompters
             this.mockAutoCompleter.Verify(
                 ac => ac.ReadLine(new List<string> { "true", "false", string.Empty }, prompt),
                 Times.Exactly(2));
-            this.mockConsoleErrorWriter.Verify(
-                ew => ew.WriteError($"{firstUserInput} is not a valid value. Please enter true, false or an empty string."),
+            this.mockConsole.Verify(
+                m => m.WriteLine(
+                    $"{firstUserInput} is not a valid value. Please enter true, false or an empty string.",
+                    ConsoleOutputType.Error),
                 Times.Once);
-            this.mockConsoleErrorWriter.Verify(ew => ew.WriteException(It.IsAny<Exception>()), Times.Never);
         }
 
         private BooleanPrompter InstantiatePrompter()
         {
             return new BooleanPrompter(
-                this.mockConsoleErrorWriter.Object,
                 this.mockAutoCompleter.Object,
                 this.mockConsole.Object);
         }

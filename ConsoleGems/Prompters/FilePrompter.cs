@@ -10,7 +10,7 @@ namespace Sde.ConsoleGems.Prompters
     /// </summary>
     public class FilePrompter(
         IAutoCompleter autoCompleter,
-        IConsoleErrorWriter consoleErrorWriter)
+        IConsole console)
         : IFilePrompter
     {
         /// <inheritdoc/>
@@ -45,7 +45,9 @@ namespace Sde.ConsoleGems.Prompters
                     break;
                 }
 
-                consoleErrorWriter.WriteError($"The file '{filename}' does not exist in the directory '{rootDirectory.FullName}'.");
+                console.WriteLine(
+                    $"The file '{filename}' does not exist in the directory '{rootDirectory.FullName}'.",
+                    ConsoleOutputType.Error);
             }
 
             return returnValue;
@@ -56,7 +58,7 @@ namespace Sde.ConsoleGems.Prompters
     /// <summary>
     /// Interface for a prompter which asks the user to enter the name of an existing file.
     /// </summary>
-    public interface IFilePrompter
+    public interface IFilePrompter : IPrompter
     {
         /// <summary>
         /// Prompt the user to enter the name of an existing file.

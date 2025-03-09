@@ -12,7 +12,7 @@ namespace Sde.ConsoleGems.Commands
         IMenu menu,
         IAutoCompleter autoCompleter,
         IMenuWriter menuWriter,
-        IConsoleErrorWriter consoleErrorWriter,
+        IConsole console,
         ApplicationState applicationState)
         : ICommand
     {
@@ -35,7 +35,7 @@ namespace Sde.ConsoleGems.Commands
                         StringComparison.CurrentCultureIgnoreCase));
                 if (selectedItem == null)
                 {
-                    consoleErrorWriter.WriteError($"Sorry, '{userInputSanitised}' is not an option in this menu, try again!");
+                    console.WriteLine($"Sorry, '{userInputSanitised}' is not an option in this menu, try again!", ConsoleOutputType.Error);
                     menuWriter.WriteMenu(menu);
                 }
                 else
@@ -46,7 +46,7 @@ namespace Sde.ConsoleGems.Commands
                     }
                     catch (Exception ex)
                     {
-                        consoleErrorWriter.WriteException(ex);
+                        console.WriteLine($"Unhandled exception: {ex}", ConsoleOutputType.Error);
                     }
 
                     if (!applicationState.ExitCurrentMenu)
