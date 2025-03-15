@@ -9,16 +9,14 @@ namespace Sde.ConsoleGems.Commands
     /// Command for exiting the program normally.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class ExitProgramCommand(IConsole console)
+    public class ExitProgramCommand(IConsole console, ApplicationState applicationState)
         : ICommand
     {
         /// <inheritdoc/>
         public void Execute()
         {
             console.WriteLine("Bye!");
-
-            // TODO: #9 Exit(0) is not testable. Consider refactoring to make it testable.
-            Environment.Exit(0);
+            applicationState.ExitCurrentMenu = true;
         }
     }
 }
