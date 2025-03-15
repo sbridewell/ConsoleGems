@@ -1,5 +1,8 @@
 # ConsoleGems
 Using ConsoleGems you can build console applications with a rich user experience which are easily unit testable.
+
+Want to get straight to some example code? Take a look at the [Demos](Demos) folder for some examples of how to use ConsoleGems with dependency injection, as well as working examples of using menus, commands, colourful console output amd auto-complete.
+
 <!--TOC-->
   - [IConsole](#iconsole)
     - [Happy with monocrome?](#happy-with-monocrome)
@@ -11,6 +14,7 @@ Using ConsoleGems you can build console applications with a rich user experience
   - [Menus and commands](#menus-and-commands)
     - [Commands](#commands)
     - [Menus](#menus)
+    - [Custom menu writers](#custom-menu-writers)
   - [Prompters](#prompters)
   - [Putting it all together](#putting-it-all-together)
   - [Frequently asked questions](#frequently-asked-questions)
@@ -148,13 +152,14 @@ Any menu which isn't at the top of the menu heirarchy automatically gets a "back
 
 To specify commands which should appear on every menu in the application, implement `ISharedMenuItemsProvider`.
 
+### Custom menu writers
+If you want to render menus to the console window differently, you can provide your own implementation of `IMenuWriter`. See the [menus demo](Demos/ConsoleMenuGems.MenusDemo) for an example.
+
 ## Prompters
 The `Sde.ConsoleGems.Prompters` namespace contains classes which prompt the user for input where the required return value is of a type other than `string`. For example, the `FilePrompter` and `DirectoryPrompter` classes build on `IAutoCompleter` to assist in selecting a file or directory from the current working directory. Prompters implement the `IPrompter` interface, although this interface declares no members, it's just a marker interface which adds a bit of syntactic sugar for registering prompters with dependency injection.
 
 ## Putting it all together
 Whilst it's possible to instantiate all these console, menu, command, etc classes at the point where they're used, it's much easier to use dependency injection. ConsoleGems provides extension methods for `IServiceCollection` and a `ConsoleGemsOptions` class which simplifies the process of registering the necessary dependencies using a fluent syntax. In particular, the `UseMainMenu` method of `ConsoleGemsOptions` allows you to specify the menu which is at the top of the menu heirarchy, and then have all the other menus and any commands used in those menus auto-discovered and registered with dependency injection. Bewware though - other dependencies used by those commands are not auto-discovered.
-
-Take a look at the [Demos](Demos) folder for some examples of how to use ConsoleGems with dependency injection, as well as working examples of using menus, commands, colourful console output amd auto-complete.
 
 ## Frequently asked questions
 
