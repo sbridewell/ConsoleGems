@@ -34,10 +34,16 @@ namespace Sde.ConsoleGems
         public IAutoCompleteKeyPressMappings? AutoCompleteKeyPressMappings { get; private set; }
 
         /// <summary>
-        /// Gets the main menu for the application.
+        /// Gets the type of the main menu for the application.
         /// Returns null if the application does not use menus.
         /// </summary>
         public Type? MainMenu { get; private set; }
+
+        /// <summary>
+        /// Gets the type of <see cref="IMenuWriter"/> to use for
+        /// writing menus to the console.
+        /// </summary>
+        public Type? MenuWriter { get; private set; }
 
         /// <summary>
         /// Gets the provider of menu items shared across all menus
@@ -91,6 +97,23 @@ namespace Sde.ConsoleGems
                 this.UseAutoComplete();
             }
 
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the type of <see cref="IMenuWriter"/> to use for writing
+        /// menus to the console.
+        /// If this method is not called, the built-in <see cref="MenuWriter"/>
+        /// will be used.
+        /// </summary>
+        /// <typeparam name="TMenuWriter">
+        /// The type to use for writing menus to the console.
+        /// </typeparam>
+        /// <returns>The updated options.</returns>
+        public ConsoleGemsOptions UseMenuWriter<TMenuWriter>()
+            where TMenuWriter : class, IMenuWriter
+        {
+            this.MenuWriter = typeof(TMenuWriter);
             return this;
         }
 

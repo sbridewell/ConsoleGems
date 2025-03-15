@@ -221,6 +221,30 @@ namespace Sde.ConsoleGems.Test
             AssertService(provider, typeof(IGlobalMenuItemsProvider), typeof(GlobalMenuItemsProvider));
         }
 
+        /// <summary>
+        /// Tests that when a custom <see cref="IMenuWriter"/> is selected,
+        /// the correct dependencies are registered.
+        /// </summary>
+        [Fact]
+        public void UseMenuWriter_RegistersCorrectDependencies()
+        {
+            // Arrange
+            var options = new ConsoleGemsOptions()
+                .UseMainMenu<MenuWithChildMenus>()
+                .UseMenuWriter<MenuWriterForTesting>();
+
+            // Act
+            var provider = BuildServiceProvider(options);
+
+            // Assert
+            AssertMonochromeConsole(provider);
+            AssertAutoCompleter(provider);
+            AssertService(provider, typeof(MenuWithChildMenus), typeof(MenuWithChildMenus));
+            AssertService(provider, typeof(ChildMenu), typeof(ChildMenu));
+            AssertService(provider, typeof(IMenuWriter), typeof(MenuWriterForTesting));
+            AssertService(provider, typeof(IGlobalMenuItemsProvider), typeof(GlobalMenuItemsProvider));
+        }
+
         private static void AssertAutoCompleter(IServiceProvider serviceProvider)
         {
             AssertService(serviceProvider, typeof(IAutoCompleter), typeof(AutoCompleter));
@@ -351,6 +375,21 @@ namespace Sde.ConsoleGems.Test
             {
                 autoCompleter.InsertUserInput("comma");
             }
+        }
+
+        private class MenuWriterForTesting(
+            ISharedMenuItemsProvider sharedMenuItemsProvider,
+            IGlobalMenuItemsProvider globalMenuItemsProvider,
+            IConsole console,
+            ExitCurrentMenuCommand exitCurrentMenuCommand,
+            ApplicationState applicationState)
+            : MenuWriter(
+                sharedMenuItemsProvider,
+                globalMenuItemsProvider,
+                console,
+                exitCurrentMenuCommand,
+                applicationState)
+        {
         }
     }
 }

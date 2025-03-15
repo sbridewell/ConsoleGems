@@ -1,17 +1,26 @@
-﻿// <copyright file="MenuWriter.cs" company="Simon Bridewell">
+﻿// <copyright file="FigletMenuWriter.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell.
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.ConsoleGems.Menus
+namespace Sde.ConsoleGems.MenusDemo
 {
+    using System.Text;
+    using Sde.ConsoleGems.Commands;
+    using Sde.ConsoleGems.Consoles;
+    using Sde.ConsoleGems.Menus;
+    using WenceyWang.FIGlet;
+
     /// <summary>
-    /// Writes a menu to the console in verbose format.
+    /// A demonstration implementation of <see cref="IMenuWriter"/>
+    /// which uses the
+    /// <see href="http://nuget.org/packages/GIFlet.Net/">FIGlet.Net</see>
+    /// package to render the menu title as ASCII art.
     /// </summary>
-    public class MenuWriter(
+    public class FigletMenuWriter(
+        IConsole console,
         ISharedMenuItemsProvider sharedMenuItemsProvider,
         IGlobalMenuItemsProvider globalMenuItemsProvider,
-        IConsole console,
         ExitCurrentMenuCommand exitCurrentMenuCommand,
         ApplicationState applicationState)
         : AbstractMenuWriter(
@@ -24,8 +33,8 @@ namespace Sde.ConsoleGems.Menus
         public override void WriteMenu(IMenu menu)
         {
             var sb = new StringBuilder();
-            var title = Justify(menu.Title, TextJustification.Centre, console.WindowWidth);
-            console.WriteLine(title, ConsoleOutputType.MenuHeader);
+            var title = new AsciiArt(menu.Title);
+            console.WriteLine(title.ToString(), ConsoleOutputType.MenuHeader);
             var items = this.GetAllMenuItems(menu);
             var maxKeyWidth = items.Max(i => i.Key.Length);
             foreach (var menuItem in items)

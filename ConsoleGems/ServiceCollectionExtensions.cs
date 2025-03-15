@@ -68,7 +68,7 @@ namespace Sde.ConsoleGems
 
             if (options.MainMenu != null)
             {
-                services.UseMenus().AddMenu(options.MainMenu);
+                services.UseMenus(options.MenuWriter).AddMenu(options.MainMenu);
             }
 
             if (options.Prompters.Any())
@@ -158,9 +158,17 @@ namespace Sde.ConsoleGems
         /// <summary>
         /// Registers the necessary dependencies for a console application with menus.
         /// </summary>
-        private static IServiceCollection UseMenus(this IServiceCollection services)
+        private static IServiceCollection UseMenus(this IServiceCollection services, Type? menuWriterType = null)
         {
-            services.AddSingleton<IMenuWriter, MenuWriter>();
+            if (menuWriterType == null)
+            {
+                services.AddSingleton<IMenuWriter, MenuWriter>();
+            }
+            else
+            {
+                services.AddSingleton(typeof(IMenuWriter), menuWriterType);
+            }
+
             services.AddSingleton<IGlobalMenuItemsProvider, GlobalMenuItemsProvider>();
             services.AddCommands(typeof(GlobalMenuItemsProvider));
 
