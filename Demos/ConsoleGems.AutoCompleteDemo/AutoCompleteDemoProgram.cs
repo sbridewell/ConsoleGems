@@ -57,6 +57,8 @@ namespace Sde.ConsoleGems.AutoCompleteDemo
             var serviceProvider = serviceCollection.BuildServiceProvider();
             var demo = serviceProvider.GetRequiredService<AutoCompleteDemo>();
             demo.ChooseADrink();
+            Console.WriteLine("Press any key to close the window");
+            Console.ReadKey();
         }
     }
 }

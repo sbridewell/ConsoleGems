@@ -51,6 +51,8 @@ namespace Sde.ConsoleGems.MenusDemo
             var provider = services.BuildServiceProvider();
             var mainMenu = provider.GetRequiredService<MainMenu>();
             mainMenu.ShowCommand.Execute();
+            Console.WriteLine("Press any key to close the window");
+            Console.ReadKey();
         }
     }
 }

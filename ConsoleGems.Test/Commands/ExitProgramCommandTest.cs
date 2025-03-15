@@ -14,18 +14,20 @@ namespace Sde.ConsoleGems.Test.Commands
         /// Tests that the Execute method displays the correct console output
         /// and exits the program.
         /// </summary>
-        [Fact(Skip = "Test doesn't finish because Execute calls Environment.Exit(0)")]
+        [Fact]
         public void Execute_DisplaysCorrectConsoleOutputAndExits()
         {
             // Arrange
             var mockConsole = new Mock<IConsole>();
-            var command = new ExitProgramCommand(mockConsole.Object);
+            var applicationState = new ApplicationState();
+            var command = new ExitProgramCommand(mockConsole.Object, applicationState);
 
             // Act
             command.Execute();
 
             // Assert
             mockConsole.Verify(c => c.WriteLine("Bye!", ConsoleOutputType.Default), Times.Once);
+            applicationState.ExitCurrentMenu.Should().BeTrue();
         }
     }
 }
