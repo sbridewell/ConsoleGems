@@ -54,7 +54,7 @@ namespace Sde.ConsoleGems.Test.Menus
         }
 
         /// <summary>
-        /// Tests that the <see cref="MenuWriter.GetAllMenuItems(IMenu)"/>
+        /// Tests that the <see cref="AbstractMenuWriter.GetAllMenuItems(IMenu)"/>
         /// method returns the correct menu items.
         /// </summary>
         [Fact]
@@ -231,7 +231,7 @@ namespace Sde.ConsoleGems.Test.Menus
 
         /// <summary>
         /// Tests that when the supplied justification is not a member of the
-        /// <see cref="MenuWriter.TextJustification"/> enum, the correct
+        /// <see cref="AbstractMenuWriter.TextJustification"/> enum, the correct
         /// exception is thrown.
         /// </summary>
         [Fact]
@@ -280,7 +280,7 @@ namespace Sde.ConsoleGems.Test.Menus
 
         /// <summary>
         /// Class which allows unit tests to call the
-        /// <see cref="MenuWriter.Justify(string, MenuWriter.TextJustification, int)"/>
+        /// <see cref="AbstractMenuWriter.Justify(string, MenuWriter.TextJustification, int)"/>
         /// method.
         /// </summary>
         private class MenuWriterForTesting(
