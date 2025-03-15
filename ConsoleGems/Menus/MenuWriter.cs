@@ -100,7 +100,7 @@ namespace Sde.ConsoleGems.Menus
         /// </returns>
         protected static string Justify(string text, TextJustification justification, int availableWidth)
         {
-            // TODO: better formatting when text is long enough to wrap onto the next line?
+            // TODO: #10 better formatting of menus
             ArgumentNullException.ThrowIfNull(text);
             text = text.Trim();
             return justification switch

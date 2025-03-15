@@ -16,7 +16,6 @@ namespace Sde.ConsoleGems.Prompters
         /// <inheritdoc/>
         public bool? Prompt(string prompt, bool? defaultValue = null)
         {
-            // TODO: make validationMessage an optional parameter?
             var validationMessage = defaultValue == null
                 ? "{0} is not a valid value. Please enter true or false."
                 : "{0} is not a valid value. Please enter true, false or an empty string.";
