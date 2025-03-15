@@ -63,7 +63,7 @@ namespace Sde.ConsoleGems
                 services.AddSingleton<IAutoCompleter, AutoCompleter>();
                 services.AddSingleton(typeof(IAutoCompleteKeyPressMappings), options.AutoCompleteKeyPressMappings);
 
-                // TODO: a way in the options to specify a different IAutoCompleter implementation
+                // TODO: #8 a way in the options to specify a different IAutoCompleter implementation
             }
 
             if (options.MainMenu != null)
@@ -128,6 +128,8 @@ namespace Sde.ConsoleGems
             foreach (var dependency in dependencies)
             {
                 services.AddSingleton(dependency.ParameterType);
+
+                // TODO: #11 discover and register dependencies of the command
             }
 
             return services;
@@ -162,8 +164,9 @@ namespace Sde.ConsoleGems
             services.AddSingleton<IGlobalMenuItemsProvider, GlobalMenuItemsProvider>();
             services.AddCommands(typeof(GlobalMenuItemsProvider));
 
-            // TODO: Need to keep this for now because exit current menu is not a menu item in GlobalMenuItemsProvider
-            // instead it's added dynamically if the menu stack is greater than 1
+            // This command is registered here because it's not a menu item in
+            // GlobalMenuItemsProvider, instead it's added dynamically if the
+            // menu stack is greater than 1.
             services.AddSingleton<ExitCurrentMenuCommand>();
             return services;
         }

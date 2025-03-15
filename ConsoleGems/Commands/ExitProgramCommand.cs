@@ -17,7 +17,7 @@ namespace Sde.ConsoleGems.Commands
         {
             console.WriteLine("Bye!");
 
-            // TODO: Exit(0) is not testable. Consider refactoring to make it testable.
+            // TODO: #9 Exit(0) is not testable. Consider refactoring to make it testable.
             Environment.Exit(0);
         }
     }

@@ -26,8 +26,6 @@ namespace Sde.ConsoleGems.Commands
             while (!applicationState.ExitCurrentMenu)
             {
                 var userInput = autoCompleter.ReadLine(menuKeys, "Choose an option: ");
-
-                // TODO: trim and tolower in autoCompleteConsole.ReadLine based on flags parameter?
                 var userInputSanitised = userInput.Trim().ToLower();
                 var selectedItem = items
                     .SingleOrDefault(item => item.Key.Trim().Equals(

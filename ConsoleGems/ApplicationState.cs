@@ -20,24 +20,11 @@ namespace Sde.ConsoleGems
         public DirectoryInfo WorkingDirectory { get; set; }
             = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
 
-        // TODO: revisit this as part of the submenu / back solution
-
         /// <summary>
         /// Gets or sets the number of menus from the main menu to the
         /// menu the user is currently on.
         /// </summary>
         public int MenuDepth { get; set; } = -1;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether all menus should
-        /// show the items which are intended just to demonstrate features
-        /// of the ConsoleInfrastructure library.
-        /// </summary>
-        /// <remarks>
-        /// Probably best to set this to true in Program.cs if you want
-        /// the demo items to be displayed.
-        /// </remarks>
-        public bool ShowDemoMenuItems { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether the application should

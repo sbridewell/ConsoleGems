@@ -276,7 +276,7 @@ namespace Sde.ConsoleGems.Test.Menus
             public ShowMenuCommand ShowCommand => throw new NotImplementedException();
         }
 
-        // TODO: move text justification into a separate class and remove the need for MenuWriterForTesting
+        // TODO: #10 move text justification into a separate class and remove the need for MenuWriterForTesting
 
         /// <summary>
         /// Class which allows unit tests to call the
