@@ -27,6 +27,8 @@ namespace Sde.ConsoleGems.ColoursDemo
             var serviceProvider = services.BuildServiceProvider();
             var demo = serviceProvider.GetRequiredService<ColourfulConsoleDemo>();
             demo.DemonstrateColours();
+            Console.WriteLine("Press any key to close the window");
+            Console.ReadKey();
         }
     }
 }
