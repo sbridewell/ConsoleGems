@@ -1,7 +1,9 @@
 $coverageFilenames = Get-ChildItem -Path "..\..\ConsoleGems\ConsoleGems\TestResults" -Recurse -Filter "*.xml";
-$coverageFilenames | Format-List
-$coverageFileContent = [xml](Get-Content $coverageFilenames[0].FullName);
+$coverageFilenames | Format-List;
+$coverageFilename = $coverageFilenames[0].FullName;
+$coverageFileContent = Get-Content $coverageFilename);
 $coverageFileContent
+$coverageXml = [xml]$coverageFileContent;
 $methods = $coverageFileContent.GetElementsByTagName("Method");
 $methods | Format-List
 $failures = $methods | Where-Object {[int]$_.sequenceCoverage -lt 80 -or [int]$_.branchCoverage -lt 80};
