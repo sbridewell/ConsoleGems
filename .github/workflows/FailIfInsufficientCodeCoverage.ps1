@@ -1,3 +1,4 @@
+Write-Verbose "You are running in verbose mode";
 $ErrorActionPreference = 'Stop';
 $coverageFilenames = Get-ChildItem -Path "..\..\ConsoleGems\ConsoleGems\TestResults" -Recurse -Filter "*.xml";
 Write-Verbose ($coverageFilenames | Format-List | Out-String);
