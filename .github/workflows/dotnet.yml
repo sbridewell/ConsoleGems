@@ -80,4 +80,4 @@ jobs:
         path: coveragereport
 
     - name: Fail if code coverage is less than 80%
-      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -ErrorAction Stop
+      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose
