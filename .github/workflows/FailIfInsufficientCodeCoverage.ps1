@@ -1,7 +1,7 @@
 $coverageFilenames = Get-ChildItem -Path "..\..\ConsoleGems\ConsoleGems\TestResults" -Recurse -Filter "*.xml";
 $coverageFilenames | Format-List;
 $coverageFilename = $coverageFilenames[0].FullName;
-$coverageFileContent = Get-Content $coverageFilename);
+$coverageFileContent = Get-Content $coverageFilename;
 $coverageFileContent
 $coverageXml = [xml]$coverageFileContent;
 $methods = $coverageFileContent.GetElementsByTagName("Method");
