@@ -1,4 +1,4 @@
-$coverageFilename = Get-ChildItem -Path "..\..\ConsoleGems.Test\TestResults" -Recurse -Filter "*.xml";
+$coverageFilename = Get-ChildItem -Path "..\..\ConsoleGems\ConsoleGems.Test\TestResults" -Recurse -Filter "*.xml";
 $coverageFileContent = [xml](Get-Content $coverageFilename);
 $methods = $coverageFileContent.GetElementsByTagName("Method");
 $failures = $methods | Where-Object {[int]$_.sequenceCoverage -lt 80 -or [int]$_.branchCoverage -lt 80};
