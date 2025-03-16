@@ -1,7 +1,8 @@
 $coverageFilenames = Get-ChildItem -Path "..\..\ConsoleGems\ConsoleGems\TestResults" -Recurse -Filter "*.xml";
-$coverageFilenames[0].FullName | Format-List
+$coverageFilenames | Format-List
 $coverageFileContent = [xml](Get-Content $coverageFilenames[0].FullName);
 $methods = $coverageFileContent.GetElementsByTagName("Method");
+$methods | Format-List
 $failures = $methods | Where-Object {[int]$_.sequenceCoverage -lt 80 -or [int]$_.branchCoverage -lt 80};
 if ($failures.Count -gt 0) {
     Write-Output "The following methods have insufficient code coverage";
