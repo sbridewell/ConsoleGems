@@ -29,7 +29,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
       
-    - name: Run tests with code coverate
+    - name: Run tests with code coverage
       run: dotnet test --no-build --verbosity normal --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
     - name: Display test results directory
@@ -73,9 +73,6 @@ jobs:
         # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings
         #customSettings: # optional, default is 
 
-    - name: Directory listing
-      run: dir d:\a\
-      
     - name: Upload coverage report
       uses: actions/upload-artifact@v4.6.1
       with:
@@ -83,4 +80,4 @@ jobs:
         path: coveragereport
 
     - name: Fail if code coverage is less than 80%
-      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose
+      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1
