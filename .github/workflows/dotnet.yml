@@ -30,7 +30,7 @@ jobs:
       run: dotnet build --no-restore
       
     - name: Run tests with code coverate
-      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory .\\TestResults
+      run: dotnet test --no-build --verbosity normal --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
     - name: Display test results directory
       run: dir -r ./TestResults
@@ -83,4 +83,4 @@ jobs:
         path: coveragereport
 
     - name: Fail if code coverage is less than 80%
-      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1
+      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose
