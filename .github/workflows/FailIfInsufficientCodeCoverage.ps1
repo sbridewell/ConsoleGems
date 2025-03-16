@@ -8,7 +8,7 @@ $coverageXml = [xml]$coverageFileContent;
 $methods = $coverageXml.GetElementsByTagName("Method");
 $methodCount = ($methods | Measure-Object).Count;
 Write-Output "Found $methodCount methods";
-Write-Verbose ($methods | Format-List -Property name,sequenceCoverage,branchCoverage | Out-String);
+Write-Output ($methods | Format-List -Property name,sequenceCoverage,branchCoverage | Out-String);
 $failures = $methods | Where-Object {[int]$_.sequenceCoverage -lt 80 -or [int]$_.branchCoverage -lt 80};
 if ($failures.Count -gt 0) {
     Write-Output "The following methods have insufficient code coverage";
