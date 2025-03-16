@@ -5,6 +5,7 @@ $coverageFilename = $coverageFilenames[0].FullName;
 $coverageFileContent = Get-Content $coverageFilename;
 $coverageXml = [xml]$coverageFileContent;
 $methods = $coverageXml.GetElementsByTagName("Method");
+Write-Output "Found $methods.Count methods";
 Write-Verbose ($methods | Format-List -Property name,sequenceCoverage,branchCoverage | Out-String);
 $failures = $methods | Where-Object {[int]$_.sequenceCoverage -lt 80 -or [int]$_.branchCoverage -lt 80};
 if ($failures.Count -gt 0) {
