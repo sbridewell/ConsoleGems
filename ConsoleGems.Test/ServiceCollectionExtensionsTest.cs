@@ -245,6 +245,25 @@ namespace Sde.ConsoleGems.Test
             AssertService(provider, typeof(IGlobalMenuItemsProvider), typeof(GlobalMenuItemsProvider));
         }
 
+        /// <summary>
+        /// Tests that the correct exception is thrown when attempting to self-
+        /// register an interface without an implementation.
+        /// </summary>
+        [Fact]
+        public void AddSingletonInternal_SelfRegisterInterface_Throws()
+        {
+            // Arrange
+            var options = new ConsoleGemsOptions().UseMainMenu<IMenu>();
+
+            // Act
+            var action = () => BuildServiceProvider(options);
+
+            // Assert
+            var ex = action.Should().ThrowExactly<ArgumentException>().Which;
+            ex.Message.Should().Contain("Cannot register an interface without an implementation type");
+            ex.ParamName.Should().Be("serviceType");
+        }
+
         private static void AssertAutoCompleter(IServiceProvider serviceProvider)
         {
             AssertService(serviceProvider, typeof(IAutoCompleter), typeof(AutoCompleter));

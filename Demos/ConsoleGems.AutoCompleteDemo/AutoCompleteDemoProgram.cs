@@ -47,8 +47,9 @@ namespace Sde.ConsoleGems.AutoCompleteDemo
             // the third auto-completes names of directories in the My
             // Documents folder.
             options.UseAutoComplete(autoCompleteKeyPressMappings)
-                .AddPrompter<IFilePrompter, FilePrompter>()
-                .AddPrompter<IDirectoryPrompter, DirectoryPrompter>();
+                //.AddPrompter<IFilePrompter, FilePrompter>()
+                //.AddPrompter<IDirectoryPrompter, DirectoryPrompter>();
+                .UseBuiltInPrompters();
 
             var serviceCollection = new ServiceCollection()
                 .AddConsoleGems(options)

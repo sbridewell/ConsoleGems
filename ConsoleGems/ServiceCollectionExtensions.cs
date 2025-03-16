@@ -38,45 +38,43 @@ namespace Sde.ConsoleGems
         {
             if (options.UseColours)
             {
-                services.AddSingleton<IConsole, ColourfulConsole>();
-                services.AddSingleton<IConsoleColourManager, ConsoleColourManager>();
+                services.AddSingletonInternal<IConsole, ColourfulConsole>();
+                services.AddSingletonInternal<IConsoleColourManager, ConsoleColourManager>();
             }
             else
             {
-                services.AddSingleton<IConsole, Console>();
+                services.AddSingletonInternal<IConsole, Console>();
             }
 
             services.AddSingleton<ApplicationState>();
-
-            if (options.SharedMenuItemsProvider == null)
-            {
-                services.AddSingleton<ISharedMenuItemsProvider, EmptySharedMenuItemsProvider>();
-            }
-            else
-            {
-                services.AddSingleton(typeof(ISharedMenuItemsProvider), options.SharedMenuItemsProvider);
-                services.AddCommands(options.SharedMenuItemsProvider);
-            }
-
-            if (options.AutoCompleteKeyPressMappings != null)
-            {
-                services.AddSingleton<IAutoCompleter, AutoCompleter>();
-                services.AddSingleton(typeof(IAutoCompleteKeyPressMappings), options.AutoCompleteKeyPressMappings);
-
-                // TODO: #8 a way in the options to specify a different IAutoCompleter implementation
-            }
-
-            if (options.MainMenu != null)
-            {
-                services.UseMenus(options.MenuWriter).AddMenu(options.MainMenu);
-            }
 
             if (options.Prompters.Any())
             {
                 foreach (var prompter in options.Prompters)
                 {
-                    services.AddSingleton(prompter.Key, prompter.Value);
+                    services.AddSingletonInternal(prompter.Key, prompter.Value);
                 }
+            }
+
+            if (options.SharedMenuItemsProvider == null)
+            {
+                services.AddSingletonInternal<ISharedMenuItemsProvider, EmptySharedMenuItemsProvider>();
+            }
+            else
+            {
+                services.AddSingletonInternal<ISharedMenuItemsProvider>(options.SharedMenuItemsProvider);
+                services.AddCommands(options.SharedMenuItemsProvider);
+            }
+
+            if (options.AutoCompleteKeyPressMappings != null)
+            {
+                services.AddSingletonInternal<IAutoCompleter, AutoCompleter>();
+                services.AddSingleton(typeof(IAutoCompleteKeyPressMappings), options.AutoCompleteKeyPressMappings);
+            }
+
+            if (options.MainMenu != null)
+            {
+                services.UseMenus(options.MenuWriter).AddMenu(options.MainMenu);
             }
 
             return services;
@@ -109,7 +107,7 @@ namespace Sde.ConsoleGems
         /// <returns>The service collection.</returns>
         private static IServiceCollection AddMenu(this IServiceCollection services, Type menuType)
         {
-            services.AddSingleton(menuType);
+            services.AddSingletonInternal(menuType);
             services.AddCommands(menuType);
             services.AddChildMenus(menuType);
             return services;
@@ -121,13 +119,15 @@ namespace Sde.ConsoleGems
         /// <param name="services">Service collection.</param>
         /// <param name="dependentType">The type which depends on some commands.</param>
         /// <returns>The service collection.</returns>
-        private static IServiceCollection AddCommands(this IServiceCollection services, Type dependentType)
+        private static IServiceCollection AddCommands(
+            this IServiceCollection services,
+            Type dependentType)
         {
             var constructorParams = GetSoleConstructorParameters(dependentType);
             var dependencies = constructorParams.Where(p => p.ParameterType.IsAssignableTo(typeof(ICommand)));
             foreach (var dependency in dependencies)
             {
-                services.AddSingleton(dependency.ParameterType);
+                services.AddSingletonInternal(dependency.ParameterType);
 
                 // TODO: #11 discover and register dependencies of the command
             }
@@ -143,7 +143,9 @@ namespace Sde.ConsoleGems
         /// The menu type for which to add the child menus.
         /// </param>
         /// <returns>The service collection.</returns>
-        private static IServiceCollection AddChildMenus(this IServiceCollection services, Type menuType)
+        private static IServiceCollection AddChildMenus(
+            this IServiceCollection services,
+            Type menuType)
         {
             var constructorParams = GetSoleConstructorParameters(menuType);
             var childMenus = constructorParams.Where(p => p.ParameterType.IsAssignableTo(typeof(IMenu)));
@@ -158,25 +160,89 @@ namespace Sde.ConsoleGems
         /// <summary>
         /// Registers the necessary dependencies for a console application with menus.
         /// </summary>
-        private static IServiceCollection UseMenus(this IServiceCollection services, Type? menuWriterType = null)
+        private static IServiceCollection UseMenus(
+            this IServiceCollection services,
+            Type? menuWriterType = null)
         {
             if (menuWriterType == null)
             {
-                services.AddSingleton<IMenuWriter, MenuWriter>();
+                services.AddSingletonInternal<IMenuWriter, MenuWriter>();
             }
             else
             {
-                services.AddSingleton(typeof(IMenuWriter), menuWriterType);
+                services.AddSingletonInternal(typeof(IMenuWriter), menuWriterType);
             }
 
-            services.AddSingleton<IGlobalMenuItemsProvider, GlobalMenuItemsProvider>();
+            services.AddSingletonInternal<IGlobalMenuItemsProvider, GlobalMenuItemsProvider>();
             services.AddCommands(typeof(GlobalMenuItemsProvider));
 
             // This command is registered here because it's not a menu item in
             // GlobalMenuItemsProvider, instead it's added dynamically if the
             // menu stack is greater than 1.
-            services.AddSingleton<ExitCurrentMenuCommand>();
+            services.AddSingletonInternal<ExitCurrentMenuCommand>();
             return services;
+        }
+
+        private static IServiceCollection AddSingletonInternal<TServiceType>(
+            this IServiceCollection services)
+            where TServiceType : class
+        {
+            services.AddSingletonInternal(typeof(TServiceType));
+            return services;
+        }
+
+        private static IServiceCollection AddSingletonInternal<TServiceType>(
+            this IServiceCollection services,
+            Type implementationType)
+            where TServiceType : class
+        {
+            services.AddSingletonInternal(typeof(TServiceType), implementationType);
+            return services;
+        }
+
+        private static IServiceCollection AddSingletonInternal(
+            this IServiceCollection services,
+            Type serviceType)
+        {
+            if (serviceType.IsInterface)
+            {
+                var msg = "Cannot register an interface without an implementation type";
+                throw new ArgumentException(msg, nameof(serviceType));
+            }
+
+            if (!services.IsAlreadyRegistered(serviceType))
+            {
+                services.AddSingleton(serviceType);
+            }
+
+            return services;
+        }
+
+        private static IServiceCollection AddSingletonInternal<TServiceType, TImplementationType>(
+            this IServiceCollection services)
+        {
+            services.AddSingletonInternal(typeof(TServiceType), typeof(TImplementationType));
+            return services;
+        }
+
+        private static IServiceCollection AddSingletonInternal(
+            this IServiceCollection services,
+            Type serviceType,
+            Type implementationType)
+        {
+            if (!services.IsAlreadyRegistered(serviceType))
+            {
+                services.AddSingleton(serviceType, implementationType);
+            }
+
+            return services;
+        }
+
+        private static bool IsAlreadyRegistered(
+            this IServiceCollection services,
+            Type serviceType)
+        {
+            return services.Any(services => services.ServiceType.IsAssignableFrom(serviceType));
         }
     }
 }
