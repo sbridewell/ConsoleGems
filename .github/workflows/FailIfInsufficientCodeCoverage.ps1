@@ -13,4 +13,6 @@ if ($failures.Count -gt 0) {
         $_ | Select-Object -Property name,sequenceCoverage,branchCoverage
     } | Format-List
     throw "Insufficient code coverage";
+} else {
+    Write-Output "Congratulations, your code coverage looks good :-)";
 }
