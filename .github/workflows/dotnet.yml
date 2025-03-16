@@ -79,5 +79,8 @@ jobs:
         name: coverage-report
         path: coveragereport
 
+    - name: List directory contents
+      run: dir
+      
     - name: Fail if code coverage is less than 80%
-      run: powershell.exe -File FailIfInsufficientCodeCoverage.ps1
+      run: powershell.exe -ExecutionPolicy Bypass -File FailIfInsufficientCodeCoverage.ps1
