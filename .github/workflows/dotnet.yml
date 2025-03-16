@@ -1,7 +1,7 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+name: Build, run unit tests and check code coverage
 permissions: read-all
 
 on:
@@ -78,3 +78,6 @@ jobs:
       with:
         name: coverage-report
         path: coveragereport
+
+    - name: Fail if code coverage is less than 80%
+      run: powershell.exe -File FailIfInsufficientCodeCoverage.ps1
