@@ -33,7 +33,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
     - name: Directory listing with xml files
-      run: Get-ChildItem -Path "*..\..\..\.xml" -Recurse -Depth 3
+      run: Get-ChildItem -Path "..\..\..\*.xml" -Recurse -Depth 3
 
     - name: Report code coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
