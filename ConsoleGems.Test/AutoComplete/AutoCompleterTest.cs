@@ -539,6 +539,70 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         }
 
         /// <summary>
+        /// Tests that when the user input is replaced with a shorter string,
+        /// the replacement text is displayed with trailing spaces to pad it
+        /// out to the length of the replaced text, to ensure that all of the
+        /// replaced text is overwritten.
+        /// </summary>
+        [Fact]
+        public void ReplaceUserInputWith_ReplacementTextIsShorterThanUserInput_ReplacementTextIsPaddedWithSpaces()
+        {
+            // Arrange
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockConsole.Object);
+            var userInput = new List<ConsoleKeyInfoWrapper>
+            {
+                new () { Character = '1', Key = ConsoleKey.NoName },
+                new () { Character = '2', Key = ConsoleKey.NoName },
+                new () { Character = '3', Key = ConsoleKey.NoName },
+                new () { Character = ' ', Key = ConsoleKey.Enter },
+            };
+            this.SendKeysToConsole(userInput);
+            autoCompleter.ReadLine(this.suggestions, string.Empty);
+
+            // Act
+            autoCompleter.ReplaceUserInputWith("12");
+
+            // Assert
+            autoCompleter.UserInput.Should().Be("12");
+            this.mockConsole.Verify(
+                mockConsole => mockConsole.Write("12 ", ConsoleOutputType.UserInput),
+                Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that when the user input is replaced with a string which
+        /// is not shorter than the user input, no extra spaces are displayed.
+        /// </summary>
+        [Fact]
+        public void ReplaceUserInputWith_ReplacementTextNotShorterThanUserInput_ReplacementTextIsNotPadded()
+        {
+            // Arrange
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockConsole.Object);
+            var userInput = new List<ConsoleKeyInfoWrapper>
+            {
+                new () { Character = '1', Key = ConsoleKey.NoName },
+                new () { Character = '2', Key = ConsoleKey.NoName },
+                new () { Character = '3', Key = ConsoleKey.NoName },
+                new () { Character = ' ', Key = ConsoleKey.Enter },
+            };
+            this.SendKeysToConsole(userInput);
+            autoCompleter.ReadLine(this.suggestions, string.Empty);
+
+            // Act
+            autoCompleter.ReplaceUserInputWith("abc");
+
+            // Assert
+            autoCompleter.UserInput.Should().Be("abc");
+            this.mockConsole.Verify(
+                mockConsole => mockConsole.Write("abc", ConsoleOutputType.UserInput),
+                Times.Once);
+        }
+
+        /// <summary>
         /// Tests that when the cursor is at the end of user input,
         /// the MoveCursorRight method does not move the cursor.
         /// </summary>
