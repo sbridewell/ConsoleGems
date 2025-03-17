@@ -32,8 +32,8 @@ jobs:
     - name: Run tests with code coverage
       run: dotnet test --no-build --verbosity normal --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
-    - name: Display test results directory
-      run: dir -r ./TestResults
+    - name: Directory listing with xml files
+      run: Get-ChildItem -Path "*.xml" -Recurse -Depth 3
 
     - name: Report code coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
