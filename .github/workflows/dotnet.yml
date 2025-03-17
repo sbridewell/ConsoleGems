@@ -25,6 +25,9 @@ jobs:
         
     - name: Restore dependencies
       run: dotnet restore
+
+    - name: Directory structure
+      run: Get-ChildItem -Recurse -Directory
       
     - name: Build
       run: dotnet build --no-restore
