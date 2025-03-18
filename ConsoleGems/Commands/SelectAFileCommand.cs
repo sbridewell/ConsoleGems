@@ -7,7 +7,7 @@ namespace Sde.ConsoleGems.Commands.Demo
 {
     /// <summary>
     /// Command which prompts the user to select a file in the current
-    /// working directory, just to demonstrate the use of FileSystemConsole.
+    /// working directory.
     /// </summary>
     public class SelectAFileCommand(
         IFilePrompter filePrompter,

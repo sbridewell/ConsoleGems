@@ -5,6 +5,8 @@
 
 namespace Sde.ConsoleGems.Test.Commands
 {
+    using Sde.ConsoleGems.Test.Menus;
+
     /// <summary>
     /// Unit tests for the <see cref="ShowMenuCommand"/> class.
     /// </summary>
@@ -15,7 +17,6 @@ namespace Sde.ConsoleGems.Test.Commands
         private readonly Mock<IConsole> mockConsole = new ();
         private readonly Mock<ICommand> mockCommand1 = new ();
         private readonly ApplicationState applicationState = new ();
-        private readonly ThrowExceptionCommand throwExceptionCommand = new ();
         private ExitCurrentMenuCommand? exitCurrentMenuCommand;
         private MenuForTesting? menu;
 
@@ -111,9 +112,10 @@ namespace Sde.ConsoleGems.Test.Commands
         {
             // Arrange
             this.Setup();
+            this.mockCommand1.Setup(command => command.Execute()).Throws(new Exception("Test exception"));
             this.mockAutoCompleter
                 .SetupSequence(ac => ac.ReadLine(It.IsAny<List<string>>(), It.IsAny<string>()))
-                .Returns("throw")
+                .Returns("mock1")
                 .Returns("back");
             var command = this.InstantiateCommand();
             var expectedSuggestions = this.menu!.MenuItems.Select(item => item.Key).ToList();
@@ -126,8 +128,7 @@ namespace Sde.ConsoleGems.Test.Commands
             this.applicationState.MenuDepth.Should().Be(0);
             this.mockConsoleMenuWriter.Verify(writer => writer.WriteMenu(this.menu), Times.Exactly(2));
             this.mockAutoCompleter.Verify(ac => ac.ReadLine(expectedSuggestions, expectedPrompt), Times.Exactly(2));
-            this.mockConsole.Verify(m => m.WriteLine(It.IsAny<string>(), ConsoleOutputType.Error), Times.Once);
-            this.mockCommand1.Verify(command => command.Execute(), Times.Never);
+            this.mockConsole.Verify(m => m.WriteLine(It.Is<string>(s => s.Contains("Test exception")), ConsoleOutputType.Error), Times.Once);
         }
 
         /// <summary>
@@ -166,7 +167,6 @@ namespace Sde.ConsoleGems.Test.Commands
                 this.mockConsole.Object,
                 this.mockCommand1.Object,
                 this.exitCurrentMenuCommand,
-                this.throwExceptionCommand,
                 this.applicationState);
             this.mockConsoleMenuWriter.Setup(writer => writer.GetAllMenuItems(It.IsAny<IMenu>())).Returns(this.menu.MenuItems);
             var command = new ShowMenuCommand(
@@ -176,35 +176,6 @@ namespace Sde.ConsoleGems.Test.Commands
                 this.mockConsole.Object,
                 this.applicationState);
             return command;
-        }
-
-        private class MenuForTesting(
-            IAutoCompleter autoCompleter,
-            IMenuWriter consoleMenuWriter,
-            IConsole console,
-            ICommand command1,
-            ICommand exitCurrentMenuCommand,
-            ICommand throwExceptionCommand,
-            ApplicationState applicationState)
-            : IMenu
-        {
-            public string Title => "Menu for testing";
-
-            public string Description => "A menu which is implemented for the purpose of a unit test.";
-
-            public List<MenuItem> MenuItems =>
-            [
-                new () { Key = "mock1", Description = "Mock command 1", Command = command1 },
-                new () { Key = "throw", Description = "Throw an exception", Command = throwExceptionCommand },
-                new () { Key = "back", Description = "Return to previous menu", Command = exitCurrentMenuCommand },
-            ];
-
-            public ShowMenuCommand ShowCommand => new (
-                this,
-                autoCompleter,
-                consoleMenuWriter,
-                console,
-                applicationState);
         }
     }
 }

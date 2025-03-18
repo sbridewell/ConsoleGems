@@ -3,8 +3,12 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.ConsoleGems.Commands.Demo
+namespace Sde.ConsoleGems.MenusDemo
 {
+    using Sde.ConsoleGems.AutoComplete;
+    using Sde.ConsoleGems.Commands;
+    using Sde.ConsoleGems.Consoles;
+
     /// <summary>
     /// Command to demonstrate autocomplete behaviour in console apps.
     /// </summary>

@@ -15,7 +15,7 @@ namespace Sde.ConsoleGems.MenusDemo
         /// <inheritdoc/>
         public List<MenuItem> MenuItems =>
         [
-            new () { Key = "greet", Description = "Display a greeting", Command = greetingCommand },
+            new () { Key = "greet", Description = "Display a greeting (this is a shared command)", Command = greetingCommand },
         ];
     }
 }
