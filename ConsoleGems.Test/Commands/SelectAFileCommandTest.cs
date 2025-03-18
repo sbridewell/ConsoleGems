@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.ConsoleGems.Test.Commands.Demo
+namespace Sde.ConsoleGems.Test.Commands
 {
     /// <summary>
     /// Unit tests for the <see cref="SelectAFileCommand"/> class.

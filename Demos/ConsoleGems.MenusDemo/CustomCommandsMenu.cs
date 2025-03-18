@@ -18,7 +18,9 @@ namespace Sde.ConsoleGems.MenusDemo
         IMenuWriter menuWriter,
         IConsole console,
         ApplicationState applicationState,
-        RollDiceCommand rollDiceCommand)
+        RollDiceCommand rollDiceCommand,
+        GetADrinkCommand getADrinkCommand,
+        ThrowExceptionCommand throwExceptionCommand)
         : AbstractMenu(autoCompleter, menuWriter, console, applicationState), IMenu
     {
         /// <inheritdoc/>
@@ -31,6 +33,8 @@ namespace Sde.ConsoleGems.MenusDemo
         public override List<MenuItem> MenuItems =>
         [
             new () { Key = "dice", Description = "Simulate rolling dice", Command = rollDiceCommand },
+            new () { Key = "drink", Description = "Get a drink", Command = getADrinkCommand },
+            new () { Key = "throw", Description = "Throw an exception", Command = throwExceptionCommand },
         ];
     }
 }
