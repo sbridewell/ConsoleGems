@@ -16,7 +16,7 @@ namespace Sde.ConsoleGems.Commands
         public void Execute()
         {
             console.WriteLine("Bye!");
-            applicationState.ExitCurrentMenu = true;
+            applicationState.ExitProgram = true;
         }
     }
 }

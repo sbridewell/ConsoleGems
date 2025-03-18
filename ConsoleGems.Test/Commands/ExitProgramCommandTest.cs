@@ -20,6 +20,8 @@ namespace Sde.ConsoleGems.Test.Commands
             // Arrange
             var mockConsole = new Mock<IConsole>();
             var applicationState = new ApplicationState();
+            applicationState.ExitCurrentMenu = false;
+            applicationState.ExitProgram = false;
             var command = new ExitProgramCommand(mockConsole.Object, applicationState);
 
             // Act
@@ -27,7 +29,8 @@ namespace Sde.ConsoleGems.Test.Commands
 
             // Assert
             mockConsole.Verify(c => c.WriteLine("Bye!", ConsoleOutputType.Default), Times.Once);
-            applicationState.ExitCurrentMenu.Should().BeTrue();
+            applicationState.ExitCurrentMenu.Should().BeFalse();
+            applicationState.ExitProgram.Should().BeTrue();
         }
     }
 }

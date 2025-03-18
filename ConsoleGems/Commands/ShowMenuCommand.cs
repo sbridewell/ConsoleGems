@@ -19,11 +19,16 @@ namespace Sde.ConsoleGems.Commands
         /// <inheritdoc/>
         public void Execute()
         {
+            if (applicationState.ExitProgram)
+            {
+                return;
+            }
+
             applicationState.MenuDepth++;
             menuWriter.WriteMenu(menu);
             var items = menuWriter.GetAllMenuItems(menu);
             var menuKeys = items.Select(item => item.Key.Trim().ToLower()).ToList();
-            while (!applicationState.ExitCurrentMenu)
+            while (!applicationState.ExitCurrentMenu && !applicationState.ExitProgram)
             {
                 var userInput = autoCompleter.ReadLine(menuKeys, "Choose an option: ");
                 var userInputSanitised = userInput.Trim().ToLower();
@@ -47,7 +52,7 @@ namespace Sde.ConsoleGems.Commands
                         console.WriteLine($"Unhandled exception: {ex}", ConsoleOutputType.Error);
                     }
 
-                    if (!applicationState.ExitCurrentMenu)
+                    if (!applicationState.ExitCurrentMenu && !applicationState.ExitProgram)
                     {
                         menuWriter.WriteMenu(menu);
                     }

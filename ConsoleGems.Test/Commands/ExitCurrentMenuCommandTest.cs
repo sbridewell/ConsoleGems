@@ -25,6 +25,7 @@ namespace Sde.ConsoleGems.Test.Commands
             var applicationState = new ApplicationState();
             applicationState.MenuDepth = 3;
             applicationState.ExitCurrentMenu = false;
+            applicationState.ExitProgram = false;
             var command = new ExitCurrentMenuCommand(applicationState);
 
             // Act
@@ -33,6 +34,7 @@ namespace Sde.ConsoleGems.Test.Commands
             // Assert
             applicationState.MenuDepth.Should().Be(2);
             applicationState.ExitCurrentMenu.Should().BeTrue();
+            applicationState.ExitProgram.Should().BeFalse();
         }
     }
 }

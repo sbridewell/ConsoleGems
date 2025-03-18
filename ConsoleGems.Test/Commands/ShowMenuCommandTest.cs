@@ -130,6 +130,27 @@ namespace Sde.ConsoleGems.Test.Commands
             this.mockCommand1.Verify(command => command.Execute(), Times.Never);
         }
 
+        /// <summary>
+        /// Tests that the Execute method does nothing if the application state's
+        /// ExitProgram property is set to true.
+        /// </summary>
+        [Fact]
+        public void Execute_ExitProgramTrue_ReturnsWithoutDoingAnything()
+        {
+            // Arrange
+            this.Setup();
+            this.applicationState.ExitProgram = true;
+            var command = this.InstantiateCommand();
+
+            // Act
+            command.Execute();
+
+            // Assert
+            this.mockConsoleMenuWriter.Verify(writer => writer.WriteMenu(It.IsAny<IMenu>()), Times.Never);
+            this.mockAutoCompleter.Verify(ac => ac.ReadLine(It.IsAny<List<string>>(), It.IsAny<string>()), Times.Never);
+            this.mockCommand1.Verify(command => command.Execute(), Times.Never);
+        }
+
         private void Setup()
         {
             this.applicationState.ExitCurrentMenu = false;
