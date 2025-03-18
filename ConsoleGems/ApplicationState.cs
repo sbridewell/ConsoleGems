@@ -31,5 +31,10 @@ namespace Sde.ConsoleGems
         /// exit the current menu and return to the previous menu.
         /// </summary>
         public bool ExitCurrentMenu { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the application should exit.
+        /// </summary>
+        public bool ExitProgram { get; set; } = false;
     }
 }
