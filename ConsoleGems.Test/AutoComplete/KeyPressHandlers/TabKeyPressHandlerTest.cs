@@ -13,12 +13,14 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         /// <inheritdoc/>
         public override IAutoCompleteKeyPressHandler HandlerUnderTest => new TabKeyPressHandler();
 
+        // TODO: #25 Use Mock<IAutoCompleter> to remove dependency on AutoCompleter in tests
+
         /// <summary>
         /// Tests that if text has already been entered which does not match any
-        /// of the suggestions, the tab key does nothing.
+        /// of the suggestions, the tab key does not change the user input.
         /// </summary>
         [Fact]
-        public void Handle_WithNonMatchingMatchTextAlreadyEntered_DoesNothing()
+        public void Handle_WithNonMatchingMatchTextAlreadyEntered_UserInputIsNotChanged()
         {
             // Arrange
             var handler = this.HandlerUnderTest;

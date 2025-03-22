@@ -17,6 +17,7 @@ global using System.Threading.Tasks;
 global using Sde.ConsoleGems;
 global using Sde.ConsoleGems.AutoComplete;
 global using Sde.ConsoleGems.AutoComplete.KeyPressHandlers;
+global using Sde.ConsoleGems.AutoComplete.Matchers;
 global using Sde.ConsoleGems.Commands;
 global using Sde.ConsoleGems.Consoles;
 global using Sde.ConsoleGems.Menus;

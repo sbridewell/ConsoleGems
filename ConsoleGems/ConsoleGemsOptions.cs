@@ -6,6 +6,7 @@
 namespace Sde.ConsoleGems
 {
     using Sde.ConsoleGems.AutoComplete;
+    using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Consoles;
 
     /// <summary>
@@ -24,14 +25,8 @@ namespace Sde.ConsoleGems
         /// Mappings of <see cref="ConsoleOutputType"/> values to colours
         /// can be overridden using the properties of <see cref="ConsoleColours"/>.
         /// </summary>
+        [ExcludeFromCodeCoverage(Justification = "Simple get/set property")]
         public bool UseColours { get; set; }
-
-        /// <summary>
-        /// Gets the key press mappings to be used during auto-complete
-        /// operations.
-        /// Returns null if auto-complete is not enabled.
-        /// </summary>
-        public IAutoCompleteKeyPressMappings? AutoCompleteKeyPressMappings { get; private set; }
 
         /// <summary>
         /// Gets the type of the main menu for the application.
@@ -52,34 +47,41 @@ namespace Sde.ConsoleGems
         public Type? SharedMenuItemsProvider { get; private set; }
 
         /// <summary>
+        /// Gets the <see cref="AutoCompleteOptions"/> instance which
+        /// controls the behaviour of the auto-complete feature.
+        /// </summary>
+        public AutoCompleteOptions? AutoCompleteOptions { get; private set; }
+
+        /// <summary>
         /// Gets the prompters that the application can use.
         /// </summary>
         public Dictionary<Type, Type> Prompters { get; } = new ();
 
         /// <summary>
-        /// Adds auto-complete support to the application using the
-        /// default key press mappings.
-        /// This will register an <see cref="IAutoCompleter"/> with dependency
-        /// injection.
+        /// Configures ConsoleGems to use auto-complete.
         /// </summary>
-        /// <returns>The updated options.</returns>
-        public ConsoleGemsOptions UseAutoComplete()
-        {
-            this.UseAutoComplete(new AutoCompleteKeyPressDefaultMappings());
-            return this;
-        }
-
-        /// <summary>
-        /// Adds auto-complete support to the application using the
-        /// supplied key press mappings.
-        /// </summary>
-        /// <param name="autoCompleteKeyPressMappings">
-        /// The key press mappings to use.
+        /// <param name="configure">
+        /// An action which returns an <see cref="AutoCompleteOptions"/> instance
+        /// defining the auto-complete configuration.
+        /// If none is supplied, ConsoleGems will use a default configuration.
         /// </param>
-        /// <returns>The update options.</returns>
-        public ConsoleGemsOptions UseAutoComplete(IAutoCompleteKeyPressMappings autoCompleteKeyPressMappings)
+        /// <returns>
+        /// The updated options.
+        /// </returns>
+        public ConsoleGemsOptions UseAutoComplete(Action<AutoCompleteOptions>? configure = default)
         {
-            this.AutoCompleteKeyPressMappings = autoCompleteKeyPressMappings;
+            this.AutoCompleteOptions = new AutoCompleteOptions();
+            if (configure == null)
+            {
+                this.AutoCompleteOptions
+                    .UseKeyPressMappings(new AutoCompleteKeyPressDefaultMappings())
+                    .UseMatcher<StartsWithMatcher>();
+            }
+            else
+            {
+                configure(this.AutoCompleteOptions);
+            }
+
             return this;
         }
 
@@ -92,7 +94,7 @@ namespace Sde.ConsoleGems
             where TMenu : IMenu
         {
             this.MainMenu = typeof(TMenu);
-            if (this.AutoCompleteKeyPressMappings == null)
+            if (this.AutoCompleteOptions == null)
             {
                 this.UseAutoComplete();
             }
@@ -146,9 +148,9 @@ namespace Sde.ConsoleGems
             where TService : IPrompter
             where TImplementation : class, TService
         {
-            if (this.AutoCompleteKeyPressMappings == null)
+            if (this.AutoCompleteOptions == null)
             {
-                this.UseAutoComplete(new AutoCompleteKeyPressDefaultMappings());
+                this.UseAutoComplete();
             }
 
             this.Prompters.Add(typeof(TService), typeof(TImplementation));

@@ -11,6 +11,7 @@ global using Moq;
 
 global using Sde.ConsoleGems.AutoComplete;
 global using Sde.ConsoleGems.AutoComplete.KeyPressHandlers;
+global using Sde.ConsoleGems.AutoComplete.Matchers;
 global using Sde.ConsoleGems.Commands;
 global using Sde.ConsoleGems.Commands.Demo;
 global using Sde.ConsoleGems.Consoles;
