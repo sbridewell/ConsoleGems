@@ -1,4 +1,4 @@
-﻿// <copyright file="StartsWithMatcherTest.cs" company="Simon Bridewell">
+﻿// <copyright file="ContainsMatcherTest.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell.
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
@@ -6,12 +6,12 @@
 namespace Sde.ConsoleGems.Test.AutoComplete.Matchers
 {
     /// <summary>
-    /// Tests for the <see cref="StartsWithMatcher"/> class.
+    /// Unit tests for the <see cref="ContainsMatcher"/> class.
     /// </summary>
-    public class StartsWithMatcherTest : MatcherTestBase
+    public class ContainsMatcherTest : MatcherTestBase
     {
         /// <inheritdoc/>
-        public override IAutoCompleteMatcher MatcherUnderTest => new StartsWithMatcher();
+        public override IAutoCompleteMatcher MatcherUnderTest => new ContainsMatcher();
 
         /// <summary>
         /// Tests that the index of the expected suggestion is returned when
@@ -22,17 +22,16 @@ namespace Sde.ConsoleGems.Test.AutoComplete.Matchers
         /// The suggestion which should be returned.
         /// </param>
         [Theory]
-        [InlineData("", "ant")]
         [InlineData("a", "ant")]
         [InlineData("an", "ant")]
         [InlineData("ant", "ant")]
         [InlineData("ante", "antelope")]
-        [InlineData("anti", "anticipate")]
-        [InlineData("anto", "ant")]
+        [InlineData("tel", "antelope")]
+        [InlineData("ici", "anticipate")]
         public void FindMatch_ReturnsCorrectMatch(string userInput, string expectedSuggestion)
         {
             // Arrange
-            var matcher = new StartsWithMatcher();
+            var matcher = new ContainsMatcher();
 
             // Act
             var matchIndex = matcher.FindMatch(userInput, this.Suggestions);
