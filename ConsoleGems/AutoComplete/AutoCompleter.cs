@@ -73,8 +73,10 @@ namespace Sde.ConsoleGems.AutoComplete
         /// <inheritdoc/>
         public void InsertUserInput(string text)
         {
-            this.UserInputSB.Insert(this.CursorPositionWithinUserInput, text);
-            this.CursorPositionWithinUserInput += text.Length;
+            foreach (var character in text)
+            {
+                this.InsertUserInput(character);
+            }
         }
 
         /// <inheritdoc/>
