@@ -240,8 +240,6 @@ namespace Sde.ConsoleGems.Test.AutoComplete
 
         #region public test methods
 
-        // TODO: #24 increase code coverage of AutoCompleter when the integration test is skipped
-
         /// <summary>
         /// Tests that supplying a sequence of keypresses to the console results in
         /// the correct user input being returned.
@@ -251,8 +249,9 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         /// <param name="keys">The keypresses to send to the console.</param>
         /// <param name="clipboardText">Text to be pasted from the clipboard.</param>
         /// <param name="expectedOutput">The expected user input.</param>
-        ////[Theory(Skip = "re-enable once unit tests are written for matchers and autocompleteoptions")]
+        //[Theory(Skip = "mark this as an integration test, skip it when measuring code coverage but still check that it passes")]
         [Theory]
+        [Trait("Category", "Integration")]
         [MemberData(nameof(SpecialKeysTestData))]
         [SuppressMessage(
             "Minor Code Smell",
@@ -289,6 +288,80 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 actualOutput.Should().Be(expectedOutput);
             }
         }
+
+        #region property tests
+
+        /// <summary>
+        /// Tests that the CursorIsAtHome property returns true when the cursor is at the home position.
+        /// </summary>
+        [Fact]
+        public void CursorIsAtHome_CursorIsAtHome_ReturnsTrue()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.MoveCursorToEnd();
+
+            // Act
+            autoCompleter.MoveCursorToHome();
+
+            // Assert
+            autoCompleter.CursorIsAtHome.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// Tests that the CursorIsAtHome property returns false when the cursor is not at the home position.
+        /// </summary>
+        [Fact]
+        public void CursorIsAtHome_CursorIsNotAtHome_ReturnsFalse()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.MoveCursorToHome();
+
+            // Act
+            autoCompleter.MoveCursorRight();
+
+            // Assert
+            autoCompleter.CursorIsAtHome.Should().BeFalse();
+        }
+
+        /// <summary>
+        /// Tests that the CursorIsAtEnd property returns true when the cursor is at the end of the user input.
+        /// </summary>
+        [Fact]
+        public void CursorIsAtEnd_CursorIsAtEnd_ReturnsTrue()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.MoveCursorToHome();
+
+            // Act
+            autoCompleter.MoveCursorToEnd();
+
+            // Assert
+            autoCompleter.CursorIsAtEnd.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// Tests that the CursorIsAtEnd property returns false when the cursor is not at the end of the user input.
+        /// </summary>
+        [Fact]
+        public void CursorIsAtEnd_CursorIsNotAtEnd_ReturnsFalse()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.MoveCursorToEnd();
+
+            // Act
+            autoCompleter.MoveCursorLeft();
+
+            // Assert
+            autoCompleter.CursorIsAtEnd.Should().BeFalse();
+        }
+
+        #endregion
+
+        #region ReadLine tests
 
         /// <summary>
         /// Tests that if the user input is long enough to wrap onto a second
@@ -438,130 +511,126 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             this.mockConsole.VerifySet(m => m.CursorVisible = true, Times.Exactly(4));
         }
 
+        #endregion
+
+        #region tests for updating the user input
+
         /// <summary>
-        /// Tests that the MoveCursorLeft method moves the cursor
-        /// left by 1 character.
+        /// Tests that when the cursor is not at the end of the user input,
+        /// the InsertUserInput method inserts text at the current cursor
+        /// position and the cursor is moved to the end of the inserted
+        /// text.
         /// </summary>
         [Fact]
-        public void MoveCursorLeft_1Character_MovesCursorBy1Character()
+        public void InsertUserInput_CursorIsNotAtEnd_InsertsUserInput()
         {
             // Arrange
-            this.mockConsole.Setup(m => m.CursorLeft).Returns(3);
-            var autoCompleter = new AutoCompleter(
-                new AutoCompleteKeyPressDefaultMappings(),
-                this.mockMatcher.Object,
-                this.mockConsole.Object);
-            var userInput = new List<ConsoleKeyInfoWrapper>
-            {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = '2', Key = ConsoleKey.NoName },
-                new () { Character = '3', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
-            };
-            this.SendKeysToConsole(userInput);
-            autoCompleter.ReadLine(this.suggestions, string.Empty);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.MoveCursorLeft();
 
             // Act
-            autoCompleter.MoveCursorLeft(1);
+            autoCompleter.InsertUserInput("abc");
 
             // Assert
-            this.mockConsole.VerifySet(m => m.CursorLeft = 2, Times.Once);
-            this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
+            autoCompleter.UserInput.Should().Be("12abc3");
+            autoCompleter.CursorPositionWithinUserInput.Should().Be(5);
         }
 
         /// <summary>
-        /// Tests that when the cursor is already at the home position,
-        /// the MoveCursorLeft method does not move the cursor.
+        /// Tests that when the cursor is at the end of the user input, the
+        /// InsertUserInput method appends text to the end of the user input
+        /// and the cursor is moved to the end of the inserted text.
         /// </summary>
         [Fact]
-        public void MoveCursorLeft_CursorIsAtHome_DoesNotMoveCursor()
+        public void InsertUserInput_CursorIsAtEnd_AppendsUserInput()
         {
             // Arrange
-            var autoCompleter = new AutoCompleter(
-                new AutoCompleteKeyPressDefaultMappings(),
-                this.mockMatcher.Object,
-                this.mockConsole.Object);
-            var userInput = new List<ConsoleKeyInfoWrapper>
-            {
-                new () { Character = ' ', Key = ConsoleKey.Enter },
-            };
-            this.SendKeysToConsole(userInput);
-            autoCompleter.ReadLine(this.suggestions, string.Empty);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
 
             // Act
-            autoCompleter.MoveCursorLeft(1);
+            autoCompleter.InsertUserInput("abc");
 
             // Assert
-            this.mockConsole.VerifySet(m => m.CursorLeft = It.IsAny<int>(), Times.Never);
-            this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
+            autoCompleter.UserInput.Should().Be("123abc");
+            autoCompleter.CursorPositionWithinUserInput.Should().Be(6);
         }
 
         /// <summary>
-        /// Tests that when the cursor is in column zero, the
-        /// MoveCursorLeft method moves the cursor to the end
-        /// of the previous line.
+        /// Tests that when the cursor is not at the end of the user input, the
+        /// RemoveCurrentCharacterFromUserInput method removes the character at
+        /// the current cursor position, and the cursor remains in the same
+        /// position.
         /// </summary>
         [Fact]
-        public void MoveCursorLeft_AtColumnZero_MovesCursorToPreviousLine()
+        public void RemoveCurrentCharacterFromUserInput_CursorIsNotAtEnd_RemovesCurrentCharacter()
         {
             // Arrange
-            this.mockConsole.Setup(m => m.CursorLeft).Returns(0);
-            this.mockConsole.Setup(m => m.CursorTop).Returns(1);
-            this.mockConsole.Setup(m => m.WindowWidth).Returns(4);
-            var autoCompleter = new AutoCompleter(
-                new AutoCompleteKeyPressDefaultMappings(),
-                this.mockMatcher.Object,
-                this.mockConsole.Object);
-            var userInput = new List<ConsoleKeyInfoWrapper>
-            {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = '2', Key = ConsoleKey.NoName },
-                new () { Character = '3', Key = ConsoleKey.NoName },
-                new () { Character = '4', Key = ConsoleKey.NoName },
-                new () { Character = '5', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
-            };
-            this.SendKeysToConsole(userInput);
-            autoCompleter.ReadLine(this.suggestions, string.Empty);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.MoveCursorLeft();
 
             // Act
-            autoCompleter.MoveCursorLeft(1);
+            autoCompleter.RemoveCurrentCharacterFromUserInput();
 
             // Assert
-            this.mockConsole.VerifySet(m => m.CursorLeft = 3, Times.Once);
-            this.mockConsole.VerifySet(m => m.CursorTop = 0, Times.Once);
+            autoCompleter.UserInput.Should().Be("12");
+            autoCompleter.CursorPositionWithinUserInput.Should().Be(2);
         }
 
         /// <summary>
-        /// Tests that the MoveCursorRight method moves the cursor
-        /// right by 1 character.
+        /// Tests that when the cursor is at the end of the user input, the
+        /// RemoveCurrentCharacterFromUserInput method does nothing.
         /// </summary>
         [Fact]
-        public void MoveCursorRight_1Character_MovesCursorBy1Character()
+        public void RemoveCurrentCharacterFromUserInput_CursorIsAtEnd_DoesNothing()
         {
             // Arrange
-            this.mockConsole.Setup(m => m.CursorLeft).Returns(2);
-            var autoCompleter = new AutoCompleter(
-                new AutoCompleteKeyPressDefaultMappings(),
-                this.mockMatcher.Object,
-                this.mockConsole.Object);
-            var userInput = new List<ConsoleKeyInfoWrapper>
-            {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = '2', Key = ConsoleKey.NoName },
-                new () { Character = '3', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
-            };
-            this.SendKeysToConsole(userInput);
-            autoCompleter.ReadLine(this.suggestions, string.Empty);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+
+            // Act
+            autoCompleter.RemoveCurrentCharacterFromUserInput();
+
+            // Assert
+            autoCompleter.UserInput.Should().Be("123");
+            autoCompleter.CursorPositionWithinUserInput.Should().Be(3);
+        }
+
+        /// <summary>
+        /// Tests that when the cursor is not at the home position, the
+        /// RemovePreviousCharacterFromUserInput method removes the character immediately
+        /// before the cursor position and moves the cursor left by one position.
+        /// </summary>
+        [Fact]
+        public void RemovePreviousCharacterFromUserInput_CursorIsNotAtHome_RemovesPreviousCharacter()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.MoveCursorLeft();
+
+            // Act
+            autoCompleter.RemovePreviousCharacterFromUserInput();
+
+            // Assert
+            autoCompleter.UserInput.Should().Be("13");
+            autoCompleter.CursorPositionWithinUserInput.Should().Be(1);
+        }
+
+        /// <summary>
+        /// Tests that when the cursor is at the home position, the
+        /// RemovePreviousCharacterFromUserInput method does nothing.
+        /// </summary>
+        [Fact]
+        public void RemovePreviousCharacterFromUserInput_CursorIsAtHome_DoesNothing()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
             autoCompleter.MoveCursorToHome();
 
             // Act
-            autoCompleter.MoveCursorRight(1);
+            autoCompleter.RemovePreviousCharacterFromUserInput();
 
             // Assert
-            this.mockConsole.VerifySet(m => m.CursorLeft = 3, Times.Once);
-            this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
+            autoCompleter.UserInput.Should().Be("123");
+            autoCompleter.CursorPositionWithinUserInput.Should().Be(0);
         }
 
         /// <summary>
@@ -630,12 +699,35 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 Times.Once);
         }
 
+        #endregion
+
+        #region tests for moving the cursor
+
         /// <summary>
-        /// Tests that when the cursor is at the end of user input,
-        /// the MoveCursorRight method does not move the cursor.
+        /// Tests that the MoveCursorLeft method moves the cursor
+        /// left by 1 character.
         /// </summary>
         [Fact]
-        public void MoveCursorRight_CursorIsAtEnd_DoesNotMoveCursor()
+        public void MoveCursorLeft_1Character_MovesCursorBy1Character()
+        {
+            // Arrange
+            this.mockConsole.Setup(m => m.CursorLeft).Returns(3);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+
+            // Act
+            autoCompleter.MoveCursorLeft(1);
+
+            // Assert
+            this.mockConsole.VerifySet(m => m.CursorLeft = 2, Times.Once);
+            this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
+        }
+
+        /// <summary>
+        /// Tests that when the cursor is already at the home position,
+        /// the MoveCursorLeft method does not move the cursor.
+        /// </summary>
+        [Fact]
+        public void MoveCursorLeft_CursorIsAtHome_DoesNotMoveCursor()
         {
             // Arrange
             var autoCompleter = new AutoCompleter(
@@ -648,6 +740,66 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             };
             this.SendKeysToConsole(userInput);
             autoCompleter.ReadLine(this.suggestions, string.Empty);
+
+            // Act
+            autoCompleter.MoveCursorLeft(1);
+
+            // Assert
+            this.mockConsole.VerifySet(m => m.CursorLeft = It.IsAny<int>(), Times.Never);
+            this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
+        }
+
+        /// <summary>
+        /// Tests that when the cursor is in column zero, the
+        /// MoveCursorLeft method moves the cursor to the end
+        /// of the previous line.
+        /// </summary>
+        [Fact]
+        public void MoveCursorLeft_AtColumnZero_MovesCursorToPreviousLine()
+        {
+            // Arrange
+            this.mockConsole.Setup(m => m.CursorLeft).Returns(0);
+            this.mockConsole.Setup(m => m.CursorTop).Returns(1);
+            this.mockConsole.Setup(m => m.WindowWidth).Returns(4);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+
+            // Act
+            autoCompleter.MoveCursorLeft(1);
+
+            // Assert
+            this.mockConsole.VerifySet(m => m.CursorLeft = 3, Times.Once);
+            this.mockConsole.VerifySet(m => m.CursorTop = 0, Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that the MoveCursorRight method moves the cursor
+        /// right by 1 character.
+        /// </summary>
+        [Fact]
+        public void MoveCursorRight_1Character_MovesCursorBy1Character()
+        {
+            // Arrange
+            this.mockConsole.Setup(m => m.CursorLeft).Returns(2);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.MoveCursorToHome();
+
+            // Act
+            autoCompleter.MoveCursorRight(1);
+
+            // Assert
+            this.mockConsole.VerifySet(m => m.CursorLeft = 3, Times.Once);
+            this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
+        }
+
+        /// <summary>
+        /// Tests that when the cursor is at the end of user input,
+        /// the MoveCursorRight method does not move the cursor.
+        /// </summary>
+        [Fact]
+        public void MoveCursorRight_CursorIsAtEnd_DoesNotMoveCursor()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
 
             // Act
             autoCompleter.MoveCursorRight(1);
@@ -670,21 +822,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             this.mockConsole.Setup(m => m.CursorTop).Returns(0);
             this.mockConsole.Setup(m => m.WindowWidth).Returns(4);
             this.mockConsole.Setup(m => m.WindowHeight).Returns(2);
-            var autoCompleter = new AutoCompleter(
-                new AutoCompleteKeyPressDefaultMappings(),
-                this.mockMatcher.Object,
-                this.mockConsole.Object);
-            var userInput = new List<ConsoleKeyInfoWrapper>
-            {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = '2', Key = ConsoleKey.NoName },
-                new () { Character = '3', Key = ConsoleKey.NoName },
-                new () { Character = '4', Key = ConsoleKey.NoName },
-                new () { Character = '5', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
-            };
-            this.SendKeysToConsole(userInput);
-            autoCompleter.ReadLine(this.suggestions, string.Empty);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
             autoCompleter.MoveCursorToHome();
 
             // Act
@@ -704,23 +842,13 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(1);
-            var autoCompleter = new AutoCompleter(
-                new AutoCompleteKeyPressDefaultMappings(),
-                this.mockMatcher.Object,
-                this.mockConsole.Object);
-            var userInput = new List<ConsoleKeyInfoWrapper>
-            {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
-            };
-            this.SendKeysToConsole(userInput);
-            autoCompleter.ReadLine(this.suggestions, string.Empty);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
 
             // Act
             autoCompleter.MoveCursorToHome();
 
             // Assert
-            this.mockConsole.VerifySet(m => m.CursorLeft = 0, Times.Once);
+            this.mockConsole.VerifySet(m => m.CursorLeft = 0, Times.Exactly(autoCompleter.UserInput.Length));
             this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
         }
 
@@ -762,19 +890,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(2);
-            var autoCompleter = new AutoCompleter(
-                new AutoCompleteKeyPressDefaultMappings(),
-                this.mockMatcher.Object,
-                this.mockConsole.Object);
-            var userInput = new List<ConsoleKeyInfoWrapper>
-            {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = '2', Key = ConsoleKey.NoName },
-                new () { Character = '3', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
-            };
-            this.SendKeysToConsole(userInput);
-            autoCompleter.ReadLine(this.suggestions, string.Empty);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
             autoCompleter.MoveCursorLeft();
 
             // Act
@@ -795,6 +911,197 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(2);
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+
+            // Act
+            autoCompleter.MoveCursorToEnd();
+
+            // Assert
+            this.mockConsole.VerifySet(m => m.CursorLeft = It.IsAny<int>(), Times.Never);
+            this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
+        }
+
+        #endregion
+
+        #region tests for working with suggestions
+
+        /// <summary>
+        /// Tests that the SelectFirstMatchingSuggestion method calls the
+        /// <see cref="IAutoCompleteMatcher"/> implementation.
+        /// </summary>
+        [Fact]
+        public void SelectFirstMatchingSuggestion_CallsTheMatcher()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+
+            // Act
+            autoCompleter.SelectFirstMatchingSuggestion();
+
+            // Assert
+            this.mockMatcher.Verify(
+                m => m.FindMatch(
+                    "123",
+                    this.suggestions,
+                    StringComparison.InvariantCultureIgnoreCase),
+                Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that when no suggestion is selected, the
+        /// SelectFirstMatchingSuggestion method selects the first suggestion.
+        /// </summary>
+        [Fact]
+        public void SelectNextSuggestion_NoSuggestionSelected_SelectsFirstSuggestion()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+
+            // Act
+            autoCompleter.SelectNextSuggestion();
+
+            // Assert
+            autoCompleter.GetCurrentSuggestion().Should().Be(this.suggestions[0]);
+        }
+
+        /// <summary>
+        /// Tests that when the first suggestion is already selected, the
+        /// SelectNextSuggestion method selects the second suggestion.
+        /// </summary>
+        [Fact]
+        public void SelectNextSuggestion_OnFirstSuggestion_SelectsSecondSuggestion()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.SelectFirstMatchingSuggestion();
+
+            // Act
+            autoCompleter.SelectNextSuggestion();
+
+            // Assert
+            autoCompleter.GetCurrentSuggestion().Should().Be(this.suggestions[1]);
+        }
+
+        /// <summary>
+        /// Tests that when the final suggestion is already selected, the
+        /// SelectNextSuggestion method selects the first suggestion.
+        /// </summary>
+        [Fact]
+        public void SelectNextSuggestion_OnFinalSuggestion_SelectsFirstSuggestion()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            for (var i = 0; i < this.suggestions.Count; i++)
+            {
+                autoCompleter.SelectNextSuggestion();
+            }
+
+            // Act
+            autoCompleter.SelectNextSuggestion();
+
+            // Assert
+            autoCompleter.GetCurrentSuggestion().Should().Be(this.suggestions[0]);
+        }
+
+        /// <summary>
+        /// Tests that when the final suggestion is already selected, the
+        /// SelectPreviousSuggestion method selects the penultimate suggestion.
+        /// </summary>
+        [Fact]
+        public void SelectPreviousSuggestion_OnFinalSuggestion_SelectsPenultimateSuggestion()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            for (var i = 0; i < this.suggestions.Count; i++)
+            {
+                autoCompleter.SelectNextSuggestion();
+            }
+
+            // Act
+            autoCompleter.SelectPreviousSuggestion();
+
+            // Assert
+            autoCompleter.GetCurrentSuggestion().Should().Be(this.suggestions[this.suggestions.Count - 2]);
+        }
+
+        /// <summary>
+        /// Tests that when the first suggestion is already selected, the
+        /// SelectPreviousSelection method selects the final suggestion.
+        /// </summary>
+        [Fact]
+        public void SelectPreviousSuggestion_OnFirstSuggestion_SelectsFinalSuggestion()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.SelectNextSuggestion();
+
+            // Act
+            autoCompleter.SelectPreviousSuggestion();
+
+            // Assert
+            autoCompleter.GetCurrentSuggestion().Should().Be(this.suggestions[this.suggestions.Count - 1]);
+        }
+
+        /// <summary>
+        /// Tests that the SelectSuggestion method selects the current suggestion.
+        /// </summary>
+        [Fact]
+        public void GetCurrentSuggestion_ReturnsCurrentSuggestion()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            foreach (var expectedSuggestion in this.suggestions)
+            {
+                // Act
+                autoCompleter.SelectNextSuggestion();
+                var actualSuggestion = autoCompleter.GetCurrentSuggestion();
+
+                // Assert
+                actualSuggestion.Should().Be(expectedSuggestion);
+            }
+        }
+
+        /// <summary>
+        /// Tests that when no suggestion is selected, the GetCurrentSuggestion
+        /// method returns null.
+        /// </summary>
+        [Fact]
+        public void GetCurrentSuggestion_NoSuggestionSelected_ReturnsNull()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+
+            // Act
+            var actualSuggestion = autoCompleter.GetCurrentSuggestion();
+
+            // Assert
+            actualSuggestion.Should().BeNull();
+        }
+
+        /// <summary>
+        /// Tests that when the suggestions list is empty, the GetCurrentSuggestion
+        /// method returns null.
+        /// </summary>
+        [Fact]
+        public void GetCurrentSuggestion_AutoCompleterHasNoSuggestions_ReturnsNull()
+        {
+            // Arrange
+            var autoCompleter = this.CreateAutoCompleterWithUserInput();
+            autoCompleter.Suggestions.Clear();
+
+            // Act
+            var actualSuggestion = autoCompleter.GetCurrentSuggestion();
+
+            // Assert
+            actualSuggestion.Should().BeNull();
+        }
+
+        #endregion
+
+        #endregion
+
+        private AutoCompleter CreateAutoCompleterWithUserInput()
+        {
             var autoCompleter = new AutoCompleter(
                 new AutoCompleteKeyPressDefaultMappings(),
                 this.mockMatcher.Object,
@@ -808,16 +1115,8 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             };
             this.SendKeysToConsole(userInput);
             autoCompleter.ReadLine(this.suggestions, string.Empty);
-
-            // Act
-            autoCompleter.MoveCursorToEnd();
-
-            // Assert
-            this.mockConsole.VerifySet(m => m.CursorLeft = It.IsAny<int>(), Times.Never);
-            this.mockConsole.VerifySet(m => m.CursorTop = It.IsAny<int>(), Times.Never);
+            return autoCompleter;
         }
-
-        #endregion
 
         private void SendKeysToConsole(IEnumerable<ConsoleKeyInfoWrapper> keys)
         {
