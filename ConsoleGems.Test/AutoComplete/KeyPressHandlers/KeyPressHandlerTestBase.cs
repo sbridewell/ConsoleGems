@@ -24,15 +24,6 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         /// </remarks>
         protected Action<bool> RewriteUserInput { get; } = (preserveCursorPosition) => { };
 
-        /////// <summary>
-        /////// Gets a dummy implementation of the rewriteUserInput action.
-        /////// </summary>
-        /////// <remarks>
-        /////// This is temporary until we can remove the call to RewriteUserInput.
-        /////// </remarks>
-        ////protected Action<bool> RewriteUserInput { get; } = (preserveCursorPosition) =>
-        ////    throw new InvalidOperationException("Need to remove call to RewriteUserinput");
-
         /// <summary>
         /// Gets some suggestions which can be used by autocomplete.
         /// </summary>
@@ -98,8 +89,9 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
             var suggestions = withSuggestions ? this.Suggestions : new ();
             var mockConsole = new Mock<IConsole>();
             var mockMappings = new Mock<IAutoCompleteKeyPressMappings>();
+            var matcher = new StartsWithMatcher();
             mockMappings.Setup(m => m.GetHandler(It.IsAny<ConsoleKey>())).Returns(this.HandlerUnderTest);
-            var autoCompleter = new AutoCompleter(mockMappings.Object, mockConsole.Object);
+            var autoCompleter = new AutoCompleter(mockMappings.Object, matcher, mockConsole.Object);
             autoCompleter.Suggestions.AddRange(suggestions);
             autoCompleter.InsertUserInput(enteredText);
             return autoCompleter;

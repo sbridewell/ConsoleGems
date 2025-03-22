@@ -141,7 +141,8 @@ namespace Sde.ConsoleGems.Test
             var mappings = new AutoCompleteKeyPressDefaultMappings();
             mappings.Mappings.Add(ConsoleKey.Q, new QKeyPressHandler());
             var options = new ConsoleGemsOptions()
-                .UseAutoComplete(mappings);
+                .UseAutoComplete(options => options
+                    .UseKeyPressMappings(mappings));
 
             // Act
             var provider = BuildServiceProvider(options);

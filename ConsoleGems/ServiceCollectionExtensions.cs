@@ -7,6 +7,7 @@ namespace Sde.ConsoleGems
 {
     using System.Reflection;
     using Microsoft.Extensions.DependencyInjection;
+    using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
 
@@ -66,10 +67,15 @@ namespace Sde.ConsoleGems
                 services.AddCommands(options.SharedMenuItemsProvider);
             }
 
-            if (options.AutoCompleteKeyPressMappings != null)
+            if (options.AutoCompleteOptions != null)
             {
                 services.AddSingletonInternal<IAutoCompleter, AutoCompleter>();
-                services.AddSingleton(typeof(IAutoCompleteKeyPressMappings), options.AutoCompleteKeyPressMappings);
+                services.AddSingleton(
+                    typeof(IAutoCompleteKeyPressMappings),
+                    options.AutoCompleteOptions.KeyPressMappings ?? new AutoCompleteKeyPressDefaultMappings());
+                services.AddSingleton(
+                    typeof(IAutoCompleteMatcher),
+                    options.AutoCompleteOptions.Matcher ?? typeof(StartsWithMatcher));
             }
 
             if (options.MainMenu != null)

@@ -7,6 +7,7 @@ namespace Sde.ConsoleGems.AutoCompleteDemo
 {
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems.AutoComplete;
+    using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Prompters;
 
     /// <summary>
@@ -46,7 +47,10 @@ namespace Sde.ConsoleGems.AutoCompleteDemo
             // completes names of files in the My Documents folder, and
             // the third auto-completes names of directories in the My
             // Documents folder.
-            options.UseAutoComplete(autoCompleteKeyPressMappings)
+            options.UseAutoComplete(
+                autoCompleteOptions => autoCompleteOptions
+                    .UseKeyPressMappings(autoCompleteKeyPressMappings)
+                    .UseMatcher<StartsWithMatcher>())
                 .UseBuiltInPrompters();
 
             var serviceCollection = new ServiceCollection()

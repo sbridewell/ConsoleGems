@@ -16,6 +16,7 @@ namespace Sde.ConsoleGems.AutoComplete
     /// </remarks>
     public class AutoCompleter(
         IAutoCompleteKeyPressMappings autoCompleteKeyPressMappings,
+        IAutoCompleteMatcher matcher,
         IConsole console)
         : IAutoCompleter
     {
@@ -237,9 +238,7 @@ namespace Sde.ConsoleGems.AutoComplete
         public void SelectFirstMatchingSuggestion()
         {
             this.currentSuggestionIndex
-                = this.Suggestions.FindIndex(
-                    item => item != this.UserInput
-                    && item.StartsWith(this.UserInput, true, CultureInfo.InvariantCulture));
+                = matcher.FindMatch(this.UserInput, this.Suggestions);
         }
 
         /// <inheritdoc/>
@@ -267,7 +266,7 @@ namespace Sde.ConsoleGems.AutoComplete
         /// <inheritdoc/>
         public string? GetCurrentSuggestion()
         {
-            if (this.currentSuggestionIndex == -1)
+            if (this.currentSuggestionIndex == -1 || !this.Suggestions.Any())
             {
                 return null;
             }

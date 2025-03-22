@@ -11,6 +11,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
     public class AutoCompleterTest
     {
         private readonly Mock<IConsole> mockConsole = new ();
+        private readonly Mock<IAutoCompleteMatcher> mockMatcher = new ();
         private readonly DummyKeyPressMappings dummyAutoCompleteKeyPressMappings = new ();
 
         private readonly List<string> suggestions =
@@ -239,6 +240,8 @@ namespace Sde.ConsoleGems.Test.AutoComplete
 
         #region public test methods
 
+        // TODO: #24 increase code coverage of AutoCompleter when the integration test is skipped
+
         /// <summary>
         /// Tests that supplying a sequence of keypresses to the console results in
         /// the correct user input being returned.
@@ -248,6 +251,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         /// <param name="keys">The keypresses to send to the console.</param>
         /// <param name="clipboardText">Text to be pasted from the clipboard.</param>
         /// <param name="expectedOutput">The expected user input.</param>
+        ////[Theory(Skip = "re-enable once unit tests are written for matchers and autocompleteoptions")]
         [Theory]
         [MemberData(nameof(SpecialKeysTestData))]
         [SuppressMessage(
@@ -275,7 +279,8 @@ namespace Sde.ConsoleGems.Test.AutoComplete
 
                 this.SendKeysToConsole(keys);
                 var keyPressMappings = new AutoCompleteKeyPressDefaultMappings();
-                var autoCompleter = new AutoCompleter(keyPressMappings, this.mockConsole.Object);
+                var matcher = new StartsWithMatcher();
+                var autoCompleter = new AutoCompleter(keyPressMappings, matcher, this.mockConsole.Object);
 
                 // Act
                 var actualOutput = autoCompleter.ReadLine(this.suggestions, "Type something: ");
@@ -305,7 +310,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 new () { Character = ' ', Key = ConsoleKey.Enter },
             };
             var expectedOutput = "67890"; // last keypress has not been ignored
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             this.SendKeysToConsole(userInput);
 
             // Act
@@ -330,7 +338,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 new ('q', ConsoleKey.Q),
                 new (' ', ConsoleKey.Enter),
             };
-            var autoCompleter = new AutoCompleter(this.dummyAutoCompleteKeyPressMappings, this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                this.dummyAutoCompleteKeyPressMappings,
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var prompt = "What is your command? "; // note trailing space
             this.SendKeysToConsole(keys);
 
@@ -376,7 +387,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             // Arrange
             this.mockConsole.Setup(m => m.WindowWidth).Returns(100);
             var keyPressMappings = this.dummyAutoCompleteKeyPressMappings;
-            var autoCompleter = new AutoCompleter(keyPressMappings, this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(keyPressMappings, this.mockMatcher.Object, this.mockConsole.Object);
             var prompt = "What is the meaning of life? ";
             var userInput = new List<ConsoleKeyInfoWrapper> { new () { Character = ' ', Key = ConsoleKey.Enter } };
             this.SendKeysToConsole(userInput);
@@ -399,7 +410,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             this.mockConsole.Setup(c => c.WindowWidth).Returns(consoleWidth);
             var prompt = "Who watches the watcher? ";
 
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = 's', Key = ConsoleKey.NoName },
@@ -433,7 +447,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(3);
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = '1', Key = ConsoleKey.NoName },
@@ -460,7 +477,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         public void MoveCursorLeft_CursorIsAtHome_DoesNotMoveCursor()
         {
             // Arrange
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = ' ', Key = ConsoleKey.Enter },
@@ -488,7 +508,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             this.mockConsole.Setup(m => m.CursorLeft).Returns(0);
             this.mockConsole.Setup(m => m.CursorTop).Returns(1);
             this.mockConsole.Setup(m => m.WindowWidth).Returns(4);
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = '1', Key = ConsoleKey.NoName },
@@ -518,7 +541,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(2);
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = '1', Key = ConsoleKey.NoName },
@@ -550,6 +576,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             // Arrange
             var autoCompleter = new AutoCompleter(
                 new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
                 this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
@@ -581,6 +608,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             // Arrange
             var autoCompleter = new AutoCompleter(
                 new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
                 this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
@@ -610,7 +638,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         public void MoveCursorRight_CursorIsAtEnd_DoesNotMoveCursor()
         {
             // Arrange
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = ' ', Key = ConsoleKey.Enter },
@@ -639,7 +670,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             this.mockConsole.Setup(m => m.CursorTop).Returns(0);
             this.mockConsole.Setup(m => m.WindowWidth).Returns(4);
             this.mockConsole.Setup(m => m.WindowHeight).Returns(2);
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = '1', Key = ConsoleKey.NoName },
@@ -670,7 +704,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(1);
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = '1', Key = ConsoleKey.NoName },
@@ -696,7 +733,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(0);
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = ' ', Key = ConsoleKey.Enter },
@@ -722,7 +762,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(2);
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = '1', Key = ConsoleKey.NoName },
@@ -752,7 +795,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         {
             // Arrange
             this.mockConsole.Setup(m => m.CursorLeft).Returns(2);
-            var autoCompleter = new AutoCompleter(new AutoCompleteKeyPressDefaultMappings(), this.mockConsole.Object);
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                this.mockMatcher.Object,
+                this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
                 new () { Character = '1', Key = ConsoleKey.NoName },
