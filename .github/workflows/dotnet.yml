@@ -32,8 +32,8 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
       
-    - name: Run tests with code coverage
-      run: dotnet test --no-build --verbosity normal --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+    - name: Run tests with code coverage but skip integration tests
+      run: dotnet test --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
     - name: Display test results directory
       run: dir -r ./TestResults
@@ -84,3 +84,6 @@ jobs:
 
     - name: Fail if code coverage is less than 80%
       run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose
+
+    - name: Run integration tests
+      run: dotnet test --no-build --verbosity normal --filter "Category=Integration"
