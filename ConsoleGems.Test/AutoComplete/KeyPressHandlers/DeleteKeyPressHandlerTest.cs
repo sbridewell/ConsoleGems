@@ -22,17 +22,16 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.SetupGet(m => m.CursorIsAtEnd).Returns(true);
             var deleteKeyPress = CreateKey(ConsoleKey.Delete);
 
             // Act
-            handler.Handle(deleteKeyPress, autoCompleter);
+            handler.Handle(deleteKeyPress, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(enteredText.Length);
+            mockAutoCompleter.Verify(m => m.RemoveCurrentCharacterFromUserInput(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectNoSuggestion(), Times.Never);
         }
 
         /// <summary>
@@ -45,18 +44,15 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            autoCompleter.MoveCursorToHome();
-            autoCompleter.MoveCursorRight(3);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
             var deleteKeyPress = CreateKey(ConsoleKey.Delete);
 
             // Act
-            handler.Handle(deleteKeyPress, autoCompleter);
+            handler.Handle(deleteKeyPress, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be("12356");
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(3);
+            mockAutoCompleter.Verify(m => m.RemoveCurrentCharacterFromUserInput(), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectNoSuggestion(), Times.Once);
         }
     }
 }
