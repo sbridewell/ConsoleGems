@@ -249,7 +249,6 @@ namespace Sde.ConsoleGems.Test.AutoComplete
         /// <param name="keys">The keypresses to send to the console.</param>
         /// <param name="clipboardText">Text to be pasted from the clipboard.</param>
         /// <param name="expectedOutput">The expected user input.</param>
-        //[Theory(Skip = "mark this as an integration test, skip it when measuring code coverage but still check that it passes")]
         [Theory]
         [Trait("Category", "Integration")]
         [MemberData(nameof(SpecialKeysTestData))]

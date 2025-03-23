@@ -84,17 +84,14 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         /// Defaults to false.
         /// </param>
         /// <returns>The requested <see cref="AutoCompleter"/> instance.</returns>
-        protected AutoCompleter CreateAutoCompleter(string enteredText, bool withSuggestions = false)
+        protected IAutoCompleter CreateAutoCompleter(string enteredText, bool withSuggestions = false)
         {
             var suggestions = withSuggestions ? this.Suggestions : new ();
-            var mockConsole = new Mock<IConsole>();
             var mockMappings = new Mock<IAutoCompleteKeyPressMappings>();
-            var matcher = new StartsWithMatcher();
             mockMappings.Setup(m => m.GetHandler(It.IsAny<ConsoleKey>())).Returns(this.HandlerUnderTest);
-            var autoCompleter = new AutoCompleter(mockMappings.Object, matcher, mockConsole.Object);
-            autoCompleter.Suggestions.AddRange(suggestions);
-            autoCompleter.InsertUserInput(enteredText);
-            return autoCompleter;
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.Suggestions).Returns(suggestions);
+            return mockAutoCompleter.Object;
         }
     }
 }

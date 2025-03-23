@@ -24,15 +24,17 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText, true);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
             var keyInfo = CreateKey(ConsoleKey.Tab);
 
             // Act
-            handler.Handle(keyInfo, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
+            mockAutoCompleter.Verify(m => m.SelectFirstMatchingSuggestion(), Times.Exactly(1));
+            mockAutoCompleter.Verify(m => m.SelectNextSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectPreviousSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.ReplaceUserInputWith(It.IsAny<string>()), Times.Never);
         }
 
         /// <summary>
@@ -43,15 +45,18 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = string.Empty;
-            var autoCompleter = this.CreateAutoCompleter(enteredText, false);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.GetCurrentSuggestion()).Returns((string?)null);
             var keyInfo = CreateKey(ConsoleKey.Tab);
 
             // Act
-            handler.Handle(keyInfo, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
+            mockAutoCompleter.Verify(m => m.SelectFirstMatchingSuggestion(), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectNextSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectPreviousSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.ReplaceUserInputWith(It.IsAny<string>()), Times.Never);
         }
 
         /// <summary>
@@ -64,16 +69,18 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
             // Arrange
             var handler = this.HandlerUnderTest;
             var enteredText = string.Empty;
-            var autoCompleter = this.CreateAutoCompleter(enteredText, true);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.UserInput).Returns(enteredText);
+            mockAutoCompleter.Setup(m => m.Suggestions).Returns(this.Suggestions);
             var keyInfo = CreateKey(ConsoleKey.Tab);
-            var expectedSuggestion = this.Suggestions[0];
 
             // Act
-            handler.Handle(keyInfo, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(this.Suggestions[0]);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(expectedSuggestion.Length);
+            mockAutoCompleter.Verify(m => m.SelectFirstMatchingSuggestion(), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectNextSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectPreviousSuggestion(), Times.Never);
         }
 
         /// <summary>
@@ -85,16 +92,18 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             var handler = this.HandlerUnderTest;
             var enteredText = string.Empty;
-            var autoCompleter = this.CreateAutoCompleter(enteredText, true);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.UserInput).Returns(enteredText);
+            mockAutoCompleter.Setup(m => m.Suggestions).Returns(this.Suggestions);
             var keyInfo = CreateKey(ConsoleKey.Tab, shift: true);
-            var expectedSuggestion = this.Suggestions[0];
 
             // Act
-            handler.Handle(keyInfo, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(expectedSuggestion);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(expectedSuggestion.Length);
+            mockAutoCompleter.Verify(m => m.SelectFirstMatchingSuggestion(), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectNextSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectPreviousSuggestion(), Times.Never);
         }
 
         /// <summary>
@@ -105,18 +114,18 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         public void Handle_SubsequentTabWithoutShiftKey_SelectsNextSuggestion()
         {
             var handler = this.HandlerUnderTest;
-            var enteredText = string.Empty;
-            var autoCompleter = this.CreateAutoCompleter(enteredText, true);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.Suggestions).Returns(this.Suggestions);
+            mockAutoCompleter.Setup(m => m.GetCurrentSuggestion()).Returns(this.Suggestions[0]);
             var keyInfo = CreateKey(ConsoleKey.Tab);
-            var expectedSuggestion = this.Suggestions[1];
-            handler.Handle(keyInfo, autoCompleter);
 
             // Act
-            handler.Handle(keyInfo, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(expectedSuggestion);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(expectedSuggestion.Length);
+            mockAutoCompleter.Verify(m => m.SelectFirstMatchingSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectNextSuggestion(), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectPreviousSuggestion(), Times.Never);
         }
 
         /// <summary>
@@ -124,26 +133,21 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         /// cycles backwards through the suggestions.
         /// </summary>
         [Fact]
-        [SuppressMessage(
-            "Minor Code Smell",
-            "S6608:Prefer indexing instead of \"Enumerable\" methods on types implementing \"IList\"",
-            Justification = "Easier to read and performance is not a concern here")]
         public void Handle_SubsequentTabWithShiftKey_SelectsPreviousSuggestion()
         {
             var handler = this.HandlerUnderTest;
-            var enteredText = string.Empty;
-            var autoCompleter = this.CreateAutoCompleter(enteredText, true);
-            var keyInfo1 = CreateKey(ConsoleKey.Tab);
-            var keyInfo2 = CreateKey(ConsoleKey.Tab, shift: true);
-            var expectedSuggestion = this.Suggestions.Last();
-            handler.Handle(keyInfo1, autoCompleter);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.Suggestions).Returns(this.Suggestions);
+            mockAutoCompleter.Setup(m => m.GetCurrentSuggestion()).Returns(this.Suggestions[0]);
+            var keyInfo = CreateKey(ConsoleKey.Tab, shift: true);
 
             // Act
-            handler.Handle(keyInfo2, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(expectedSuggestion);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(expectedSuggestion.Length);
+            mockAutoCompleter.Verify(m => m.SelectFirstMatchingSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectNextSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectPreviousSuggestion(), Times.Once);
         }
 
         /// <summary>
@@ -155,37 +159,17 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = this.Suggestions[1].Substring(0, 2);
-            var autoCompleter = this.CreateAutoCompleter(enteredText, true);
-            var keyInfo = CreateKey(ConsoleKey.Tab);
-            var expectedSelection = this.Suggestions[1];
-
-            // Act
-            handler.Handle(keyInfo, autoCompleter);
-
-            // Assert
-            autoCompleter.UserInput.Should().Be(expectedSelection);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(expectedSelection.Length);
-        }
-
-        /// <summary>
-        /// Tests that nothing happens when the tab key is pressed when the
-        /// entered text already exactly matches a suggestion.
-        /// </summary>
-        [Fact]
-        public void Handle_UserInputMatchesSuggestionExactly_DoesNothing()
-        {
-            // Arrange
-            var handler = this.HandlerUnderTest;
-            var enteredText = this.Suggestions[1];
-            var autoCompleter = this.CreateAutoCompleter(enteredText, true);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.GetCurrentSuggestion()).Returns((string?)null);
             var keyInfo = CreateKey(ConsoleKey.Tab);
 
             // Act
-            handler.Handle(keyInfo, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
+            mockAutoCompleter.Verify(m => m.SelectFirstMatchingSuggestion(), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectNextSuggestion(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectPreviousSuggestion(), Times.Never);
         }
     }
 }
