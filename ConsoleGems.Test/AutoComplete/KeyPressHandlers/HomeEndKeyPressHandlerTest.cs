@@ -22,16 +22,15 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
             var homeKeyPress = CreateKey(ConsoleKey.Home);
 
             // Act
-            handler.Handle(homeKeyPress, autoCompleter);
+            handler.Handle(homeKeyPress, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(0);
-            autoCompleter.UserInput.Should().Be(enteredText);
+            mockAutoCompleter.Verify(m => m.MoveCursorToHome(), Times.Once);
+            mockAutoCompleter.Verify(m => m.MoveCursorToEnd(), Times.Never);
         }
 
         /// <summary>
@@ -43,18 +42,15 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            autoCompleter.MoveCursorToHome();
-            autoCompleter.MoveCursorRight(3);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
             var endKeyPress = CreateKey(ConsoleKey.End);
 
             // Act
-            handler.Handle(endKeyPress, autoCompleter);
+            handler.Handle(endKeyPress, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(autoCompleter.UserInput.Length);
-            autoCompleter.UserInput.Should().Be(enteredText);
+            mockAutoCompleter.Verify(m => m.MoveCursorToHome(), Times.Never);
+            mockAutoCompleter.Verify(m => m.MoveCursorToEnd(), Times.Once);
         }
     }
 }
