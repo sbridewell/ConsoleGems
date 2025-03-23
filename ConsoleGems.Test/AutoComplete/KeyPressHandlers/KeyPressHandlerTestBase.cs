@@ -84,6 +84,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         /// Defaults to false.
         /// </param>
         /// <returns>The requested <see cref="AutoCompleter"/> instance.</returns>
+        [Obsolete("Use Mock<IAutoCompleter> instead")]
         protected IAutoCompleter CreateAutoCompleter(string enteredText, bool withSuggestions = false)
         {
             var suggestions = withSuggestions ? this.Suggestions : new ();

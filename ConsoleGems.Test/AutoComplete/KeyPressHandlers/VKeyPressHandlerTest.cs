@@ -23,19 +23,16 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
             {
                 // Arrange
                 var handler = this.HandlerUnderTest;
-                var enteredText = "123456";
-                var autoCompleter = this.CreateAutoCompleter(enteredText);
-                autoCompleter.MoveCursorToHome();
-                autoCompleter.MoveCursorRight(3);
+                var mockAutoCompleter = new Mock<IAutoCompleter>();
                 TextCopy.ClipboardService.SetText("abc");
                 var keyPress = CreateKey('v', ConsoleKey.V, control: true);
 
                 // Act
-                handler.Handle(keyPress, autoCompleter);
+                handler.Handle(keyPress, mockAutoCompleter.Object);
 
                 // Assert
-                autoCompleter.UserInput.Should().Be("123abc456");
-                autoCompleter.CursorPositionWithinUserInput.Should().Be(6);
+                mockAutoCompleter.Verify(m => m.InsertUserInput("abc"), Times.Once);
+                mockAutoCompleter.Verify(m => m.SelectNoSuggestion(), Times.Once);
             }
         }
 
@@ -46,18 +43,15 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         public void Handle_WithoutControlKey_IsTreatedAsLiteralKey()
         {
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            autoCompleter.MoveCursorToHome();
-            autoCompleter.MoveCursorRight(3);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
             var keyInfo = CreateKey('v', ConsoleKey.V);
 
             // Act
-            handler.Handle(keyInfo, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be("123v456");
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(4);
+            mockAutoCompleter.Verify(m => m.InsertUserInput('v'), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectNoSuggestion(), Times.Once);
         }
     }
 }
