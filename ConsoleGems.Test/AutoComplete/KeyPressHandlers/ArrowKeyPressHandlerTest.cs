@@ -17,87 +17,38 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         /// Happy path test for handling the left arrow key.
         /// </summary>
         [Fact]
-        public void Handle_LeftArrow_MovesCursorLeftByOneAndDoesNotChangeUserInput()
+        public void Handle_LeftArrow_MovesCursorLeftByOne()
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            var initialCursorPosition = autoCompleter.CursorPositionWithinUserInput;
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
             var leftArrowKeyPress = CreateKey(ConsoleKey.LeftArrow);
 
             // Act
-            handler.Handle(leftArrowKeyPress, autoCompleter);
+            handler.Handle(leftArrowKeyPress, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(initialCursorPosition - 1);
-        }
-
-        /// <summary>
-        /// Tests that the cursor position is not changed when the cursor is at the start of the user input
-        /// and the left arrow key is pressed.
-        /// </summary>
-        [Fact]
-        public void Handle_LeftArrowWhenCursorIsAtStartOfUserInput_DoesNotChangeCursorPositionOrUserInput()
-        {
-            // Arrange
-            var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            autoCompleter.MoveCursorToHome();
-            var leftArrowKeyPress = CreateKey(ConsoleKey.LeftArrow);
-
-            // Act
-            handler.Handle(leftArrowKeyPress, autoCompleter);
-
-            // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(0);
+            mockAutoCompleter.Verify(m => m.MoveCursorLeft(), Times.Once);
+            mockAutoCompleter.Verify(m => m.MoveCursorRight(), Times.Never);
         }
 
         /// <summary>
         /// Happy path test for handling the right arrow key.
         /// </summary>
         [Fact]
-        public void Handle_RightArrow_MovesCursorRightByOneAndDoesNotChangeUserInput()
+        public void Handle_RightArrow_MovesCursorRightByOne()
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            var initialCursorPosition = 1;
-            autoCompleter.MoveCursorToHome();
-            autoCompleter.MoveCursorRight(initialCursorPosition);
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
             var rightArrowKeyPress = CreateKey(ConsoleKey.RightArrow);
 
             // Act
-            handler.Handle(rightArrowKeyPress, autoCompleter);
+            handler.Handle(rightArrowKeyPress, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(initialCursorPosition + 1);
-        }
-
-        /// <summary>
-        /// Tests that the cursor position is not changed when the cursor is at the end of the user input
-        /// and the right arrow key is pressed.
-        /// </summary>
-        [Fact]
-        public void Handle_RightArrowWhenCursorIsAtEndOfUserInput_DoesNotChangeCursorPositionOrUserInput()
-        {
-            // Arrange
-            var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            var rightArrowKeyPress = CreateKey(ConsoleKey.RightArrow);
-
-            // Act
-            handler.Handle(rightArrowKeyPress, autoCompleter);
-
-            // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(enteredText.Length);
+            mockAutoCompleter.Verify(m => m.MoveCursorLeft(), Times.Never);
+            mockAutoCompleter.Verify(m => m.MoveCursorRight(), Times.Once);
         }
     }
 }

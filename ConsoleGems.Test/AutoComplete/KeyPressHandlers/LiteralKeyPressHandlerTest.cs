@@ -14,71 +14,23 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         public override IAutoCompleteKeyPressHandler HandlerUnderTest => new LiteralKeyPressHandler();
 
         /// <summary>
-        /// Tests that when a literal character is entered and the cursor is at the end
-        /// of the user input, the correct character is added to the end of the user input
-        /// and the cursor is positioned after it.
+        /// Tests that the ListeralKeyPressHandler inserts the keyed character
+        /// into the user input and that no suggestion is selected.
         /// </summary>
         [Fact]
-        public void Handle_LiteralCharacterWhenCursorIsAtEndOfUserInput_InsertsCharacterAtCursorPositionAndPositionsCursorAfterId()
+        public void Handle_InsertsUserInputAndSelectsNoSuggestion()
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            var initialCursorPosition = autoCompleter.CursorPositionWithinUserInput;
-            var keyPress = CreateKey('a');
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            var keyInfo = CreateKey('a', ConsoleKey.A);
 
             // Act
-            handler.Handle(keyPress, autoCompleter);
+            handler.Handle(keyInfo, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be("123456a");
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(initialCursorPosition + 1);
-        }
-
-        /// <summary>
-        /// Tests that when a literal character is entered into the middle of the user
-        /// input, the correct character is added to the user input and the cursor is
-        /// positioned after it.
-        /// </summary>
-        [Fact]
-        public void Handle_LiteralCharacterWhenCursorIsInMiddleOfInput_InsertsCharacterAtCursorPositionAndPositionsCursorAfterIt()
-        {
-            // Arrange
-            var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            autoCompleter.MoveCursorToHome();
-            autoCompleter.MoveCursorRight(3);
-            var keyPress = CreateKey('a');
-
-            // Act
-            handler.Handle(keyPress, autoCompleter);
-
-            // Assert
-            autoCompleter.UserInput.Should().Be("123a456");
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(4);
-        }
-
-        /// <summary>
-        /// Tests that entering a literal character resets the suggestion
-        /// index to -1.
-        /// </summary>
-        [Fact]
-        public void Handle_SetsCurrentSuggestionIndexToMinusOne()
-        {
-            // Arrange
-            var handler = this.HandlerUnderTest;
-            var enteredText = "z";
-            var autoCompleter = this.CreateAutoCompleter(enteredText, true);
-            autoCompleter.SelectNextSuggestion();
-            var keyPress = CreateKey('b');
-
-            // Act
-            handler.Handle(keyPress, autoCompleter);
-
-            // Assert
-            autoCompleter.GetCurrentSuggestion().Should().BeNull();
+            mockAutoCompleter.Verify(m => m.InsertUserInput('a'), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectNoSuggestion(), Times.Once);
         }
     }
 }
