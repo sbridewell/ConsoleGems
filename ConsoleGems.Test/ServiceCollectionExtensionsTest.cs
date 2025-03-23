@@ -138,22 +138,18 @@ namespace Sde.ConsoleGems.Test
         public void UseAutoComplete_MapppingsSupplied_RegistersCorrectDependencies()
         {
             // Arrange
-            var mappings = new AutoCompleteKeyPressDefaultMappings();
-            mappings.Mappings.Add(ConsoleKey.Q, new QKeyPressHandler());
             var options = new ConsoleGemsOptions()
                 .UseAutoComplete(options => options
-                    .UseKeyPressMappings(mappings));
+                    .UseKeyPressMappings<TestKeyPressMappings>());
 
             // Act
             var provider = BuildServiceProvider(options);
 
             // Assert
-            AssertAutoCompleter(provider);
+            AssertService(provider, typeof(IAutoCompleter), typeof(AutoCompleter));
             AssertNoBuiltInPrompters(provider);
             AssertService(provider, typeof(ApplicationState), typeof(ApplicationState));
-            AssertService(provider, typeof(IAutoCompleteKeyPressMappings), typeof(AutoCompleteKeyPressDefaultMappings));
-            var actualMappings = provider.GetRequiredService<IAutoCompleteKeyPressMappings>();
-            actualMappings.Mappings[ConsoleKey.Q].Should().BeOfType<QKeyPressHandler>();
+            AssertService(provider, typeof(IAutoCompleteKeyPressMappings), typeof(TestKeyPressMappings));
         }
 
         /// <summary>
@@ -389,14 +385,6 @@ namespace Sde.ConsoleGems.Test
             ];
         }
 
-        private class QKeyPressHandler : IAutoCompleteKeyPressHandler
-        {
-            public void Handle(ConsoleKeyInfo keyInfo, IAutoCompleter autoCompleter)
-            {
-                autoCompleter.InsertUserInput("comma");
-            }
-        }
-
         private class MenuWriterForTesting(
             ISharedMenuItemsProvider sharedMenuItemsProvider,
             IGlobalMenuItemsProvider globalMenuItemsProvider,
@@ -410,6 +398,13 @@ namespace Sde.ConsoleGems.Test
                 exitCurrentMenuCommand,
                 applicationState)
         {
+        }
+
+        private class TestKeyPressMappings : IAutoCompleteKeyPressMappings
+        {
+            public IDictionary<ConsoleKey, IAutoCompleteKeyPressHandler> Mappings => throw new NotImplementedException();
+
+            public IAutoCompleteKeyPressHandler DefaultHandler => throw new NotImplementedException();
         }
     }
 }

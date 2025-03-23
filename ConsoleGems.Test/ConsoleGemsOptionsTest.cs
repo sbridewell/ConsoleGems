@@ -19,18 +19,17 @@ namespace Sde.ConsoleGems.Test
         {
             // Arrange
             var options = new ConsoleGemsOptions();
-            var mappings = new TestKeyPressMappings();
 
             // Act
             options.UseAutoComplete(options =>
             {
-                options.UseKeyPressMappings(mappings);
+                options.UseKeyPressMappings<TestKeyPressMappings>();
                 options.UseMatcher<TestMatcher>();
             });
 
             // Assert
             options.AutoCompleteOptions.Should().NotBeNull();
-            options.AutoCompleteOptions.KeyPressMappings.Should().Be(mappings);
+            options.AutoCompleteOptions.KeyPressMappings.Should().Be(typeof(TestKeyPressMappings));
             options.AutoCompleteOptions.Matcher.Should().Be(typeof(TestMatcher));
         }
 
@@ -49,7 +48,7 @@ namespace Sde.ConsoleGems.Test
 
             // Assert
             options.AutoCompleteOptions.Should().NotBeNull();
-            options.AutoCompleteOptions.KeyPressMappings.Should().BeEquivalentTo(new AutoCompleteKeyPressDefaultMappings());
+            options.AutoCompleteOptions.KeyPressMappings.Should().Be(typeof(AutoCompleteKeyPressDefaultMappings));
             options.AutoCompleteOptions.Matcher.Should().Be(typeof(StartsWithMatcher));
         }
 
@@ -70,7 +69,7 @@ namespace Sde.ConsoleGems.Test
             // Assert
             options.MainMenu.Should().Be(typeof(TestMenu));
             options.AutoCompleteOptions.Should().NotBeNull();
-            options.AutoCompleteOptions.KeyPressMappings.Should().BeEquivalentTo(new AutoCompleteKeyPressDefaultMappings());
+            options.AutoCompleteOptions.KeyPressMappings.Should().Be(typeof(AutoCompleteKeyPressDefaultMappings));
             options.AutoCompleteOptions.Matcher.Should().Be(typeof(StartsWithMatcher));
         }
 
@@ -84,9 +83,8 @@ namespace Sde.ConsoleGems.Test
         {
             // Arrange
             var options = new ConsoleGemsOptions();
-            var mappings = new TestKeyPressMappings();
             options.UseAutoComplete(options => options
-                .UseKeyPressMappings(mappings)
+                .UseKeyPressMappings<TestKeyPressMappings>()
                 .UseMatcher<TestMatcher>());
 
             // Act
@@ -95,7 +93,7 @@ namespace Sde.ConsoleGems.Test
             // Assert
             options.MainMenu.Should().Be(typeof(TestMenu));
             options.AutoCompleteOptions.Should().NotBeNull();
-            options.AutoCompleteOptions.KeyPressMappings.Should().Be(mappings);
+            options.AutoCompleteOptions.KeyPressMappings.Should().Be(typeof(TestKeyPressMappings));
             options.AutoCompleteOptions.Matcher.Should().Be(typeof(TestMatcher));
         }
 

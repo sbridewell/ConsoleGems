@@ -72,7 +72,7 @@ namespace Sde.ConsoleGems
                 services.AddSingletonInternal<IAutoCompleter, AutoCompleter>();
                 services.AddSingleton(
                     typeof(IAutoCompleteKeyPressMappings),
-                    options.AutoCompleteOptions.KeyPressMappings ?? new AutoCompleteKeyPressDefaultMappings());
+                    options.AutoCompleteOptions.KeyPressMappings ?? typeof(AutoCompleteKeyPressDefaultMappings));
                 services.AddSingleton(
                     typeof(IAutoCompleteMatcher),
                     options.AutoCompleteOptions.Matcher ?? typeof(StartsWithMatcher));
