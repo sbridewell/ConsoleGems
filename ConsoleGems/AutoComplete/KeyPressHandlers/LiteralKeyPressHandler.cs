@@ -16,6 +16,12 @@ namespace Sde.ConsoleGems.AutoComplete.KeyPressHandlers
         public virtual void Handle(ConsoleKeyInfo keyInfo, IAutoCompleter autoCompleter)
         {
             var key = keyInfo.KeyChar;
+            if (key == 0)
+            {
+                // It's a key which doesn't represent a printable character
+                return;
+            }
+
             autoCompleter.InsertUserInput(key);
             autoCompleter.SelectNoSuggestion();
         }

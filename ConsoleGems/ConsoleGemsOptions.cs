@@ -74,7 +74,7 @@ namespace Sde.ConsoleGems
             if (configure == null)
             {
                 this.AutoCompleteOptions
-                    .UseKeyPressMappings(new AutoCompleteKeyPressDefaultMappings())
+                    .UseKeyPressMappings<AutoCompleteKeyPressDefaultMappings>()
                     .UseMatcher<StartsWithMatcher>();
             }
             else

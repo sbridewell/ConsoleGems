@@ -33,15 +33,6 @@ namespace Sde.ConsoleGems.AutoCompleteDemo
                 options.UseColours = true;
             }
 
-            // Here we're adding a couple of key press mappings to
-            // the default set.
-            // If you just want to use auto-complete with the default
-            // mappings, call the UseAutoComplete method without any
-            // arguments.
-            var autoCompleteKeyPressMappings = new AutoCompleteKeyPressDefaultMappings();
-            autoCompleteKeyPressMappings.Mappings.Add(ConsoleKey.F1, new F1KeyPressHandler());
-            autoCompleteKeyPressMappings.Mappings.Add(ConsoleKey.F2, new F2KeyPressHandler());
-
             // This demo shows 3 types of autocomplete.
             // The first is a simple list of strings, the second auto-
             // completes names of files in the My Documents folder, and
@@ -49,7 +40,10 @@ namespace Sde.ConsoleGems.AutoCompleteDemo
             // Documents folder.
             options.UseAutoComplete(
                 autoCompleteOptions => autoCompleteOptions
-                    .UseKeyPressMappings(autoCompleteKeyPressMappings)
+
+                    // if you don't call them then ConsoleGems will use the
+                    // default implementations.
+                    .UseKeyPressMappings<CustomAutoCompleteKeyPressMappings>()
                     .UseMatcher<StartsWithMatcher>())
                 .UseBuiltInPrompters();
 

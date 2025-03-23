@@ -12,10 +12,10 @@ namespace Sde.ConsoleGems
     public class AutoCompleteOptions
     {
         /// <summary>
-        /// Gets the <see cref="IAutoCompleteKeyPressMappings"/> instance
+        /// Gets the type of <see cref="IAutoCompleteKeyPressMappings"/>
         /// which defines how different key presses are handled.
         /// </summary>
-        public IAutoCompleteKeyPressMappings? KeyPressMappings { get; private set; }
+        public Type? KeyPressMappings { get; private set; }
 
         /// <summary>
         /// Gets the type of <see cref="IAutoCompleteMatcher"/> which
@@ -24,19 +24,18 @@ namespace Sde.ConsoleGems
         /// </summary>
         public Type? Matcher { get; private set; }
 
-        // TODO: #23 make the key press mappings a type parameter
-
         /// <summary>
-        /// Sets the <see cref="IAutoCompleteKeyPressMappings"/> instance
+        /// Sets the type of <see cref="IAutoCompleteKeyPressMappings"/>
         /// which defines how different key presses are handled.
         /// </summary>
-        /// <param name="keyPressMappings">
-        /// The <see cref="IAutoCompleteKeyPressMappings"/> instance to use.
-        /// </param>
+        /// <typeparam name="TMappings">
+        /// The type of key press mappings to use.
+        /// </typeparam>
         /// <returns>The updated options.</returns>
-        public AutoCompleteOptions UseKeyPressMappings(IAutoCompleteKeyPressMappings keyPressMappings)
+        public AutoCompleteOptions UseKeyPressMappings<TMappings>()
+            where TMappings : IAutoCompleteKeyPressMappings
         {
-            this.KeyPressMappings = keyPressMappings;
+            this.KeyPressMappings = typeof(TMappings);
             return this;
         }
 

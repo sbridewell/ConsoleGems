@@ -18,13 +18,12 @@ namespace Sde.ConsoleGems.Test
         {
             // Arrange
             var options = new AutoCompleteOptions();
-            var mappings = new TestKeyPressMappings();
 
             // Act
-            options.UseKeyPressMappings(mappings);
+            options.UseKeyPressMappings<TestKeyPressMappings>();
 
             // Assert
-            options.KeyPressMappings.Should().Be(mappings);
+            options.KeyPressMappings.Should().Be(typeof(TestKeyPressMappings));
         }
 
         /// <summary>
