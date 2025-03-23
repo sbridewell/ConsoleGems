@@ -173,6 +173,6 @@ Whilst it's possible to instantiate all these console, menu, command, etc classe
 - Found a bug or something in this README which isn't consistent with the code?
 - Got a question?
 - Want to suggest a feature or enhancement?
-- Want to contribute?
+- Want to contribute? See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 Scroll to the top of the page and create a new issue to start a conversation. ConsoleGems is developed and maintained in my spare time, so I may not be super quick in getting back to you, but I promise to engage in good faith with all reasonable requests.
