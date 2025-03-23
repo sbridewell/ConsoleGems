@@ -21,40 +21,16 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            var initialCursorPosition = autoCompleter.CursorPositionWithinUserInput;
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.CursorIsAtHome).Returns(false);
             var backspaceKeyPress = CreateKey(ConsoleKey.Backspace);
 
             // Act
-            handler.Handle(backspaceKeyPress, autoCompleter);
+            handler.Handle(backspaceKeyPress, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be("12345");
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(initialCursorPosition - 1);
-        }
-
-        /// <summary>
-        /// Tests that when the cursor is in the middle of the user input and the backspace key is pressed,
-        /// the correct character is deleted and the cursor is moved left by one character.
-        /// </summary>
-        [Fact]
-        public void Handle_BackspaceWhenCursorIsInMiddleOfUserInput_RemovesCorrectCharacterAndMovesCursorLeftByOne()
-        {
-            // Arrange
-            var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            autoCompleter.MoveCursorToHome();
-            autoCompleter.MoveCursorRight(3);
-            var backspaceKeyPress = CreateKey(ConsoleKey.Backspace);
-
-            // Act
-            handler.Handle(backspaceKeyPress, autoCompleter);
-
-            // Assert
-            autoCompleter.UserInput.Should().Be("12456");
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(2);
+            mockAutoCompleter.Verify(m => m.RemovePreviousCharacterFromUserInput(), Times.Once);
+            mockAutoCompleter.Verify(m => m.SelectNoSuggestion(), Times.Once);
         }
 
         /// <summary>
@@ -66,17 +42,16 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
         {
             // Arrange
             var handler = this.HandlerUnderTest;
-            var enteredText = "123456";
-            var autoCompleter = this.CreateAutoCompleter(enteredText);
-            autoCompleter.MoveCursorToHome();
+            var mockAutoCompleter = new Mock<IAutoCompleter>();
+            mockAutoCompleter.Setup(m => m.CursorIsAtHome).Returns(true);
             var backspaceKeyPress = CreateKey(ConsoleKey.Backspace);
 
             // Act
-            handler.Handle(backspaceKeyPress, autoCompleter);
+            handler.Handle(backspaceKeyPress, mockAutoCompleter.Object);
 
             // Assert
-            autoCompleter.UserInput.Should().Be(enteredText);
-            autoCompleter.CursorPositionWithinUserInput.Should().Be(0);
+            mockAutoCompleter.Verify(m => m.RemovePreviousCharacterFromUserInput(), Times.Never);
+            mockAutoCompleter.Verify(m => m.SelectNoSuggestion(), Times.Never);
         }
     }
 }
