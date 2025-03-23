@@ -71,28 +71,5 @@ namespace Sde.ConsoleGems.Test.AutoComplete.KeyPressHandlers
             var keyInfo = new ConsoleKeyInfo(keyChar, key, shift, alt, control);
             return keyInfo;
         }
-
-        /// <summary>
-        /// A quick way of creating an internally consistent
-        /// <see cref="AutoCompleter"/> instance.
-        /// </summary>
-        /// <param name="enteredText">
-        /// The text which has been entered into the console.
-        /// </param>
-        /// <param name="withSuggestions">
-        /// True to include autocomplete suggestions.
-        /// Defaults to false.
-        /// </param>
-        /// <returns>The requested <see cref="AutoCompleter"/> instance.</returns>
-        [Obsolete("Use Mock<IAutoCompleter> instead")]
-        protected IAutoCompleter CreateAutoCompleter(string enteredText, bool withSuggestions = false)
-        {
-            var suggestions = withSuggestions ? this.Suggestions : new ();
-            var mockMappings = new Mock<IAutoCompleteKeyPressMappings>();
-            mockMappings.Setup(m => m.GetHandler(It.IsAny<ConsoleKey>())).Returns(this.HandlerUnderTest);
-            var mockAutoCompleter = new Mock<IAutoCompleter>();
-            mockAutoCompleter.Setup(m => m.Suggestions).Returns(suggestions);
-            return mockAutoCompleter.Object;
-        }
     }
 }
