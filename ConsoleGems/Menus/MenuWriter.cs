@@ -11,6 +11,7 @@ namespace Sde.ConsoleGems.Menus
     public class MenuWriter(
         ISharedMenuItemsProvider sharedMenuItemsProvider,
         IGlobalMenuItemsProvider globalMenuItemsProvider,
+        ITextJustifier textJustifier,
         IConsole console,
         ExitCurrentMenuCommand exitCurrentMenuCommand,
         ApplicationState applicationState)
@@ -24,14 +25,17 @@ namespace Sde.ConsoleGems.Menus
         public override void WriteMenu(IMenu menu)
         {
             var sb = new StringBuilder();
-            var title = Justify(menu.Title, TextJustification.Centre, console.WindowWidth);
+            textJustifier.Justify(menu.Title, TextJustification.Centre, console.WindowWidth);
+            var title = textJustifier.JustifiedText;
             console.WriteLine(title, ConsoleOutputType.MenuHeader);
             var items = this.GetAllMenuItems(menu);
             var maxKeyWidth = items.Max(i => i.Key.Length);
             foreach (var menuItem in items)
             {
-                var keyDisplay = Justify(menuItem.Key, TextJustification.Right, maxKeyWidth);
-                var descriptionDisplay = Justify(menuItem.Description, TextJustification.Left, console.WindowWidth - maxKeyWidth - 3);
+                textJustifier.Justify(menuItem.Key, TextJustification.Right, maxKeyWidth);
+                var keyDisplay = textJustifier.JustifiedText;
+                textJustifier.Justify(menuItem.Description, TextJustification.Left, console.WindowWidth - maxKeyWidth - 3);
+                var descriptionDisplay = textJustifier.JustifiedText;
                 console.WriteLine($"{keyDisplay} - {descriptionDisplay}", ConsoleOutputType.MenuBody);
             }
 

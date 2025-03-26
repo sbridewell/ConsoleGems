@@ -1,0 +1,170 @@
+﻿// <copyright file="TextJustifierTest.cs" company="Simon Bridewell">
+// Copyright (c) Simon Bridewell.
+// Released under the MIT license - see LICENSE.txt in the repository root.
+// </copyright>
+
+namespace Sde.ConsoleGems.Test.Text
+{
+    /// <summary>
+    /// Unit tests for the <see cref="TextJustifier"/> class.
+    /// </summary>
+    public class TextJustifierTest
+    {
+        /// <summary>
+        /// Tests that the correct exception is thrown when the Justify
+        /// method is passed null text.
+        /// </summary>
+        [Fact]
+        public void Justify_NullText_Throws()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+
+            // Act
+            var action = () => justifier.Justify(null!, TextJustification.None, 100);
+
+            // Assert
+            var ex = action.Should().ThrowExactly<ArgumentNullException>().Which;
+            ex.ParamName.Should().Be("text");
+        }
+
+        /// <summary>
+        /// Tests that when the supplied justification is none, leading and
+        /// trailing whitespace is trimmed and the resulting text is left
+        /// justified with no trailing whitespace.
+        /// </summary>
+        [Fact]
+        public void Justify_NoJustification_TrimsAndDoesNotJustify()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            const string text = "  foo ";
+            const int availableWidth = 20;
+
+            // Act
+            justifier.Justify(text, TextJustification.None, availableWidth);
+
+            // Assert
+            justifier.JustifiedText.Should().Be("foo");
+            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be("foo");
+        }
+
+        /// <summary>
+        /// Tests that when the supplied justification is left, leading and
+        /// trailing whitespace is trimmed and the resulting text is left
+        /// justified and right padded with spaces to the required width.
+        /// </summary>
+        [Fact]
+        public void Justify_LeftJustification_TrimsAndJustifiesLeft()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            const string text = "  foo ";
+            const int availableWidth = 20;
+
+            // Act
+            justifier.Justify(text, TextJustification.Left, availableWidth);
+
+            // Assert
+            justifier.JustifiedText.Should().Be("foo                 ");
+            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be("foo                 ");
+        }
+
+        /// <summary>
+        /// Tests that when the supplied justification is centre, leading
+        /// and trailing whitespace is trimmed and the resulting text is
+        /// centre justified and right padded with spaces to the required
+        /// width.
+        /// </summary>
+        [Fact]
+        public void Justify_CentreJustification_TrimsAndJustifiesCentre()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            const string text = "  foo ";
+            const int availableWidth = 20;
+
+            // Act
+            justifier.Justify(text, TextJustification.Centre, availableWidth);
+
+            // Assert
+            justifier.JustifiedText.Should().Be("        foo         ");
+            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be("        foo         ");
+        }
+
+        /// <summary>
+        /// Tests that when the supplied justification is right, leading and
+        /// trailing whitespace is trimmed and the resulting text is right
+        /// justified.
+        /// </summary>
+        [Fact]
+        public void Justify_RightJustification_TrimsAndJustifiesRight()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            const string text = "  foo ";
+            const int availableWidth = 20;
+
+            // Act
+            justifier.Justify(text, TextJustification.Right, availableWidth);
+
+            // Assert
+            justifier.JustifiedText.Should().Be("                 foo");
+            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be("                 foo");
+        }
+
+        /// <summary>
+        /// Tests that text which is wider than the available width
+        /// is wrapped and justified correctly.
+        /// </summary>
+        [Fact]
+        public void Justify_TextWiderThanAvailableWidth_Wraps()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            const string text = "   The quick brown fox jumps over the lazy dog.   ";
+            const int availableWidth = 21;
+            var expectedText
+                = " The quick brown fox "
+                + Environment.NewLine
+                + " jumps over the lazy "
+                + Environment.NewLine
+                + "        dog.         ";
+            var expectedLines = new List<string>
+            {
+                " The quick brown fox ",
+                " jumps over the lazy ",
+                "        dog.         ",
+            };
+
+            // Act
+            justifier.Justify(text, TextJustification.Centre, availableWidth);
+
+            // Assert
+            justifier.JustifiedText.Should().Be(expectedText);
+            justifier.JustifiedLines.Should().BeEquivalentTo(expectedLines);
+        }
+
+        /// <summary>
+        /// Tests that when the supplied justification is not a member of the
+        /// <see cref="TextJustification"/> enum, the correct
+        /// exception is thrown.
+        /// </summary>
+        [Fact]
+        public void Justify_InvalidJustification_Throws()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            const string text = "  foo ";
+            const int availableWidth = 20;
+
+            // Act
+            var action = () => justifier.Justify(text, (TextJustification)(-1), availableWidth);
+
+            // Assert
+            var ex = action.Should().ThrowExactly<ArgumentOutOfRangeException>().Which;
+            ex.Message.Should().Contain($"The supplied value is not a member of the {nameof(TextJustification)} enum.");
+            ex.ParamName.Should().Be("justification");
+        }
+    }
+}

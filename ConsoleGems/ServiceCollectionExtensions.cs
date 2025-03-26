@@ -10,6 +10,7 @@ namespace Sde.ConsoleGems
     using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
+    using Sde.ConsoleGems.Text;
 
     /// <summary>
     /// Class to simplify registering the necessary dependencies.
@@ -80,6 +81,7 @@ namespace Sde.ConsoleGems
 
             if (options.MainMenu != null)
             {
+                services.AddSingleton<ITextJustifier, TextJustifier>();
                 services.UseMenus(options.MenuWriter).AddMenu(options.MainMenu);
             }
 
@@ -134,8 +136,6 @@ namespace Sde.ConsoleGems
             foreach (var dependency in dependencies)
             {
                 services.AddSingletonInternal(dependency.ParameterType);
-
-                // TODO: #11 discover and register dependencies of the command
             }
 
             return services;

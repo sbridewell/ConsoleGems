@@ -17,5 +17,6 @@ global using Sde.ConsoleGems.Commands.Demo;
 global using Sde.ConsoleGems.Consoles;
 global using Sde.ConsoleGems.Menus;
 global using Sde.ConsoleGems.Prompters;
+global using Sde.ConsoleGems.Text;
 global using Console = Sde.ConsoleGems.Consoles.Console;
 #pragma warning restore SA1200 // Using directives should be placed correctly
