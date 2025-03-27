@@ -9,6 +9,7 @@ namespace Sde.ConsoleGems.Test
     using Sde.ConsoleGems;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
+    using Sde.ConsoleGems.Text;
 
     /// <summary>
     /// Unit tests for the <see cref="ServiceCollectionExtensions"/> class,

@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.ConsoleGems.Menus
+namespace Sde.ConsoleGems.Text
 {
     /// <summary>
     /// Interface for a class which justifies text and wraps it onto
