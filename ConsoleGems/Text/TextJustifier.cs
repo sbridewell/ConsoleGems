@@ -10,11 +10,31 @@ namespace Sde.ConsoleGems.Text
     /// </summary>
     public class TextJustifier : ITextJustifier
     {
-        /// <inheritdoc/>
-        public string JustifiedText { get; private set; } = string.Empty;
+        private string? text;
+        private TextJustification justification;
+        private int availableWidth;
+        private char paddingCharacter;
+        private Lazy<List<StringBuilder>>? unjustifiedLines;
+        private Lazy<List<string>>? justifiedLines;
+        private Lazy<string>? justifiedText;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextJustifier"/> class.
+        /// </summary>
+        public TextJustifier()
+        {
+            this.Initialise();
+        }
 
         /// <inheritdoc/>
-        public List<string> JustifiedLines { get; private set; } = new ();
+        public string JustifiedText => this.justifiedText!.Value;
+
+        /// <inheritdoc/>
+        public List<string> JustifiedLines => this.justifiedLines!.Value;
+
+        // TODO: JustifiedTextBlock property, lazy initialised
+
+        private List<StringBuilder> UnjustifiedLines => this.unjustifiedLines!.Value;
 
         /// <inheritdoc/>
         public void Justify(
@@ -24,23 +44,42 @@ namespace Sde.ConsoleGems.Text
             char paddingCharacter = ' ')
         {
             ArgumentNullException.ThrowIfNull(text);
-            this.JustifiedText = string.Empty;
-            this.JustifiedLines.Clear();
-            text = text.Trim();
-            var lines = BuildLines(text, availableWidth);
-            this.BuildJustifiedLines(lines, justification, availableWidth, paddingCharacter);
-            this.BuildJustifiedText();
+            ValidateJustification(justification);
+            this.Initialise();
+            this.text = text.Trim();
+            this.justification = justification;
+            this.availableWidth = availableWidth;
+            this.paddingCharacter = paddingCharacter;
         }
 
-        private static List<StringBuilder> BuildLines(string text, int availableWidth)
+        private static void ValidateJustification(TextJustification justification)
+        {
+            if (!Enum.IsDefined(typeof(TextJustification), justification))
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(justification),
+                    justification,
+                    $"The supplied value is not a member of the {nameof(TextJustification)} enum.");
+            }
+        }
+
+        private void Initialise()
+        {
+            this.text = string.Empty;
+            this.unjustifiedLines = new Lazy<List<StringBuilder>>(() => this.BuildLines());
+            this.justifiedText = new Lazy<string>(() => this.BuildJustifiedText());
+            this.justifiedLines = new Lazy<List<string>>(() => this.BuildJustifiedLines());
+        }
+
+        private List<StringBuilder> BuildLines()
         {
             var sb = new StringBuilder();
             var lines = new List<StringBuilder>();
-            var words = text.Split(' ');
+            var words = this.text!.Split(' ');
             for (var i = 0; i < words.Length; i++)
             {
                 var word = words[i];
-                if (sb.Length + word.Length > availableWidth)
+                if (sb.Length + word.Length > this.availableWidth)
                 {
                     lines.Add(sb);
                     sb = new StringBuilder();
@@ -54,34 +93,29 @@ namespace Sde.ConsoleGems.Text
             return lines;
         }
 
-        private void BuildJustifiedLines(
-            List<StringBuilder> lines,
-            TextJustification justification,
-            int availableWidth,
-            char paddingCharacter)
+        private List<string> BuildJustifiedLines()
         {
-            foreach (var lineSB in lines)
+            var justifiedLinesInternal = new List<string>();
+            foreach (var lineSB in this.UnjustifiedLines)
             {
                 var line = lineSB.ToString().Trim();
-                var justified = justification switch
+                var justified = this.justification switch
                 {
-                    TextJustification.None => line,
-                    TextJustification.Left => line.PadRight(availableWidth, paddingCharacter),
+                    TextJustification.Left => line.PadRight(this.availableWidth, this.paddingCharacter),
                     TextJustification.Centre => line
-                        .PadLeft((availableWidth + line.Length) / 2, paddingCharacter)
-                        .PadRight(availableWidth, paddingCharacter),
-                    TextJustification.Right => line.PadLeft(availableWidth, paddingCharacter),
-                    _ => throw new ArgumentOutOfRangeException(
-                        nameof(justification),
-                        justification,
-                        $"The supplied value is not a member of the {nameof(TextJustification)} enum."),
+                        .PadLeft((this.availableWidth + line.Length) / 2, this.paddingCharacter)
+                        .PadRight(this.availableWidth, this.paddingCharacter),
+                    TextJustification.Right => line.PadLeft(this.availableWidth, this.paddingCharacter),
+                    _ => line, // no justification
                 };
 
-                this.JustifiedLines.Add(justified);
+                justifiedLinesInternal.Add(justified);
             }
+
+            return justifiedLinesInternal;
         }
 
-        private void BuildJustifiedText()
+        private string BuildJustifiedText()
         {
             var justifiedTextSB = new StringBuilder();
             for (var i = 0; i < this.JustifiedLines.Count; i++)
@@ -96,7 +130,7 @@ namespace Sde.ConsoleGems.Text
                 }
             }
 
-            this.JustifiedText = justifiedTextSB.ToString();
+            return justifiedTextSB.ToString();
         }
     }
 }

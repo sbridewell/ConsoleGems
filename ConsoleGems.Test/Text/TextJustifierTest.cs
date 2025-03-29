@@ -5,6 +5,8 @@
 
 namespace Sde.ConsoleGems.Test.Text
 {
+    using Moq;
+
     /// <summary>
     /// Unit tests for the <see cref="TextJustifier"/> class.
     /// </summary>
@@ -165,6 +167,72 @@ namespace Sde.ConsoleGems.Test.Text
             var ex = action.Should().ThrowExactly<ArgumentOutOfRangeException>().Which;
             ex.Message.Should().Contain($"The supplied value is not a member of the {nameof(TextJustification)} enum.");
             ex.ParamName.Should().Be("justification");
+        }
+
+        /// <summary>
+        /// Tests that if the Justify method is called more than once on the same
+        /// instance of <see cref="TextJustifier"/> then any fields which were set
+        /// during the first call are re-initialised during the second call.
+        /// </summary>
+        [Fact]
+        public void Justify_InitialisesBetweenCalls()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            justifier.Justify("some words", TextJustification.Centre, 6);
+            var text = "I like armadillos, smooth on the inside, crunchy on the outside, armadillos!";
+            var expectedText
+                = "  I like armadillos," + Environment.NewLine
+                + "       smooth on the" + Environment.NewLine
+                + "  inside, crunchy on" + Environment.NewLine
+                + "        the outside," + Environment.NewLine
+                + "         armadillos!";
+
+            // Act
+            justifier.Justify(text, TextJustification.Right, 20);
+
+            // Assert
+            justifier.JustifiedText.Should().Be(expectedText);
+        }
+
+        /// <summary>
+        /// Tests that lazy initialisation of the JustifiedLines property
+        /// is not dependent on any of the other properties having been
+        /// accessed.
+        /// </summary>
+        [Fact]
+        public void JustifiedLines_InitialisedIndependentlyOfOtherProperties()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            justifier.Justify("some words", TextJustification.Centre, 6);
+
+            // Act
+            var lines = justifier.JustifiedLines;
+
+            // Assert
+            lines.Should().HaveCount(2);
+            lines[0].Should().Be(" some ");
+            lines[1].Should().Be("words ");
+        }
+
+        /// <summary>
+        /// Tests that lazy initialisation of the JustifiedText property
+        /// is not dependent on any of the other properties having been
+        /// accessed.
+        /// </summary>
+        [Fact]
+        public void JustifiedText_InitialisedIndependentlyOfOtherProperties()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            justifier.Justify("some words", TextJustification.Centre, 6);
+
+            // Act
+            var text = justifier.JustifiedText;
+
+            // Assert
+            text.Should().Be(" some " + Environment.NewLine + "words ");
         }
     }
 }
