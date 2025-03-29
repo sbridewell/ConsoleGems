@@ -17,6 +17,7 @@ namespace Sde.ConsoleGems.Text
         private Lazy<List<StringBuilder>>? unjustifiedLines;
         private Lazy<List<string>>? justifiedLines;
         private Lazy<string>? justifiedText;
+        private Lazy<TextBlock>? justifiedTextBlock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextJustifier"/> class.
@@ -32,7 +33,8 @@ namespace Sde.ConsoleGems.Text
         /// <inheritdoc/>
         public List<string> JustifiedLines => this.justifiedLines!.Value;
 
-        // TODO: JustifiedTextBlock property, lazy initialised
+        /// <inheritdoc/>
+        public TextBlock JustifiedTextBlock => this.justifiedTextBlock!.Value;
 
         private List<StringBuilder> UnjustifiedLines => this.unjustifiedLines!.Value;
 
@@ -69,6 +71,7 @@ namespace Sde.ConsoleGems.Text
             this.unjustifiedLines = new Lazy<List<StringBuilder>>(() => this.BuildLines());
             this.justifiedText = new Lazy<string>(() => this.BuildJustifiedText());
             this.justifiedLines = new Lazy<List<string>>(() => this.BuildJustifiedLines());
+            this.justifiedTextBlock = new Lazy<TextBlock>(() => this.BuildJustifiedTextBlock());
         }
 
         private List<StringBuilder> BuildLines()
@@ -131,6 +134,20 @@ namespace Sde.ConsoleGems.Text
             }
 
             return justifiedTextSB.ToString();
+        }
+
+        private TextBlock BuildJustifiedTextBlock()
+        {
+            var block = new TextBlock(this.availableWidth);
+            var i = 0;
+            foreach (var line in this.JustifiedLines)
+            {
+                var blockToInsert = new TextBlock(this.availableWidth);
+                blockToInsert.InsertText(line);
+                block.InsertBlock(blockToInsert, new ConsolePoint(0, i++));
+            }
+
+            return block;
         }
     }
 }

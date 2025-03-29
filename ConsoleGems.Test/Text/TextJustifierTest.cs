@@ -5,8 +5,6 @@
 
 namespace Sde.ConsoleGems.Test.Text
 {
-    using Moq;
-
     /// <summary>
     /// Unit tests for the <see cref="TextJustifier"/> class.
     /// </summary>
@@ -42,13 +40,17 @@ namespace Sde.ConsoleGems.Test.Text
             var justifier = new TextJustifier();
             const string text = "  foo ";
             const int availableWidth = 20;
+            var expectedText = "foo";
+            var expectedBlock = new TextBlock(20);
+            expectedBlock.InsertText(expectedText);
 
             // Act
             justifier.Justify(text, TextJustification.None, availableWidth);
 
             // Assert
-            justifier.JustifiedText.Should().Be("foo");
-            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be("foo");
+            justifier.JustifiedText.Should().Be(expectedText);
+            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be(expectedText);
+            justifier.JustifiedTextBlock.Should().BeEquivalentTo(expectedBlock);
         }
 
         /// <summary>
@@ -63,13 +65,17 @@ namespace Sde.ConsoleGems.Test.Text
             var justifier = new TextJustifier();
             const string text = "  foo ";
             const int availableWidth = 20;
+            var expectedText = "foo                 ";
+            var expectedBlock = new TextBlock(20);
+            expectedBlock.InsertText(expectedText);
 
             // Act
             justifier.Justify(text, TextJustification.Left, availableWidth);
 
             // Assert
-            justifier.JustifiedText.Should().Be("foo                 ");
-            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be("foo                 ");
+            justifier.JustifiedText.Should().Be(expectedText);
+            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be(expectedText);
+            justifier.JustifiedTextBlock.Should().BeEquivalentTo(expectedBlock);
         }
 
         /// <summary>
@@ -85,13 +91,17 @@ namespace Sde.ConsoleGems.Test.Text
             var justifier = new TextJustifier();
             const string text = "  foo ";
             const int availableWidth = 20;
+            var expectedText = "        foo         ";
+            var expectedBlock = new TextBlock(20);
+            expectedBlock.InsertText(expectedText);
 
             // Act
             justifier.Justify(text, TextJustification.Centre, availableWidth);
 
             // Assert
-            justifier.JustifiedText.Should().Be("        foo         ");
-            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be("        foo         ");
+            justifier.JustifiedText.Should().Be(expectedText);
+            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be(expectedText);
+            justifier.JustifiedTextBlock.Should().BeEquivalentTo(expectedBlock);
         }
 
         /// <summary>
@@ -106,13 +116,17 @@ namespace Sde.ConsoleGems.Test.Text
             var justifier = new TextJustifier();
             const string text = "  foo ";
             const int availableWidth = 20;
+            var expectedText = "                 foo";
+            var expectedBlock = new TextBlock(20);
+            expectedBlock.InsertText(expectedText);
 
             // Act
             justifier.Justify(text, TextJustification.Right, availableWidth);
 
             // Assert
-            justifier.JustifiedText.Should().Be("                 foo");
-            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be("                 foo");
+            justifier.JustifiedText.Should().Be(expectedText);
+            justifier.JustifiedLines.Should().ContainSingle().Which.ToString().Should().Be(expectedText);
+            justifier.JustifiedTextBlock.Should().BeEquivalentTo(expectedBlock);
         }
 
         /// <summary>
@@ -138,6 +152,14 @@ namespace Sde.ConsoleGems.Test.Text
                 " jumps over the lazy ",
                 "        dog.         ",
             };
+            var expectedBlock = new TextBlock(21);
+            var i = 0;
+            foreach (var line in expectedLines)
+            {
+                var blockToInsert = new TextBlock(21);
+                blockToInsert.InsertText(line);
+                expectedBlock.InsertBlock(blockToInsert, new ConsolePoint(0, i++));
+            }
 
             // Act
             justifier.Justify(text, TextJustification.Centre, availableWidth);
@@ -145,6 +167,7 @@ namespace Sde.ConsoleGems.Test.Text
             // Assert
             justifier.JustifiedText.Should().Be(expectedText);
             justifier.JustifiedLines.Should().BeEquivalentTo(expectedLines);
+            justifier.JustifiedTextBlock.Should().BeEquivalentTo(expectedBlock);
         }
 
         /// <summary>
@@ -233,6 +256,31 @@ namespace Sde.ConsoleGems.Test.Text
 
             // Assert
             text.Should().Be(" some " + Environment.NewLine + "words ");
+        }
+
+        /// <summary>
+        /// Tests that lazy initialisation of the JustifiedTextBlock property
+        /// is not dependent on any of the other properties having been accessed.
+        /// </summary>
+        [Fact]
+        public void JustifiedTextBlock_InitialisesIndependentlyOfOtherProperties()
+        {
+            // Arrange
+            var justifier = new TextJustifier();
+            justifier.Justify("some words", TextJustification.Centre, 6);
+            var expectedBlock = new TextBlock(6);
+            var block1ToInsert = new TextBlock(6);
+            block1ToInsert.InsertText(" some ");
+            var block2ToInsert = new TextBlock(6);
+            block2ToInsert.InsertText("words ");
+            expectedBlock.InsertBlock(block1ToInsert, new ConsolePoint(0, 0));
+            expectedBlock.InsertBlock(block2ToInsert, new ConsolePoint(0, 1));
+
+            // Act
+            var actualBlock = justifier.JustifiedTextBlock;
+
+            // Assert
+            actualBlock.Should().BeEquivalentTo(expectedBlock);
         }
     }
 }

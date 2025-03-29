@@ -23,6 +23,11 @@ namespace Sde.ConsoleGems.Text
         public List<string> JustifiedLines { get; }
 
         /// <summary>
+        /// Gets the justified text as a <see cref="TextBlock"/>.
+        /// </summary>
+        public TextBlock JustifiedTextBlock { get; }
+
+        /// <summary>
         /// Justifies the supplied text and stores the result in the
         /// <see cref="JustifiedText"/> and <see cref="JustifiedLines"/>
         /// properties.
