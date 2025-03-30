@@ -31,12 +31,7 @@ namespace Sde.ConsoleGems.MenusDemo
         /// <inheritdoc/>
         public override List<MenuItem> MenuItems =>
         [
-            new ()
-            {
-                Key = "1",
-                Description = "Built-in commands really really really really really really really really really really really long description",
-                Command = builtInCommandsMenu.ShowCommand,
-            },
+            new () { Key = "1", Description = "Built-in commands", Command = builtInCommandsMenu.ShowCommand },
             new () { Key = "2", Description = "Custom commands", Command = customCommandsMenu.ShowCommand },
         ];
     }

@@ -9,7 +9,6 @@ namespace Sde.ConsoleGems.MenusDemo
     using Sde.ConsoleGems.Commands;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
-    using Sde.ConsoleGems.Text;
     using WenceyWang.FIGlet;
 
     /// <summary>
@@ -22,7 +21,6 @@ namespace Sde.ConsoleGems.MenusDemo
         IConsole console,
         ISharedMenuItemsProvider sharedMenuItemsProvider,
         IGlobalMenuItemsProvider globalMenuItemsProvider,
-        ITextJustifier textJustifier,
         ExitCurrentMenuCommand exitCurrentMenuCommand,
         ApplicationState applicationState)
         : AbstractMenuWriter(
@@ -41,10 +39,8 @@ namespace Sde.ConsoleGems.MenusDemo
             var maxKeyWidth = items.Max(i => i.Key.Length);
             foreach (var menuItem in items)
             {
-                textJustifier.Justify(menuItem.Key, TextJustification.Right, maxKeyWidth);
-                var keyDisplay = textJustifier.JustifiedText;
-                textJustifier.Justify(menuItem.Description, TextJustification.Left, console.WindowWidth - maxKeyWidth - 3);
-                var descriptionDisplay = textJustifier.JustifiedText;
+                var keyDisplay = Justify(menuItem.Key, TextJustification.Right, maxKeyWidth);
+                var descriptionDisplay = Justify(menuItem.Description, TextJustification.Left, console.WindowWidth - maxKeyWidth - 3);
                 console.WriteLine($"{keyDisplay} - {descriptionDisplay}", ConsoleOutputType.MenuBody);
             }
 

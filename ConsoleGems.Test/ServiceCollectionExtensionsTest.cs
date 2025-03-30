@@ -9,7 +9,6 @@ namespace Sde.ConsoleGems.Test
     using Sde.ConsoleGems;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
-    using Sde.ConsoleGems.Text;
 
     /// <summary>
     /// Unit tests for the <see cref="ServiceCollectionExtensions"/> class,
@@ -389,14 +388,12 @@ namespace Sde.ConsoleGems.Test
         private class MenuWriterForTesting(
             ISharedMenuItemsProvider sharedMenuItemsProvider,
             IGlobalMenuItemsProvider globalMenuItemsProvider,
-            ITextJustifier textJustifier,
             IConsole console,
             ExitCurrentMenuCommand exitCurrentMenuCommand,
             ApplicationState applicationState)
             : MenuWriter(
                 sharedMenuItemsProvider,
                 globalMenuItemsProvider,
-                textJustifier,
                 console,
                 exitCurrentMenuCommand,
                 applicationState)
