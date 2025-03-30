@@ -24,7 +24,7 @@ namespace Sde.ConsoleGems.Menus
         /// <inheritdoc/>
         public override void WriteMenu(IMenu menu)
         {
-            var sb = new StringBuilder();
+            var block = new TextBlock(console.WindowWidth);
             textJustifier.Justify(menu.Title, TextJustification.Centre, console.WindowWidth);
             var title = textJustifier.JustifiedText;
             console.WriteLine(title, ConsoleOutputType.MenuHeader);
@@ -33,13 +33,18 @@ namespace Sde.ConsoleGems.Menus
             foreach (var menuItem in items)
             {
                 textJustifier.Justify(menuItem.Key, TextJustification.Right, maxKeyWidth);
-                var keyDisplay = textJustifier.JustifiedText;
+                var keyBlock = textJustifier.JustifiedTextBlock;
+                var separatorBlock = new TextBlock(3);
+                separatorBlock.InsertText(" - ");
                 textJustifier.Justify(menuItem.Description, TextJustification.Left, console.WindowWidth - maxKeyWidth - 3);
-                var descriptionDisplay = textJustifier.JustifiedText;
-                console.WriteLine($"{keyDisplay} - {descriptionDisplay}", ConsoleOutputType.MenuBody);
+                var descriptionBlock = textJustifier.JustifiedTextBlock;
+                var nextYPos = block.Height;
+                block.InsertBlock(keyBlock, new ConsolePoint(0, nextYPos));
+                block.InsertBlock(separatorBlock, new ConsolePoint(maxKeyWidth, nextYPos));
+                block.InsertBlock(descriptionBlock, new ConsolePoint(maxKeyWidth + 3, nextYPos));
             }
 
-            console.Write(sb.ToString());
+            console.Write(block.ToString(), ConsoleOutputType.MenuBody);
         }
     }
 }

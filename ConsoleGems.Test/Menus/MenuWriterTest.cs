@@ -32,6 +32,7 @@ namespace Sde.ConsoleGems.Test.Menus
             this.applicationState.MenuDepth = 0;
             var menu = new MenuForTesting(this.menuItems);
             var consoleMenuWriter = this.CreateWriter();
+            this.mockTextJustifier.Setup(m => m.JustifiedTextBlock).Returns(new TextBlock(10));
 
             // Act
             consoleMenuWriter.WriteMenu(menu);
@@ -74,6 +75,7 @@ namespace Sde.ConsoleGems.Test.Menus
             this.applicationState.MenuDepth = 1;
             var menu = new MenuForTesting(this.menuItems);
             var menuWriter = this.CreateWriter();
+            this.mockTextJustifier.Setup(m => m.JustifiedTextBlock).Returns(new TextBlock(10));
 
             // Act
             menuWriter.WriteMenu(menu);
