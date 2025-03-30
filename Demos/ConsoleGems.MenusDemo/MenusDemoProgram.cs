@@ -18,7 +18,7 @@ namespace Sde.ConsoleGems.MenusDemo
         /// <summary>
         /// Main entry point into the program.
         /// </summary>
-        /// <param name="args">Commmand line arguments.</param>
+        /// <param name="args">Command line arguments.</param>
         public static void Main(string[] args)
         {
             System.Console.Title = "ConsoleGems menus demo";
