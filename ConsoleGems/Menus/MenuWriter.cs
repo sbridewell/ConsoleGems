@@ -24,12 +24,12 @@ namespace Sde.ConsoleGems.Menus
         /// <inheritdoc/>
         public override void WriteMenu(IMenu menu)
         {
-            var block = new TextBlock(console.WindowWidth);
             textJustifier.Justify(menu.Title, TextJustification.Centre, console.WindowWidth);
             var title = textJustifier.JustifiedText;
             console.WriteLine(title, ConsoleOutputType.MenuHeader);
             var items = this.GetAllMenuItems(menu);
             var maxKeyWidth = items.Max(i => i.Key.Length);
+            var menuBlock = new TextBlock(console.WindowWidth);
             foreach (var menuItem in items)
             {
                 textJustifier.Justify(menuItem.Key, TextJustification.Right, maxKeyWidth);
@@ -38,13 +38,13 @@ namespace Sde.ConsoleGems.Menus
                 separatorBlock.InsertText(" - ");
                 textJustifier.Justify(menuItem.Description, TextJustification.Left, console.WindowWidth - maxKeyWidth - 3);
                 var descriptionBlock = textJustifier.JustifiedTextBlock;
-                var nextYPos = block.Height;
-                block.InsertBlock(keyBlock, new ConsolePoint(0, nextYPos));
-                block.InsertBlock(separatorBlock, new ConsolePoint(maxKeyWidth, nextYPos));
-                block.InsertBlock(descriptionBlock, new ConsolePoint(maxKeyWidth + 3, nextYPos));
+                var nextYPos = menuBlock.Height;
+                menuBlock.InsertBlock(keyBlock, new ConsolePoint(0, nextYPos));
+                menuBlock.InsertBlock(separatorBlock, new ConsolePoint(maxKeyWidth, nextYPos));
+                menuBlock.InsertBlock(descriptionBlock, new ConsolePoint(maxKeyWidth + 3, nextYPos));
             }
 
-            console.Write(block.ToString(), ConsoleOutputType.MenuBody);
+            console.Write(menuBlock.ToString(), ConsoleOutputType.MenuBody);
         }
     }
 }
