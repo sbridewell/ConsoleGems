@@ -82,6 +82,7 @@ namespace Sde.ConsoleGems
             if (options.MainMenu != null)
             {
                 services.AddTransient<ITextJustifier, TextJustifier>();
+                services.AddSingleton<AsciiArtSettings>();
                 services.UseMenus(options.MenuWriter).AddMenu(options.MainMenu);
             }
 

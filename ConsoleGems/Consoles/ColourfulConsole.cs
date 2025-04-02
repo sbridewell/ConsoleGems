@@ -67,6 +67,14 @@ namespace Sde.ConsoleGems.Consoles
             consoleColourManager.SetColours(ConsoleColours.Default);
         }
 
+        /// <inheritdoc/>
+        public override void WriteLine(char characterToWrite, ConsoleOutputType outputType = ConsoleOutputType.Default)
+        {
+            this.SetColours(outputType);
+            base.WriteLine(characterToWrite, outputType);
+            consoleColourManager.SetColours(ConsoleColours.Default);
+        }
+
         private static PropertyInfo TryGetConsoleColoursProperty(string propertyName)
         {
             var bindingFlags = BindingFlags.Public | BindingFlags.Static;

@@ -12,9 +12,9 @@ namespace Sde.ConsoleGems.Text
     public class TextBlock(int width)
     {
         /// <summary>
-        /// Represents the text in the block.
+        /// Gets the text in the block.
         /// </summary>
-        private readonly List<string> lines = new ();
+        public List<string> Lines { get; } = new ();
 
         /// <summary>
         /// Gets the width of the text block in characters.
@@ -39,17 +39,17 @@ namespace Sde.ConsoleGems.Text
             {
                 if (i < linesToInsert.Count - 1)
                 {
-                    this.lines.Add(new string(linesToInsert[i]));
+                    this.Lines.Add(new string(linesToInsert[i]));
                 }
                 else
                 {
-                    this.lines.Add(new string(linesToInsert[i]).PadRight(width));
+                    this.Lines.Add(new string(linesToInsert[i]).PadRight(width));
                 }
             }
 
-            if (this.lines.Count > this.Height)
+            if (this.Lines.Count > this.Height)
             {
-                this.Height = this.lines.Count;
+                this.Height = this.Lines.Count;
             }
         }
 
@@ -80,22 +80,22 @@ namespace Sde.ConsoleGems.Text
 
             while (insertAt.Y + block.Height > this.Height)
             {
-                this.lines.Add(new string(' ', this.Width));
+                this.Lines.Add(new string(' ', this.Width));
                 this.Height++;
             }
 
-            for (var i = 0; i < block.lines.Count; i++)
+            for (var i = 0; i < block.Lines.Count; i++)
             {
                 var targetLineIndex = insertAt.Y + i;
-                var blockLine = block.lines[i];
+                var blockLine = block.Lines[i];
 
-                var targetLineChars = this.lines[targetLineIndex].ToCharArray();
+                var targetLineChars = this.Lines[targetLineIndex].ToCharArray();
                 for (int j = 0; j < blockLine.Length; j++)
                 {
                     targetLineChars[insertAt.X + j] = blockLine[j];
                 }
 
-                this.lines[targetLineIndex] = new string(targetLineChars);
+                this.Lines[targetLineIndex] = new string(targetLineChars);
             }
         }
 
@@ -111,12 +111,12 @@ namespace Sde.ConsoleGems.Text
                 return string.Empty;
             }
 
-            foreach (var line in this.lines.Take(this.lines.Count - 1))
+            foreach (var line in this.Lines.Take(this.Lines.Count - 1))
             {
                 sb.AppendLine(line);
             }
 
-            sb.Append(this.lines.Last());
+            sb.Append(this.Lines.Last());
             return sb.ToString();
         }
     }

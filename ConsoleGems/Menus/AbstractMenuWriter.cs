@@ -16,7 +16,15 @@ namespace Sde.ConsoleGems.Menus
         : IMenuWriter
     {
         /// <inheritdoc/>
-        public abstract void WriteMenu(IMenu menu);
+        public void WriteMenu(IMenu menu)
+        {
+            this.WriteTopBorder(menu);
+            this.WriteTitleRow(menu);
+            this.WriteMenuDescription(menu);
+            this.WriteSeparatorLine(menu);
+            this.WriteMenuItems(menu);
+            this.WriteBottomBorder(menu);
+        }
 
         /// <inheritdoc/>
         public List<MenuItem> GetAllMenuItems(IMenu menu)
@@ -41,5 +49,23 @@ namespace Sde.ConsoleGems.Menus
 
             return items;
         }
+
+        /// <inheritdoc/>
+        public abstract void WriteTopBorder(IMenu menu);
+
+        /// <inheritdoc/>
+        public abstract void WriteTitleRow(IMenu menu);
+
+        /// <inheritdoc/>
+        public abstract void WriteMenuDescription(IMenu menu);
+
+        /// <inheritdoc/>
+        public abstract void WriteSeparatorLine(IMenu menu);
+
+        /// <inheritdoc/>
+        public abstract void WriteMenuItems(IMenu menu);
+
+        /// <inheritdoc/>
+        public abstract void WriteBottomBorder(IMenu menu);
     }
 }
