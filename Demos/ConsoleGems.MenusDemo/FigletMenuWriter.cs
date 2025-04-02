@@ -15,7 +15,7 @@ namespace Sde.ConsoleGems.MenusDemo
     /// <summary>
     /// A demonstration implementation of <see cref="IMenuWriter"/>
     /// which uses the
-    /// <see href="http://nuget.org/packages/GIFlet.Net/">FIGlet.Net</see>
+    /// <see href="http://nuget.org/packages/FIGlet.Net/">FIGlet.Net</see>
     /// package to render the menu title as ASCII art.
     /// </summary>
     public class FigletMenuWriter(
@@ -24,31 +24,31 @@ namespace Sde.ConsoleGems.MenusDemo
         IGlobalMenuItemsProvider globalMenuItemsProvider,
         ITextJustifier textJustifier,
         ExitCurrentMenuCommand exitCurrentMenuCommand,
+        AsciiArtSettings asciiArtSettings,
         ApplicationState applicationState)
-        : AbstractMenuWriter(
+        : MenuWriter(
             sharedMenuItemsProvider,
             globalMenuItemsProvider,
+            textJustifier,
+#pragma warning disable CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
+            console,
+            asciiArtSettings,
+#pragma warning restore CS9107 // Parameter is captured into the state of the enclosing type and its value is also passed to the base constructor. The value might be captured by the base class as well.
             exitCurrentMenuCommand,
             applicationState)
     {
         /// <inheritdoc/>
-        public override void WriteMenu(IMenu menu)
+        public override void WriteTitleRow(IMenu menu)
         {
-            var sb = new StringBuilder();
             var title = new AsciiArt(menu.Title);
-            console.WriteLine(title.ToString(), ConsoleOutputType.MenuHeader);
-            var items = this.GetAllMenuItems(menu);
-            var maxKeyWidth = items.Max(i => i.Key.Length);
-            foreach (var menuItem in items)
+            var titleLines = title.ToString().Split(Environment.NewLine);
+            foreach (var titleLine in titleLines)
             {
-                textJustifier.Justify(menuItem.Key, TextJustification.Right, maxKeyWidth);
-                var keyDisplay = textJustifier.JustifiedText;
-                textJustifier.Justify(menuItem.Description, TextJustification.Left, console.WindowWidth - maxKeyWidth - 3);
-                var descriptionDisplay = textJustifier.JustifiedText;
-                console.WriteLine($"{keyDisplay} - {descriptionDisplay}", ConsoleOutputType.MenuBody);
+                console.Write(asciiArtSettings.OuterBorderVertical, ConsoleOutputType.MenuBody);
+                console.Write(titleLine, ConsoleOutputType.MenuHeader);
+                console.Write(new string(' ', console.WindowWidth - 2 - titleLine.Length), ConsoleOutputType.MenuHeader);
+                console.WriteLine(asciiArtSettings.OuterBorderVertical, ConsoleOutputType.MenuBody);
             }
-
-            console.Write(sb.ToString());
         }
     }
 }

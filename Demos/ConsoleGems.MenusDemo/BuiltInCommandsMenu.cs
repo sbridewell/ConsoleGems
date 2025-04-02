@@ -25,7 +25,11 @@ namespace Sde.ConsoleGems.MenusDemo
         SelectAFileCommand selectAFileCommand,
         SelectAFolderCommand selectAFolderCommand,
         ThrowExceptionCommand throwExceptionCommand)
-        : AbstractMenu(autoCompleter, menuWriter, console, applicationState), IMenu
+        : AbstractMenu(
+            autoCompleter,
+            menuWriter,
+            console,
+            applicationState)
     {
         /// <inheritdoc/>
         public override string Title => "Built-in commands";

@@ -98,6 +98,12 @@ namespace Sde.ConsoleGems.Consoles
         }
 
         /// <inheritdoc/>
+        public virtual void WriteLine(char characterToWrite, ConsoleOutputType outputType = default)
+        {
+            System.Console.WriteLine(characterToWrite);
+        }
+
+        /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public override string ToString()
         {

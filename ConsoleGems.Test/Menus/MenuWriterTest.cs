@@ -15,6 +15,7 @@ namespace Sde.ConsoleGems.Test.Menus
         private readonly Mock<ITextJustifier> mockTextJustifier = new ();
         private readonly Mock<IConsole> mockConsole = new ();
         private readonly ApplicationState applicationState = new ();
+        private readonly AsciiArtSettings asciiArtSettings = new ();
         private readonly List<MenuItem> menuItems = new ()
         {
             new () { Key = "1", Description = "Item 1", Command = new Mock<ICommand>().Object },
@@ -22,27 +23,164 @@ namespace Sde.ConsoleGems.Test.Menus
         };
 
         /// <summary>
-        /// Tests that the <see cref="MenuWriter.WriteMenu(IMenu)"/>
-        /// method writes the menu correctly.
+        /// Tests that the WriteTopBorder method writes the correct output
+        /// to the console.
         /// </summary>
         [Fact]
-        public void WriteMenu_DisplaysMenu()
+        public void WriteTopBorder_WritesCorrectOutput()
+        {
+            // Arramge
+            this.applicationState.MenuDepth = 0;
+            var menu = new MenuForTesting(this.menuItems);
+            var menuWriter = this.CreateWriter();
+
+            // Act
+            menuWriter.WriteTopBorder(menu);
+
+            // Assert
+            this.mockConsole.Verify(m => m.Write(this.asciiArtSettings.OuterBorderTopLeft, ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write(new string(this.asciiArtSettings.OuterBorderHorizontal, 118), ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.WriteLine(this.asciiArtSettings.OuterBorderTopRight, ConsoleOutputType.MenuBody), Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that the WriteTitleRow method writes the correct output
+        /// to the console.
+        /// </summary>
+        [Fact]
+        public void WriteTitleRow_WritesCorrectOutput()
         {
             // Arrange
             this.applicationState.MenuDepth = 0;
             var menu = new MenuForTesting(this.menuItems);
-            var consoleMenuWriter = this.CreateWriter();
-            this.mockTextJustifier.Setup(m => m.JustifiedTextBlock).Returns(new TextBlock(10));
+            var menuWriter = this.CreateWriter();
+            this.mockTextJustifier.Setup(m => m.JustifiedText).Returns("Test menu");
 
             // Act
-            consoleMenuWriter.WriteMenu(menu);
+            menuWriter.WriteTitleRow(menu);
 
             // Assert
-            this.mockTextJustifier.Verify(m => m.Justify("Test menu", TextJustification.Centre, 120, ' '), Times.Once);
-            this.mockTextJustifier.Verify(m => m.Justify("1", TextJustification.Right, 4, ' '), Times.Once);
-            this.mockTextJustifier.Verify(m => m.Justify("Item 1", TextJustification.Left, 113, ' '), Times.Once);
-            this.mockTextJustifier.Verify(m => m.Justify("2abc", TextJustification.Right, 4, ' '), Times.Once);
-            this.mockTextJustifier.Verify(m => m.Justify("Item 2", TextJustification.Left, 113, ' '), Times.Once);
+            this.mockConsole.Verify(m => m.Write(this.asciiArtSettings.OuterBorderVertical, ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write("Test menu", ConsoleOutputType.MenuHeader), Times.Once);
+            this.mockConsole.Verify(m => m.WriteLine(this.asciiArtSettings.OuterBorderVertical, ConsoleOutputType.MenuBody), Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that the WriteMenuDescription method writes the correct
+        /// output to the console.
+        /// </summary>
+        [Fact]
+        public void WriteMenuDescription_WritesCorrectOutput()
+        {
+            // Arrange
+            this.applicationState.MenuDepth = 0;
+            var menu = new MenuForTesting(this.menuItems);
+            var menuWriter = this.CreateWriter();
+            var textBlock = new TextBlock(10);
+            textBlock.InsertText("1234567890abcdefghij");
+            this.mockTextJustifier.Setup(m => m.JustifiedTextBlock).Returns(textBlock);
+
+            // Act
+            menuWriter.WriteMenuDescription(menu);
+
+            // Assert
+            this.mockTextJustifier.Verify(m => m.Justify("A menu for use in unit tests", TextJustification.Centre, 118, ' '), Times.Once);
+            this.mockConsole.Verify(m => m.Write(this.asciiArtSettings.OuterBorderVertical, ConsoleOutputType.MenuBody), Times.Exactly(2));
+            this.mockConsole.Verify(m => m.Write("1234567890", ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write("abcdefghij", ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.WriteLine(this.asciiArtSettings.OuterBorderVertical, ConsoleOutputType.MenuBody), Times.Exactly(2));
+        }
+
+        /// <summary>
+        /// Tests that the WriteSeparatorLine method writes the correct
+        /// output to the console.
+        /// </summary>
+        [Fact]
+        public void WriteSeparatorLine_WritesCorrectOutput()
+        {
+            // Arrange
+            this.applicationState.MenuDepth = 0;
+            var menu = new MenuForTesting(this.menuItems);
+            var menuWriter = this.CreateWriter();
+
+            // Act
+            menuWriter.WriteSeparatorLine(menu);
+
+            // Assert
+            this.mockConsole.Verify(m => m.Write(this.asciiArtSettings.OuterInnerJoinLeft, ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write(new string(this.asciiArtSettings.InnerBorderHorizontal, 4), ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write(this.asciiArtSettings.InnerBorderJoinTop, ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write(new string(this.asciiArtSettings.InnerBorderHorizontal, 113), ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.WriteLine(this.asciiArtSettings.OuterInnerJoinRight, ConsoleOutputType.MenuBody), Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that the WriteMenuItems method writes the correct
+        /// output to the console.
+        /// </summary>
+        [Fact]
+        public void WriteMenuItems_WritesCorrectOutput()
+        {
+            // Arrange
+            this.applicationState.MenuDepth = 0;
+            var menu = new MenuForTesting(this.menuItems);
+            var menuWriter = this.CreateWriter();
+            var textBlock1 = new TextBlock(2);
+            textBlock1.InsertText(" 1");
+            var textBlock2 = new TextBlock(10);
+            textBlock2.InsertText("1234567890");
+            var textBlock3 = new TextBlock(2);
+            textBlock3.InsertText(" 2  ");
+            var textBlock4 = new TextBlock(10);
+            textBlock4.InsertText("1234567890abcdefghij");
+            this.mockTextJustifier.SetupSequence(m => m.JustifiedTextBlock)
+                .Returns(textBlock1)
+                .Returns(textBlock2)
+                .Returns(textBlock3)
+                .Returns(textBlock4);
+
+            // Act
+            menuWriter.WriteMenuItems(menu);
+
+            // Assert
+            this.mockConsole.Verify(
+                m => m.WriteLine(
+                    "║ 1  │1234567890                                                                                                       ║",
+                    ConsoleOutputType.MenuBody),
+                Times.Once);
+            this.mockConsole.Verify(
+                m => m.WriteLine(
+                    "║ 2  │1234567890                                                                                                       ║",
+                    ConsoleOutputType.MenuBody),
+                Times.Once);
+            this.mockConsole.Verify(
+                m => m.WriteLine(
+                    "║    │abcdefghij                                                                                                       ║",
+                    ConsoleOutputType.MenuBody),
+                Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that the WriteBottomBorder method writes the correct
+        /// output to the console.
+        /// </summary>
+        [Fact]
+        public void WriteBottomBorder_WritesCorrectContent()
+        {
+            // Arrange
+            this.applicationState.MenuDepth = 0;
+            var menu = new MenuForTesting(this.menuItems);
+            var menuWriter = this.CreateWriter();
+
+            // Act
+            menuWriter.WriteBottomBorder(menu);
+
+            // Assert
+            this.mockConsole.Verify(m => m.Write(this.asciiArtSettings.OuterBorderBottomLeft, ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write(new string(this.asciiArtSettings.OuterBorderHorizontal, 4), ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write(this.asciiArtSettings.OuterInnerJoinBottom, ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.Write(new string(this.asciiArtSettings.OuterBorderHorizontal, 113), ConsoleOutputType.MenuBody), Times.Once);
+            this.mockConsole.Verify(m => m.WriteLine(this.asciiArtSettings.OuterBorderBottomRight, ConsoleOutputType.MenuBody), Times.Once);
         }
 
         /// <summary>
@@ -81,11 +219,6 @@ namespace Sde.ConsoleGems.Test.Menus
             menuWriter.WriteMenu(menu);
 
             // Assert
-            this.mockTextJustifier.Verify(m => m.Justify("Test menu", TextJustification.Centre, 120, ' '), Times.Once);
-            this.mockTextJustifier.Verify(m => m.Justify("1", TextJustification.Right, 4, ' '), Times.Once);
-            this.mockTextJustifier.Verify(m => m.Justify("Item 1", TextJustification.Left, 113, ' '), Times.Once);
-            this.mockTextJustifier.Verify(m => m.Justify("2abc", TextJustification.Right, 4, ' '), Times.Once);
-            this.mockTextJustifier.Verify(m => m.Justify("Item 2", TextJustification.Left, 113, ' '), Times.Once);
             this.mockTextJustifier.Verify(m => m.Justify("back", TextJustification.Right, 4, ' '), Times.Once);
             this.mockTextJustifier.Verify(m => m.Justify("Go back to the previous menu", TextJustification.Left, 113, ' '), Times.Once);
         }
@@ -126,6 +259,7 @@ namespace Sde.ConsoleGems.Test.Menus
                 this.mockGlobalMenuItemsProvider.Object,
                 this.mockTextJustifier.Object,
                 this.mockConsole.Object,
+                this.asciiArtSettings,
                 exitCurrentMenuCommand,
                 this.applicationState);
         }

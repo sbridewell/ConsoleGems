@@ -356,7 +356,11 @@ namespace Sde.ConsoleGems.Test
             IMenuWriter menuWriter,
             IConsole console,
             ApplicationState applicationState)
-            : AbstractMenu(autoCompleter, menuWriter, console, applicationState)
+            : AbstractMenu(
+                autoCompleter,
+                menuWriter,
+                console,
+                applicationState)
         {
             public override string Title => "Menu with child menus";
 
@@ -374,7 +378,11 @@ namespace Sde.ConsoleGems.Test
             IMenuWriter menuWriter,
             IConsole console,
             ApplicationState applicationState)
-            : AbstractMenu(autoCompleter, menuWriter, console, applicationState)
+            : AbstractMenu(
+                autoCompleter,
+                menuWriter,
+                console,
+                applicationState)
         {
             public override string Title => "Child menu";
 
@@ -391,6 +399,7 @@ namespace Sde.ConsoleGems.Test
             IGlobalMenuItemsProvider globalMenuItemsProvider,
             ITextJustifier textJustifier,
             IConsole console,
+            AsciiArtSettings asciiArtSettings,
             ExitCurrentMenuCommand exitCurrentMenuCommand,
             ApplicationState applicationState)
             : MenuWriter(
@@ -398,6 +407,7 @@ namespace Sde.ConsoleGems.Test
                 globalMenuItemsProvider,
                 textJustifier,
                 console,
+                asciiArtSettings,
                 exitCurrentMenuCommand,
                 applicationState)
         {

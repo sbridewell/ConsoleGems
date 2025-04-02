@@ -7,6 +7,7 @@ namespace Sde.ConsoleGems.MenusDemo
 {
     using System.Collections.Generic;
     using Sde.ConsoleGems.AutoComplete;
+    using Sde.ConsoleGems.Commands;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
 
@@ -21,7 +22,11 @@ namespace Sde.ConsoleGems.MenusDemo
         RollDiceCommand rollDiceCommand,
         GetADrinkCommand getADrinkCommand,
         ThrowExceptionCommand throwExceptionCommand)
-        : AbstractMenu(autoCompleter, menuWriter, console, applicationState), IMenu
+        : AbstractMenu(
+            autoCompleter,
+            menuWriter,
+            console,
+            applicationState)
     {
         /// <inheritdoc/>
         public override string Title => "Custom commands";

@@ -201,7 +201,37 @@ namespace Sde.ConsoleGems.Test
                 throw new NotImplementedException();
             }
 
+            public void WriteBottomBorder(IMenu menu)
+            {
+                throw new NotImplementedException();
+            }
+
             public void WriteMenu(IMenu menu)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void WriteMenuDescription(IMenu menu)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void WriteMenuItems(IMenu menu)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void WriteSeparatorLine(IMenu menu)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void WriteTitleRow(IMenu menu)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void WriteTopBorder(IMenu menu)
             {
                 throw new NotImplementedException();
             }
