@@ -6,6 +6,7 @@
 namespace Sde.ConsoleGems
 {
     using System.Reflection;
+    using System.Text.Json.Serialization;
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Consoles;
@@ -81,8 +82,19 @@ namespace Sde.ConsoleGems
 
             if (options.MainMenu != null)
             {
+                // Without the following line, not all the box drawing characters
+                // we want to be used will be rendered correctly by the console
+                System.Console.OutputEncoding = System.Text.Encoding.UTF8;
                 services.AddTransient<ITextJustifier, TextJustifier>();
-                services.AddSingleton<AsciiArtSettings>();
+                if (options.AsciiArtSettings == null)
+                {
+                    services.AddSingleton<AsciiArtSettings>();
+                }
+                else
+                {
+                    services.AddSingleton<AsciiArtSettings>(options.AsciiArtSettings);
+                }
+
                 services.UseMenus(options.MenuWriter).AddMenu(options.MainMenu);
             }
 

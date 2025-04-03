@@ -96,7 +96,7 @@ namespace Sde.ConsoleGems.Test.Consoles
 
         /// <summary>
         /// Tests that the correct <see cref="ConsoleOutputType"/> is passed to the
-        /// <see cref="ConsoleColourManager"/> when non is supplied to the WriteLine
+        /// <see cref="ConsoleColourManager"/> when none is supplied to the WriteLine
         /// method.
         /// </summary>
         [Fact]
@@ -167,6 +167,39 @@ namespace Sde.ConsoleGems.Test.Consoles
 
                 // Act
                 console.Write('H', outputType);
+
+                // Assert
+                if (outputType == ConsoleOutputType.Default)
+                {
+                    this.mockConsoleColourManager.Verify(m => m.SetColours(ConsoleColours.Default), Times.Exactly(2));
+                }
+                else
+                {
+                    this.mockConsoleColourManager.Verify(m => m.SetColours(colours), Times.Once);
+                    this.mockConsoleColourManager.Verify(m => m.SetColours(ConsoleColours.Default), Times.Once);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests that the WriteLine(char) method uses the correct colours for the
+        /// supplied <see cref="ConsoleOutputType"/>.
+        /// </summary>
+        /// <param name="outputType">The output type.</param>
+        /// <param name="colours">The expected colours.</param>
+        [Theory]
+        [MemberData(nameof(OutputTypesAndColours))]
+        public void WriteLine_Char_UsesColoursWithSameNameAsConsoleOutputTypeAndResetsColours(
+            ConsoleOutputType outputType,
+            ConsoleColours colours)
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                // Arrange
+                var console = new ColourfulConsole(this.mockConsoleColourManager.Object);
+
+                // Act
+                console.WriteLine('H', outputType);
 
                 // Assert
                 if (outputType == ConsoleOutputType.Default)
