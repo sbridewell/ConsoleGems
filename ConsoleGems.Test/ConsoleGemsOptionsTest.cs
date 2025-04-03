@@ -5,7 +5,7 @@
 
 namespace Sde.ConsoleGems.Test
 {
-    using Newtonsoft.Json;
+    using System.Text.Json;
 
     /// <summary>
     /// Unit tests for the <see cref="ConsoleGemsOptions"/> class.
@@ -197,7 +197,7 @@ namespace Sde.ConsoleGems.Test
                 OuterBorderVertical = '|',
             };
             var tempFilename = Path.GetTempFileName();
-            var expectedJson = JsonConvert.SerializeObject(expectedSettings);
+            var expectedJson = JsonSerializer.Serialize(expectedSettings);
             File.WriteAllText(tempFilename, expectedJson);
 
             // Act
