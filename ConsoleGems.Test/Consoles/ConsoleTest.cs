@@ -186,6 +186,36 @@ namespace Sde.ConsoleGems.Test.Consoles
             }
         }
 
+        /// <summary>
+        /// Tests that the WriteLine method writes the correct character
+        /// followed by a line break.
+        /// </summary>
+        [Fact]
+        public void WriteLine_WritesCorrectCharacter()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                // Arrange
+                var console = new Console();
+                using var sw = new StringWriter();
+                var originalOut = System.Console.Out;
+                System.Console.SetOut(sw);
+
+                try
+                {
+                    // Act
+                    console.WriteLine('H');
+
+                    // Assert
+                    sw.ToString().Should().Be("H" + Environment.NewLine);
+                }
+                finally
+                {
+                    System.Console.SetOut(originalOut);
+                }
+            }
+        }
+
         #endregion
     }
 }

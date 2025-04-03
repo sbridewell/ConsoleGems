@@ -5,6 +5,8 @@
 
 namespace Sde.ConsoleGems.Test
 {
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Unit tests for the <see cref="ConsoleGemsOptions"/> class.
     /// </summary>
@@ -164,6 +166,45 @@ namespace Sde.ConsoleGems.Test
 
             // Assert
             options.SharedMenuItemsProvider.Should().Be(typeof(TestSharedMenuItemsProvider));
+        }
+
+        /// <summary>
+        /// Tests that when a JSON filename is passed to the UseAsciiArtSettings
+        /// method, that file is deserialised and the resulting instance is used
+        /// as the AsciiArtSettings property of the ConsoleGems instance.
+        /// </summary>
+        [Fact]
+        public void UseAsciiArtSettings_SetsAsciiArtSettings()
+        {
+            // Arrange
+            var options = new ConsoleGemsOptions();
+            var expectedSettings = new AsciiArtSettings
+            {
+                InnerBorderHorizontal = '-',
+                InnerBorderJoin = '+',
+                InnerBorderJoinBottom = '+',
+                InnerBorderJoinTop = '+',
+                InnerBorderVertical = '|',
+                OuterBorderBottomLeft = '\\',
+                OuterBorderBottomRight = '/',
+                OuterBorderHorizontal = '-',
+                OuterBorderTopLeft = '/',
+                OuterBorderTopRight = '\\',
+                OuterInnerJoinLeft = '+',
+                OuterInnerJoinRight = '+',
+                OuterInnerJoinBottom = '+',
+                OuterInnerJoinTop = '+',
+                OuterBorderVertical = '|',
+            };
+            var tempFilename = Path.GetTempFileName();
+            var expectedJson = JsonConvert.SerializeObject(expectedSettings);
+            File.WriteAllText(tempFilename, expectedJson);
+
+            // Act
+            options.UseAsciiArtSettings(tempFilename);
+
+            // Assert
+            options.AsciiArtSettings.Should().BeEquivalentTo(expectedSettings);
         }
 
         #region private classes

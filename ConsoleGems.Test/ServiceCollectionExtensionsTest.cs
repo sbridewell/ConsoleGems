@@ -5,6 +5,7 @@
 
 namespace Sde.ConsoleGems.Test
 {
+    using System.Text.Json;
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems;
     using Sde.ConsoleGems.Consoles;
@@ -217,6 +218,49 @@ namespace Sde.ConsoleGems.Test
             AssertService(provider, typeof(ChildMenu), typeof(ChildMenu));
             AssertService(provider, typeof(IMenuWriter), typeof(MenuWriter));
             AssertService(provider, typeof(IGlobalMenuItemsProvider), typeof(GlobalMenuItemsProvider));
+            AssertService(provider, typeof(AsciiArtSettings), typeof(AsciiArtSettings));
+        }
+
+        /// <summary>
+        /// Tests that the provider registers the correct
+        /// <see cref="AsciiArtSettings"/> instance when the UseAsciiArtSettings
+        /// method of ConsoleGemsOptions is passed a filename.
+        /// </summary>
+        [Fact]
+        public void SetMainMenu_UseAsciiArtSettings_UsesSuppliedAsciiArtSettings()
+        {
+            // Arrange
+            var asciiArtSettings = new AsciiArtSettings
+            {
+                InnerBorderHorizontal = '-',
+                InnerBorderJoin = '+',
+                InnerBorderJoinBottom = '+',
+                InnerBorderJoinTop = '+',
+                InnerBorderVertical = '|',
+                OuterBorderBottomLeft = '\\',
+                OuterBorderBottomRight = '/',
+                OuterBorderHorizontal = '-',
+                OuterBorderTopLeft = '/',
+                OuterBorderTopRight = '\\',
+                OuterInnerJoinLeft = '+',
+                OuterInnerJoinRight = '+',
+                OuterInnerJoinBottom = '+',
+                OuterInnerJoinTop = '+',
+                OuterBorderVertical = '|',
+            };
+            var tempFile = Path.GetTempFileName();
+            var json = JsonSerializer.Serialize(asciiArtSettings);
+            File.WriteAllText(tempFile, json);
+            var options = new ConsoleGemsOptions()
+                .UseMainMenu<MenuWithChildMenus>()
+                .UseAsciiArtSettings(tempFile);
+
+            // Act
+            var provider = BuildServiceProvider(options);
+
+            // Assert
+            var actualSettings = provider.GetRequiredService<AsciiArtSettings>();
+            actualSettings.Should().BeEquivalentTo(asciiArtSettings);
         }
 
         /// <summary>
