@@ -6,10 +6,12 @@
 namespace Sde.ConsoleGems
 {
     using System.Reflection;
+    using System.Text.Json.Serialization;
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
+    using Sde.ConsoleGems.Text;
 
     /// <summary>
     /// Class to simplify registering the necessary dependencies.
@@ -80,6 +82,19 @@ namespace Sde.ConsoleGems
 
             if (options.MainMenu != null)
             {
+                // Without the following line, not all the box drawing characters
+                // we want to be used will be rendered correctly by the console
+                System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+                services.AddTransient<ITextJustifier, TextJustifier>();
+                if (options.AsciiArtSettings == null)
+                {
+                    services.AddSingleton<AsciiArtSettings>();
+                }
+                else
+                {
+                    services.AddSingleton<AsciiArtSettings>(options.AsciiArtSettings);
+                }
+
                 services.UseMenus(options.MenuWriter).AddMenu(options.MainMenu);
             }
 
@@ -134,8 +149,6 @@ namespace Sde.ConsoleGems
             foreach (var dependency in dependencies)
             {
                 services.AddSingletonInternal(dependency.ParameterType);
-
-                // TODO: #11 discover and register dependencies of the command
             }
 
             return services;

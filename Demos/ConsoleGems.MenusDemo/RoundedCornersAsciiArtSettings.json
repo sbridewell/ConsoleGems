@@ -1,0 +1,20 @@
+{
+  "OuterBorderHorizontal": "\u2500",
+  "OuterBorderVertical": "\u2502",
+  "OuterBorderTopLeft": "\u256D",
+  "OuterBorderTopRight": "\u256E",
+  "OuterBorderBottomLeft": "\u2570",
+  "OuterBorderBottomRight": "\u256F",
+  "InnerBorderHorizontal": "\u2500",
+  "InnerBorderVertical": "\u2502",
+  "InnerBorderJoin": "\u253C",
+  "InnerBorderJoinTop": "\u252C",
+  "InnerBorderJoinBottom": "\u2534",
+  "OuterInnerJoinLeft": "\u251C",
+  "OuterInnerJoinRight": "\u2524",
+  "OuterInnerJoinTop": "\u2564",
+  "OuterInnerJoinBottom": "\u2534",
+  "LightShade": "\u2591",
+  "MediumShade": "\u2592",
+  "DarkShade": "\u2593"
+}

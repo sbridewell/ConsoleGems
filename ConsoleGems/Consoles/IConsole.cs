@@ -84,6 +84,15 @@ namespace Sde.ConsoleGems.Consoles
         /// </param>
         void WriteLine(string textToWrite = "", ConsoleOutputType outputType = default);
 
+        /// <summary>
+        /// Writes the supplied character to the console with a terminating line break.
+        /// </summary>
+        /// <param name="characterToWrite">The character to write.</param>
+        /// <param name="outputType">
+        /// Indicates the type of output and therefore how it should be formatted.
+        /// </param>
+        void WriteLine(char characterToWrite, ConsoleOutputType outputType = default);
+
         #endregion
     }
 }

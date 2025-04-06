@@ -6,6 +6,8 @@
 namespace Sde.ConsoleGems.MenusDemo
 {
     using Microsoft.Extensions.DependencyInjection;
+    using Sde.ConsoleGems.AutoComplete;
+    using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Menus;
 
     /// <summary>
@@ -20,6 +22,13 @@ namespace Sde.ConsoleGems.MenusDemo
         public static void Main(string[] args)
         {
             System.Console.Title = "ConsoleGems menus demo";
+
+            var autoCompleter = new AutoCompleter(
+                new AutoCompleteKeyPressDefaultMappings(),
+                new StartsWithMatcher(),
+                new Consoles.Console());
+            var suggestions = new List<string> { "Default menu writer", "Custom menu writer", };
+            var menuWriterTypeName = autoCompleter.ReadLine(suggestions, "Select a menu writer: ");
 
             // Each item in a menu is a command.
             // Some of those commands could show a child menu.
@@ -40,12 +49,26 @@ namespace Sde.ConsoleGems.MenusDemo
                 // It's not necessary to supply a MenuWriter, but if you
                 // want to use a different IMenuWriter implementation then
                 // you can specify it here.
-                .UseMenuWriter<FigletMenuWriter>()
+                ////.UseMenuWriter<FigletMenuWriter>()
 
                 // You do need to specify a main menu though, otherwise
                 // ConsoleGems won't auto-discover and register the child
                 // menus and their commands.
                 .UseMainMenu<MainMenu>();
+
+            // Normally we'd specify the type of menu writer in the fluent code
+            // above, but for the purposes of this demo, we need to specify it
+            // conditionally based on user input.
+            if (menuWriterTypeName == suggestions[1])
+            {
+                options.UseMenuWriter<FigletMenuWriter>()
+
+                    // UseAsciiArtSettings is optional, ConsoleGems will use
+                    // default settings if not, but you can use this file to
+                    // specify the characters to be used in ASCII art, such
+                    // as borders around menus.
+                    .UseAsciiArtSettings("RoundedCornersAsciiArtSettings.json");
+            }
 
             var services = new ServiceCollection().AddConsoleGems(options);
             var provider = services.BuildServiceProvider();

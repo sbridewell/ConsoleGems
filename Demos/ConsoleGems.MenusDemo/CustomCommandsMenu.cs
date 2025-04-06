@@ -7,6 +7,7 @@ namespace Sde.ConsoleGems.MenusDemo
 {
     using System.Collections.Generic;
     using Sde.ConsoleGems.AutoComplete;
+    using Sde.ConsoleGems.Commands;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
 
@@ -20,8 +21,13 @@ namespace Sde.ConsoleGems.MenusDemo
         ApplicationState applicationState,
         RollDiceCommand rollDiceCommand,
         GetADrinkCommand getADrinkCommand,
+        SaveAsciiArtSettingsCommand saveAsciiArtSettingsCommand,
         ThrowExceptionCommand throwExceptionCommand)
-        : AbstractMenu(autoCompleter, menuWriter, console, applicationState), IMenu
+        : AbstractMenu(
+            autoCompleter,
+            menuWriter,
+            console,
+            applicationState)
     {
         /// <inheritdoc/>
         public override string Title => "Custom commands";
@@ -35,6 +41,7 @@ namespace Sde.ConsoleGems.MenusDemo
             new () { Key = "dice", Description = "Simulate rolling dice", Command = rollDiceCommand },
             new () { Key = "drink", Description = "Get a drink", Command = getADrinkCommand },
             new () { Key = "throw", Description = "Throw an exception", Command = throwExceptionCommand },
+            new () { Key = "ascii", Description = "Save the current ASCII art settings to a JSON file", Command = saveAsciiArtSettingsCommand },
         ];
     }
 }

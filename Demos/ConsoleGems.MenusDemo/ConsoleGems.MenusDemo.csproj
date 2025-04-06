@@ -41,4 +41,10 @@
     <ProjectReference Include="..\..\ConsoleGems\ConsoleGems.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="RoundedCornersAsciiArtSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

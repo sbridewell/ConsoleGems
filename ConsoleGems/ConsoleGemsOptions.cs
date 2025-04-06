@@ -5,6 +5,7 @@
 
 namespace Sde.ConsoleGems
 {
+    using System.Text.Json;
     using Sde.ConsoleGems.AutoComplete;
     using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Consoles;
@@ -51,6 +52,12 @@ namespace Sde.ConsoleGems
         /// controls the behaviour of the auto-complete feature.
         /// </summary>
         public AutoCompleteOptions? AutoCompleteOptions { get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="AsciiArtSettings"/> used when writing
+        /// menus to the console.
+        /// </summary>
+        public AsciiArtSettings? AsciiArtSettings { get; private set; }
 
         /// <summary>
         /// Gets the prompters that the application can use.
@@ -171,6 +178,23 @@ namespace Sde.ConsoleGems
             where TSharedMenuItemsProvider : class, ISharedMenuItemsProvider
         {
             this.SharedMenuItemsProvider = typeof(TSharedMenuItemsProvider);
+            return this;
+        }
+
+        /// <summary>
+        /// Deserializes the supplied JSON file to a
+        /// <see cref="AsciiArtSettings"/> file and uses it
+        /// to control the characters used in ASCII art, such
+        /// as in borders around menus.
+        /// </summary>
+        /// <param name="filename">
+        /// Relative path to the JSON file from the current execution directory.
+        /// </param>
+        /// <returns>The updated options.</returns>
+        public ConsoleGemsOptions UseAsciiArtSettings(string filename)
+        {
+            var settingsJson = File.ReadAllText(filename);
+            this.AsciiArtSettings = JsonSerializer.Deserialize<AsciiArtSettings>(settingsJson);
             return this;
         }
     }
