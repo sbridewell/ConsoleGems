@@ -51,7 +51,7 @@ namespace Sde.ConsoleGems.Menus
         public char InnerBorderVertical { get; set; } = '│';
 
         /// <summary>
-        /// Gets or sets the character used for two inner broders crossing over.
+        /// Gets or sets the character used for two inner borders crossing over.
         /// </summary>
         public char InnerBorderJoin { get; set; } = '┼';
 
