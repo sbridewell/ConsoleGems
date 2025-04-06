@@ -13,3 +13,7 @@ using System.Diagnostics.CodeAnalysis;
     "Info Code Smell",
     "S1135:Track uses of \"TODO\" tags",
     Justification = "TODOs are tracked in the task list")]
+[assembly: SuppressMessage(
+    "Minor Code Smell",
+    "S6608:Prefer indexing instead of \"Enumerable\" methods on types implementing \"IList\"",
+    Justification = "Easier to read, and performance is not an issue here.")]

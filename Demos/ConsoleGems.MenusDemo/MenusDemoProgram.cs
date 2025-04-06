@@ -6,6 +6,8 @@
 namespace Sde.ConsoleGems.MenusDemo
 {
     using Microsoft.Extensions.DependencyInjection;
+    using Sde.ConsoleGems.AutoComplete;
+    using Sde.ConsoleGems.AutoComplete.Matchers;
     using Sde.ConsoleGems.Menus;
 
     /// <summary>
@@ -47,7 +49,7 @@ namespace Sde.ConsoleGems.MenusDemo
                 // It's not necessary to supply a MenuWriter, but if you
                 // want to use a different IMenuWriter implementation then
                 // you can specify it here.
-                .UseMenuWriter<FigletMenuWriter>()
+                ////.UseMenuWriter<FigletMenuWriter>()
 
                 // You do need to specify a main menu though, otherwise
                 // ConsoleGems won't auto-discover and register the child
