@@ -11,11 +11,11 @@ namespace Sde.ConsoleGems.Text
     /// <remarks>
     /// Implemented in order to avoid bringing the System.Drawing
     /// namespace into the library, which could cause confusion,
-    /// unneccessary increase in application size, and possble
+    /// unnecessary increase in application size, and possible
     /// cross-platform compatibility issues.
     /// </remarks>
     /// <param name="x">The zero-based x co-ordinate.</param>
-    /// <param name="y">The zer-based y co-ordinate.</param>
+    /// <param name="y">The zero-based y co-ordinate.</param>
     public readonly struct ConsolePoint(int x, int y)
     {
         /// <summary>
