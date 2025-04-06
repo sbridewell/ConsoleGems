@@ -9,6 +9,7 @@ namespace Sde.ConsoleGems.MenusDemo
     using Sde.ConsoleGems.Commands;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
+    using Sde.ConsoleGems.Text;
     using WenceyWang.FIGlet;
 
     /// <summary>
@@ -21,6 +22,7 @@ namespace Sde.ConsoleGems.MenusDemo
         IConsole console,
         ISharedMenuItemsProvider sharedMenuItemsProvider,
         IGlobalMenuItemsProvider globalMenuItemsProvider,
+        ITextJustifier textJustifier,
         ExitCurrentMenuCommand exitCurrentMenuCommand,
         AsciiArtSettings asciiArtSettings,
         ApplicationState applicationState)

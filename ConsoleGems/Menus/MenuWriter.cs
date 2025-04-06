@@ -11,6 +11,7 @@ namespace Sde.ConsoleGems.Menus
     public class MenuWriter(
         ISharedMenuItemsProvider sharedMenuItemsProvider,
         IGlobalMenuItemsProvider globalMenuItemsProvider,
+        ITextJustifier textJustifier,
         IConsole console,
         AsciiArtSettings asciiArtSettings,
         ExitCurrentMenuCommand exitCurrentMenuCommand,
