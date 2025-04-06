@@ -29,7 +29,7 @@ namespace Sde.ConsoleGems.Test.Menus
         [Fact]
         public void WriteTopBorder_WritesCorrectOutput()
         {
-            // Arramge
+            // Arrange
             this.applicationState.MenuDepth = 0;
             var menu = new MenuForTesting(this.menuItems);
             var menuWriter = this.CreateWriter();
