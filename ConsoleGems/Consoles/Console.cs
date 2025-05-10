@@ -104,6 +104,12 @@ namespace Sde.ConsoleGems.Consoles
         }
 
         /// <inheritdoc/>
+        public virtual void Clear()
+        {
+            System.Console.Clear();
+        }
+
+        /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public override string ToString()
         {
