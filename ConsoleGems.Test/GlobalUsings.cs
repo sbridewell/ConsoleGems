@@ -15,7 +15,6 @@ global using Sde.ConsoleGems.AutoComplete.Matchers;
 global using Sde.ConsoleGems.Commands;
 global using Sde.ConsoleGems.Commands.Demo;
 global using Sde.ConsoleGems.Consoles;
-global using Sde.ConsoleGems.FullScreen;
 global using Sde.ConsoleGems.Menus;
 global using Sde.ConsoleGems.Prompters;
 global using Sde.ConsoleGems.Text;
