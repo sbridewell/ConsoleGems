@@ -1,0 +1,210 @@
+﻿// <copyright file="GameController.cs" company="Simon Bridewell">
+// Copyright (c) Simon Bridewell.
+// Released under the MIT license - see LICENSE.txt in the repository root.
+// </copyright>
+
+namespace Sde.MazeGame
+{
+    using Sde.ConsoleGems.Consoles;
+    using Sde.ConsoleGems.Text;
+    using Sde.MazeGame.FogOfWar;
+    using Sde.MazeGame.KeyPressHandlers;
+    using Sde.MazeGame.Models;
+    using Sde.MazeGame.Painters;
+
+    public class GameController(
+        IConsole console,
+        IStatusPainter statusPainter,
+        IMazePainter mazePainter,
+        IMazePainter3D mazePainter3D,
+        MazeVisibilityUpdater mazeVisibilityUpdater,
+        MazeGameKeyPressMappings keyPressMappings)
+        : IGameController
+    {
+        /// <summary>
+        /// Gets the instance of the game which is currnetly being played.
+        /// </summary>
+        public Game CurrentGame { get; private set; }
+
+        /// <inheritdoc/>
+        public void Play(string mazeFile)
+        {
+            console.Clear();
+            var maze = new MazeFactory().CreateFromFile(mazeFile);
+            var player = new Player
+            {
+                FacingDirection = GetPlayersStartingDirection(),
+                Position = this.GetPlayersStartingPosition(maze),
+            };
+            this.CurrentGame = new Game(maze, player);
+            var options = new MazeGameOptions()
+                .WithMazeOrigin(41, 1)
+                .WithStatusOrigin(0, 0);
+            mazePainter.SetOrigin(options.MazeOrigin);
+            mazePainter3D.SetOrigin(new ConsolePoint(0, 1));
+            statusPainter.SetOrigin(options.StatusOrigin);
+            statusPainter.SetWidth(console.WindowWidth - options.StatusOrigin.X);
+            this.UpdateVisibility(maze, player);
+            mazePainter.Paint(maze, player);
+            this.WritePositionStatusMessage(player);
+            console.CursorVisible = false;
+            while (this.CurrentGame.ContinuePlaying && !this.CurrentGame.PlayerHasWon)
+            {
+                var keyInfo = console.ReadKey(intercept: true);
+                keyPressMappings.Mappings.TryGetValue(keyInfo.Key, out var keyPressHandler);
+                if (keyPressHandler != null)
+                {
+                    keyPressHandler.Handle(keyInfo, this);
+                }
+                else
+                {
+                    var msg = "Use left and right arrows to turn, up arrow to move forward and Q to quit.";
+                    statusPainter.Paint(msg, ConsoleOutputType.Error);
+                }
+            }
+
+            console.CursorTop = maze.Height + 1;
+            console.CursorLeft = 0;
+            console.CursorVisible = true;
+        }
+
+        /// <summary>
+        /// Turns the player to the left.
+        /// </summary>
+        /// <param name="maze">The maze that the player is in.</param>
+        /// <param name="player">The player.</param>
+        public void TurnPlayerLeft(Maze maze, Player player)
+        {
+            // TODO: PlayerManager.TurnLeft and TurnRight methods?
+            player.FacingDirection = player.FacingDirection switch
+            {
+                Direction.North => Direction.West,
+                Direction.East => Direction.North,
+                Direction.South => Direction.East,
+                Direction.West => Direction.South,
+                _ => player.FacingDirection,
+            };
+
+            this.UpdateVisibility(maze, player);
+            this.WritePositionStatusMessage(player);
+            mazePainter3D.Render(maze, player);
+        }
+
+        /// <summary>
+        /// Turns the player to the right.
+        /// </summary>
+        /// <param name="maze">The maze that the player is in.</param>
+        /// <param name="player">The player.</param>
+        public void TurnPlayerRight(Maze maze, Player player)
+        {
+            player.FacingDirection = player.FacingDirection switch
+            {
+                Direction.North => Direction.East,
+                Direction.East => Direction.South,
+                Direction.South => Direction.West,
+                Direction.West => Direction.North,
+                _ => player.FacingDirection,
+            };
+
+            this.UpdateVisibility(maze, player);
+            this.WritePositionStatusMessage(player);
+            mazePainter3D.Render(maze, player);
+        }
+
+        /// <summary>
+        /// Attempts to move the player forward.
+        /// The player can only move forward if there isn't a wall in the way.
+        /// </summary>
+        public void TryToMovePlayerForward()
+        {
+            var player = this.CurrentGame.Player;
+            var maze = this.CurrentGame.Maze;
+            var newPosition = player.FacingDirection switch
+            {
+                Direction.North => new ConsolePoint(player.Position.X, player.Position.Y - 1),
+                Direction.East => new ConsolePoint(player.Position.X + 1, player.Position.Y),
+                Direction.South => new ConsolePoint(player.Position.X, player.Position.Y + 1),
+                Direction.West => new ConsolePoint(player.Position.X - 1, player.Position.Y),
+                _ => player.Position,
+            };
+            if (!maze.PositionIsWithinMaze(newPosition))
+            {
+                var msg = "Congratulations, you have escaped the maze! Press space to continue.";
+                statusPainter.Paint(msg, ConsoleOutputType.Prompt);
+                this.CurrentGame.PlayerHasWon = true;
+                char spaceKey = '\0';
+                while (spaceKey != ' ')
+                {
+                    spaceKey = console.ReadKey().KeyChar;
+                }
+
+                return;
+            }
+
+            if (maze.GetMazePoint(newPosition).PointType == MazePointType.Path)
+            {
+                mazePainter.ErasePlayer(player);
+                player.Position = newPosition;
+                this.UpdateVisibility(maze, player);
+                this.WritePositionStatusMessage(player);
+                mazePainter3D.Render(maze, player);
+            }
+            else
+            {
+                var msg = "You can't move forward, there's a wall in the way.";
+                statusPainter.Paint(msg, ConsoleOutputType.Error);
+            }
+        }
+
+        /// <summary>
+        /// Quits the game.
+        /// </summary>
+        public void Quit()
+        {
+            console.CursorTop = this.CurrentGame.Maze.Height + 1;
+            statusPainter.Paint("Thank you for playing!");
+            this.CurrentGame.ContinuePlaying = false;
+        }
+
+        private static Direction GetPlayersStartingDirection()
+        {
+            var random = new Random();
+            var direction = (Direction)random.Next(0, 4);
+            return direction;
+        }
+
+        private ConsolePoint GetPlayersStartingPosition(Maze maze)
+        {
+            var x = new Random().Next(0, maze.Width);
+            var y = new Random().Next(0, maze.Height);
+            if (maze.GetMazePoint(x, y).PointType == MazePointType.Path)
+            {
+                return new ConsolePoint(x, y);
+            }
+            else
+            {
+                return this.GetPlayersStartingPosition(maze);
+            }
+        }
+
+        private void WritePositionStatusMessage(Player player)
+        {
+            var facingString = player.FacingDirection.ToString();
+            statusPainter.Paint($"Find your way out of the maze! You are facing {facingString}");
+        }
+
+        private void UpdateVisibility(Maze maze, Player player)
+        {
+            var updateRequired = mazeVisibilityUpdater.UpdateVisibility(maze, player);
+            if (updateRequired)
+            {
+                mazePainter.Paint(maze, player);
+            }
+            else
+            {
+                mazePainter.ErasePlayer(player);
+                mazePainter.PaintPlayer(player);
+            }
+        }
+    }
+}
