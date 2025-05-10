@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Check branch name
         run: |
-          if [[ ! ${{ github.head_ref }} =~ epic/* ]]; then
+          if [[ ! ${{ github.head_ref }} =~ ^epic/.* ]]; then
             echo "Branch name does not match the required pattern."
             exit 1
           fi
