@@ -27,5 +27,12 @@ namespace Sde.ConsoleGems.Text
         /// Gets the zero-based Y co-ordinate.
         /// </summary>
         public int Y => y;
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override string ToString()
+        {
+            return $"ConsolePoint X:{x} Y:{y}";
+        }
     }
 }
