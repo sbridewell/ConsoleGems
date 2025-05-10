@@ -93,6 +93,11 @@ namespace Sde.ConsoleGems.Consoles
         /// </param>
         void WriteLine(char characterToWrite, ConsoleOutputType outputType = default);
 
+        /// <summary>
+        /// Clears the screen and sets the cursor position to the top left corner.
+        /// </summary>
+        void Clear();
+
         #endregion
     }
 }
