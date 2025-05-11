@@ -13,12 +13,9 @@ namespace Sde.ConsoleGems.Test.FullScreen
     /// <see cref="IPainter"/> implementation for use in unit testing
     /// the abstract <see cref="Painter"/> class.
     /// </summary>
-    public class TestPainter(IConsole console, ConsolePoint position, ConsoleSize size)
-        : Painter(console, position, size)
+    public class TestPainter(IConsole console, ConsolePoint position, ConsoleSize innerSize, bool hasBorder)
+        : Painter(console, position, innerSize, hasBorder)
     {
-        // TODO: add bool PaintBorder parameter to constructor and use ╭╮╯╰─│ when painting
-        // TODO: or a bool HasBorder property which is only used by the Paint method? ScreenBuffer size validation would need to take it into account
-
         /// <summary>
         /// Gets the value of the <see cref="Painter.ScreenBuffer"/> property.
         /// </summary>

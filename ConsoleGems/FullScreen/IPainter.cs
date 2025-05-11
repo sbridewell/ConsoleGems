@@ -19,9 +19,17 @@ namespace Sde.ConsoleGems.FullScreen
 
         /// <summary>
         /// Gets the size of the area of the console window that the painter
-        /// is responsible for.
+        /// is responsible for, excluding any space taken up by a border.
         /// </summary>
-        public ConsoleSize Size { get; }
+        public ConsoleSize InnerSize { get; }
+
+        /// <summary>
+        /// Gets the size of the area of the console window that the painter
+        /// is responsible for, including any space taken up by a border.
+        /// This is the amount of space that the painter actually takes up
+        /// in the console window.
+        /// </summary>
+        public ConsoleSize OuterSize { get; }
 
         /// <summary>
         /// Gets the screen buffer for the area of the console window that
