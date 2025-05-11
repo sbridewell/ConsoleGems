@@ -28,14 +28,12 @@ namespace Sde.ConsoleGems.FullScreen
             console.CursorVisible = false;
             console.CursorLeft = position.X;
             console.CursorTop = position.Y;
-            for (var y = 0; y < size.Height - 1; y++)
+            for (var y = 0; y < size.Height; y++)
             {
                 console.Write(this.ScreenBuffer[y]);
                 console.CursorLeft = position.X;
             }
 
-            console.Write(this.ScreenBuffer[size.Height - 1]);
-            console.CursorLeft = position.X;
             console.CursorVisible = true;
         }
 
