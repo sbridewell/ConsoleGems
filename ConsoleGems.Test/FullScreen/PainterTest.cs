@@ -3,14 +3,14 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-using Microsoft.CodeAnalysis.Operations;
-
 namespace Sde.ConsoleGems.Test.FullScreen
 {
+    using Xunit.Abstractions;
+
     /// <summary>
     /// Unit tests for the <see cref="Painter"/> class.
     /// </summary>
-    public class PainterTest
+    public class PainterTest(ITestOutputHelper output)
     {
         /// <summary>
         /// Tests that the constructor sets the Size and Position properties correctly.
@@ -139,6 +139,8 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 "ConsoleGems",
                 "TestPainter",
             };
+            ////painter.ScreenBuffer[0] = linesToWrite[0]; // CS0200 - ScreenBuffer is read only :-)
+            ////painter.WriteToScreenBuffer(0, linesToWrite[0]); // CS0122 - WriteToScreenBuffer is protected :-)
             painter.PublicWriteToScreenBuffer(0, linesToWrite[0]);
             painter.PublicWriteToScreenBuffer(1, linesToWrite[1]);
             painter.PublicWriteToScreenBuffer(2, linesToWrite[2]);
@@ -150,10 +152,43 @@ namespace Sde.ConsoleGems.Test.FullScreen
             // Assert
             console.VerifySet(m => m.CursorLeft = 1);
             console.VerifySet(m => m.CursorTop = 2);
-            console.Verify(m => m.WriteLine(linesToWrite[0], It.IsAny<ConsoleOutputType>()), Times.Once);
-            console.Verify(m => m.WriteLine(linesToWrite[1], It.IsAny<ConsoleOutputType>()), Times.Once);
-            console.Verify(m => m.WriteLine(linesToWrite[2], It.IsAny<ConsoleOutputType>()), Times.Once);
-            console.Verify(m => m.WriteLine(linesToWrite[3], It.IsAny<ConsoleOutputType>()), Times.Once);
+            console.Verify(m => m.Write(linesToWrite[0], It.IsAny<ConsoleOutputType>()), Times.Once);
+            console.Verify(m => m.Write(linesToWrite[1], It.IsAny<ConsoleOutputType>()), Times.Once);
+            console.Verify(m => m.Write(linesToWrite[2], It.IsAny<ConsoleOutputType>()), Times.Once);
+            console.Verify(m => m.Write(linesToWrite[3], It.IsAny<ConsoleOutputType>()), Times.Once);
+        }
+
+        /// <summary>
+        /// Not really a unit test, instead it writes to the test output window using
+        /// <see cref="TestOutputHelperConsole"/> to enable a visual check.
+        /// </summary>
+        [Fact]
+        public void WriteConsoleOutputToTestOutputWindow()
+        {
+            // Arrange
+            var size = new ConsoleSize(11, 4);
+            var console = new TestOutputHelperConsole(output, size);
+            console.Clear();
+            var position = new ConsolePoint(0, 0);
+            var painter = new TestPainter(console, position, size);
+            var linesToWrite = new string[]
+            {
+                "Hello world",
+                "Paint test ",
+                "ConsoleGems",
+                "TestPainter",
+            };
+            painter.PublicWriteToScreenBuffer(0, linesToWrite[0]);
+            painter.PublicWriteToScreenBuffer(1, linesToWrite[1]);
+            painter.PublicWriteToScreenBuffer(2, linesToWrite[2]);
+            painter.PublicWriteToScreenBuffer(3, linesToWrite[3]);
+
+            // Act
+            painter.Paint();
+
+            // Assert
+            console.Flush();
+            Assert.True(true); // just to stop the analyzer compalining that there are no asserts
         }
     }
 }

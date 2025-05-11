@@ -22,5 +22,19 @@ namespace Sde.ConsoleGems.FullScreen
         /// is responsible for.
         /// </summary>
         public ConsoleSize Size { get; }
+
+        /// <summary>
+        /// Gets the screen buffer for the area of the console window that
+        /// the painter is responsible for.
+        /// </summary>
+        public IReadOnlyList<string> ScreenBuffer { get; }
+
+        /// <summary>
+        /// Paints the area of the console window that this painter is responsible
+        /// for from its <see cref="ScreenBuffer"/> property.
+        /// Concrete implementations are expected to have already populated the
+        /// <see cref="ScreenBuffer"/> before this method is called.
+        /// </summary>
+        public void Paint();
     }
 }

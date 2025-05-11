@@ -16,10 +16,13 @@ namespace Sde.ConsoleGems.Test.FullScreen
     public class TestPainter(IConsole console, ConsolePoint position, ConsoleSize size)
         : Painter(console, position, size)
     {
+        // TODO: add bool PaintBorder parameter to constructor and use ╭╮╯╰─│ when painting
+        // TODO: or a bool HasBorder property which is only used by the Paint method? ScreenBuffer size validation would need to take it into account
+
         /// <summary>
         /// Gets the value of the <see cref="Painter.ScreenBuffer"/> property.
         /// </summary>
-        public string[] PublicScreenBuffer => this.ScreenBuffer;
+        public IReadOnlyList<string> PublicScreenBuffer => this.ScreenBuffer;
 
         /// <summary>
         /// Calls the protected <see cref="Painter.WriteToScreenBuffer(int, string)"/> method.
