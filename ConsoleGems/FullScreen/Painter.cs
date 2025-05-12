@@ -8,13 +8,13 @@ namespace Sde.ConsoleGems.FullScreen
     /// <summary>
     /// Abstract base class for <see cref="IPainter"/> implementations.
     /// </summary>
-    public abstract class Painter(IConsole console, ConsolePoint position, ConsoleSize innerSize, bool hasBorder)
+    public abstract class Painter(IConsole console, ConsolePoint origin, ConsoleSize innerSize, bool hasBorder)
         : IPainter
     {
         private readonly string[] screenBuffer = new string[innerSize.Height];
 
         /// <inheritdoc/>
-        public ConsolePoint Position => position;
+        public ConsolePoint Origin => origin;
 
         /// <inheritdoc/>
         public ConsoleSize InnerSize => innerSize;
@@ -31,19 +31,23 @@ namespace Sde.ConsoleGems.FullScreen
         public void Paint()
         {
             console.CursorVisible = false;
-            console.CursorLeft = position.X;
-            console.CursorTop = position.Y;
+            console.CursorLeft = origin.X;
+            console.CursorTop = origin.Y;
             this.PaintTopBorderIfRequired();
 
             for (var y = 0; y < innerSize.Height; y++)
             {
-                console.CursorLeft = position.X;
+                console.CursorLeft = origin.X;
                 this.PaintSideBorderIfRequired();
                 console.Write(this.ScreenBuffer[y]);
                 this.PaintSideBorderIfRequired();
-                console.CursorLeft = position.X;
+                if (console.CursorTop < console.WindowHeight - 1)
+                {
+                    console.CursorTop++;
+                }
             }
 
+            console.CursorLeft = origin.X;
             this.PaintBottomBorderIfRequired();
             console.CursorVisible = true;
         }
@@ -92,6 +96,7 @@ namespace Sde.ConsoleGems.FullScreen
                 }
 
                 console.Write("╮");
+                console.CursorTop++;
             }
         }
 
@@ -107,7 +112,7 @@ namespace Sde.ConsoleGems.FullScreen
         {
             if (hasBorder)
             {
-                console.CursorLeft = position.X;
+                console.CursorLeft = origin.X;
                 console.Write("╰");
                 for (var x = 0; x < innerSize.Width; x++)
                 {

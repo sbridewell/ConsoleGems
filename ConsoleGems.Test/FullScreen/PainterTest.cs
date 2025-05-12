@@ -33,7 +33,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             painter.InnerSize.Should().Be(size);
             painter.OuterSize.Width.Should().Be(size.Width + (hasBorder ? 2 : 0));
             painter.OuterSize.Height.Should().Be(size.Height + (hasBorder ? 2 : 0));
-            painter.Position.Should().Be(position);
+            painter.Origin.Should().Be(position);
         }
 
         /// <summary>

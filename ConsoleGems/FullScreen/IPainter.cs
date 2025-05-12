@@ -15,7 +15,7 @@ namespace Sde.ConsoleGems.FullScreen
         /// Gets the position of the area of the console window that the
         /// painter is responsible for.
         /// </summary>
-        public ConsolePoint Position { get; }
+        public ConsolePoint Origin { get; }
 
         /// <summary>
         /// Gets the size of the area of the console window that the painter
