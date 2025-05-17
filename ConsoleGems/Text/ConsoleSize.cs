@@ -32,7 +32,7 @@ namespace Sde.ConsoleGems.Text
         [ExcludeFromCodeCoverage]
         public override string ToString()
         {
-            return $"ConsoleSize Width:{width} Height:{height}";
+            return $"{width}x{height}";
         }
     }
 }
