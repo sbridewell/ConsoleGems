@@ -13,13 +13,13 @@ namespace Sde.ConsoleGems.Test.FullScreen
     /// <see cref="IPainter"/> implementation for use in unit testing
     /// the abstract <see cref="Painter"/> class.
     /// </summary>
-    public class TestPainter(IConsole console, ConsolePoint position, ConsoleSize size)
-        : Painter(console, position, size)
+    public class TestPainter(IConsole console, ConsolePoint position, ConsoleSize innerSize, bool hasBorder)
+        : Painter(console, position, innerSize, hasBorder)
     {
         /// <summary>
         /// Gets the value of the <see cref="Painter.ScreenBuffer"/> property.
         /// </summary>
-        public string[] PublicScreenBuffer => this.ScreenBuffer;
+        public IReadOnlyList<string> PublicScreenBuffer => this.ScreenBuffer;
 
         /// <summary>
         /// Calls the protected <see cref="Painter.WriteToScreenBuffer(int, string)"/> method.

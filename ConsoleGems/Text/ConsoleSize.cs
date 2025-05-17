@@ -14,25 +14,25 @@ namespace Sde.ConsoleGems.Text
     /// unnecessary increase in application size, and possible
     /// cross-platform compatibility issues.
     /// </remarks>
-    /// <param name="horizontal">The zero-based horizontal size in characters.</param>
-    /// <param name="vertical">The zero-based vertical size in characters.</param>
-    public struct ConsoleSize(int horizontal, int vertical)
+    /// <param name="width">The zero-based width in characters.</param>
+    /// <param name="height">The zero-based height in characters.</param>
+    public struct ConsoleSize(int width, int height)
     {
         /// <summary>
-        /// Gets the zero-based horizontal size in characters.
+        /// Gets the zero-based width in characters.
         /// </summary>
-        public int Horizontal => horizontal;
+        public int Width => width;
 
         /// <summary>
-        /// Gets the zero-based vertical size in characters.
+        /// Gets the zero-based height in characters.
         /// </summary>
-        public int Vertical => vertical;
+        public int Height => height;
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public override string ToString()
         {
-            return $"ConsoleSize Horizontal:{horizontal} Vertical:{vertical}";
+            return $"{width}x{height}";
         }
     }
 }
