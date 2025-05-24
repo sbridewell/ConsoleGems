@@ -1,4 +1,4 @@
-﻿// <copyright file="ConsolePoint.cs" company="Simon Bridewell">
+﻿// <copyright file="ConsoleSize.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell.
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
@@ -6,7 +6,7 @@
 namespace Sde.ConsoleGems.Text
 {
     /// <summary>
-    /// Represents a pair of co-ordinates within a console window.
+    /// Represents the size of a rectangle in a console window.
     /// </summary>
     /// <remarks>
     /// Implemented in order to avoid bringing the System.Drawing
@@ -14,25 +14,25 @@ namespace Sde.ConsoleGems.Text
     /// unnecessary increase in application size, and possible
     /// cross-platform compatibility issues.
     /// </remarks>
-    /// <param name="x">The zero-based x co-ordinate.</param>
-    /// <param name="y">The zero-based y co-ordinate.</param>
-    public readonly struct ConsolePoint(int x, int y)
+    /// <param name="width">The zero-based width in characters.</param>
+    /// <param name="height">The zero-based height in characters.</param>
+    public struct ConsoleSize(int width, int height)
     {
         /// <summary>
-        /// Gets the zero-based X co-ordinate.
+        /// Gets the zero-based width in characters.
         /// </summary>
-        public int X => x;
+        public int Width => width;
 
         /// <summary>
-        /// Gets the zero-based Y co-ordinate.
+        /// Gets the zero-based height in characters.
         /// </summary>
-        public int Y => y;
+        public int Height => height;
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public override string ToString()
         {
-            return $"{x},{y}";
+            return $"{width}x{height}";
         }
     }
 }
