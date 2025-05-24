@@ -111,13 +111,6 @@ namespace Sde.ConsoleGems.Consoles
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
-        public virtual void Clear()
-        {
-            System.Console.Clear();
-        }
-
-        /// <inheritdoc/>
-        [ExcludeFromCodeCoverage]
         public override string ToString()
         {
             return $"CursorLeft: {this.CursorLeft}, CursorTop: {this.CursorTop}";
