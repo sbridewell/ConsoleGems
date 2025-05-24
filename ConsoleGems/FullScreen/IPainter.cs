@@ -15,12 +15,40 @@ namespace Sde.ConsoleGems.FullScreen
         /// Gets the position of the area of the console window that the
         /// painter is responsible for.
         /// </summary>
-        public ConsolePoint Position { get; }
+        public ConsolePoint Origin { get; }
 
         /// <summary>
         /// Gets the size of the area of the console window that the painter
-        /// is responsible for.
+        /// is responsible for, excluding any space taken up by a border.
         /// </summary>
-        public ConsoleSize Size { get; }
+        public ConsoleSize InnerSize { get; }
+
+        /// <summary>
+        /// Gets the size of the area of the console window that the painter
+        /// is responsible for, including any space taken up by a border.
+        /// This is the amount of space that the painter actually takes up
+        /// in the console window.
+        /// </summary>
+        public ConsoleSize OuterSize { get; }
+
+        /// <summary>
+        /// Gets the rectangle representing the space taken up by the painter,
+        /// including any space taken up by a border.
+        /// </summary>
+        public ConsoleRectangle OuterBounds => new ConsoleRectangle(this.Origin, this.OuterSize);
+
+        /// <summary>
+        /// Gets the screen buffer for the area of the console window that
+        /// the painter is responsible for.
+        /// </summary>
+        public IReadOnlyList<string> ScreenBuffer { get; }
+
+        /// <summary>
+        /// Paints the area of the console window that this painter is responsible
+        /// for from its <see cref="ScreenBuffer"/> property.
+        /// Concrete implementations are expected to have already populated the
+        /// <see cref="ScreenBuffer"/> before this method is called.
+        /// </summary>
+        public void Paint();
     }
 }

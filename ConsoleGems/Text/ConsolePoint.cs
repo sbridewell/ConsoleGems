@@ -32,7 +32,7 @@ namespace Sde.ConsoleGems.Text
         [ExcludeFromCodeCoverage]
         public override string ToString()
         {
-            return $"ConsolePoint X:{x} Y:{y}";
+            return $"{x},{y}";
         }
     }
 }
