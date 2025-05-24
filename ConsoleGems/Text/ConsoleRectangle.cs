@@ -17,7 +17,7 @@ namespace Sde.ConsoleGems.Text
         public readonly ConsolePoint Origin => origin;
 
         /// <summary>
-        /// Gets the size of the rectangle in character.
+        /// Gets the size of the rectangle in characters.
         /// </summary>
         public readonly ConsoleSize Size => size;
 
