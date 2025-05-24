@@ -32,6 +32,12 @@ namespace Sde.ConsoleGems.FullScreen
         public ConsoleSize OuterSize { get; }
 
         /// <summary>
+        /// Gets the rectangle representing the space taken up by the painter,
+        /// including any space taken up by a border.
+        /// </summary>
+        public ConsoleRectangle OuterBounds => new ConsoleRectangle(this.Origin, this.OuterSize);
+
+        /// <summary>
         /// Gets the screen buffer for the area of the console window that
         /// the painter is responsible for.
         /// </summary>

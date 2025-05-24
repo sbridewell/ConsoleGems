@@ -52,6 +52,12 @@ namespace Sde.ConsoleGems.FullScreen
             console.CursorVisible = true;
         }
 
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"Origin: {origin}, InnerSize: {innerSize}, HasBorder: {hasBorder}";
+        }
+
         /// <summary>
         /// Writes the supplied line of text to the screen buffer at the
         /// supplied line number.
