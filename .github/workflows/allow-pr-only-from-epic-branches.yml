@@ -1,0 +1,20 @@
+name: Only allow pull requests to merge from epic branches
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name
+        run: |
+          if [[ ! ${{ github.head_ref }} =~ ^epic/.* ]]; then
+            echo "Branch name does not match the required pattern."
+            exit 1
+          fi
