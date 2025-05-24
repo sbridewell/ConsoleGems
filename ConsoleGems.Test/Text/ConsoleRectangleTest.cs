@@ -157,7 +157,7 @@ namespace Sde.ConsoleGems.Test.Text
 
                     #endregion
 
-                    #region test cases for rectangles separated by 1 chaaracter
+                    #region test cases for rectangles separated by 1 character
                     {
                         /*    22
                          * 11 22
