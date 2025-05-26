@@ -17,9 +17,10 @@ namespace Sde.MazeGame.Painters
     /// </summary>
     public class MazePainter2D(
         IConsole console,
+        IBorderPainter borderPainter,
         IWallCharacterProvider wallCharacterProvider,
         IPlayerCharacterProvider playerCharacterProvider)
-        : Painter(console),
+        : Painter(console, borderPainter),
         IMazePainter
     {
         private readonly char pathChar = ' ';

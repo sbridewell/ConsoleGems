@@ -18,18 +18,20 @@ namespace Sde.ConsoleGems.Test.FullScreen
 
         private static readonly Mock<IConsole> MockConsole = new Mock<IConsole>();
 
+        private static readonly Mock<IBorderPainter> MockBorderPainter = new Mock<IBorderPainter>();
+
         private static readonly Dictionary<string, OverlappingPaintersTestCase> OverlappingPaintersTestData = new ()
         {
             ["Two overlapping painters"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
                 {
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(1, 1),
                         InnerSize = new ConsoleSize(2, 2),
                         HasBorder = false,
                     },
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(2, 2),
                         InnerSize = new ConsoleSize(2, 2),
@@ -39,13 +41,13 @@ namespace Sde.ConsoleGems.Test.FullScreen
             ["Two overlapping painters, both with borders"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
                 {
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(1, 1),
                         InnerSize = new ConsoleSize(2, 2),
                         HasBorder = true,
                     },
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(3, 3),
                         InnerSize = new ConsoleSize(2, 2),
@@ -55,13 +57,13 @@ namespace Sde.ConsoleGems.Test.FullScreen
             ["Two overlapping painters, one with border"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
                 {
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(1, 1),
                         InnerSize = new ConsoleSize(2, 2),
                         HasBorder = true,
                     },
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(2, 2),
                         InnerSize = new ConsoleSize(2, 2),
@@ -71,19 +73,19 @@ namespace Sde.ConsoleGems.Test.FullScreen
             ["Three painters, two overlap and one doesn't"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
                 {
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(1, 1),
                         InnerSize = new ConsoleSize(2, 2),
                         HasBorder = false,
                     },
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(2, 2),
                         InnerSize = new ConsoleSize(2, 2),
                         HasBorder = false,
                     },
-                    new TestPainter(MockConsole.Object)
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
                     {
                         Origin = new ConsolePoint(5, 3),
                         InnerSize = new ConsoleSize(2, 2),
@@ -138,7 +140,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var console = new TestOutputHelperConsole(output, new ConsoleSize(20, 20));
             console.Clear();
             var orchestrator = new PainterOrchestrator(console);
-            var painter1 = new TestPainter(console)
+            var painter1 = new TestPainter(console, MockBorderPainter.Object)
             {
                 Origin = new ConsolePoint(1, 1),
                 InnerSize = new ConsoleSize(5, 5),
@@ -153,7 +155,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 ['6', '7', '8', '9', '0'],
             };
             WriteToScreenBuffer(painter1Chars, painter1);
-            var painter2 = new TestPainter(console)
+            var painter2 = new TestPainter(console, MockBorderPainter.Object)
             {
                 Origin = new ConsolePoint(10, 0),
                 InnerSize = new ConsoleSize(2, 2),
@@ -224,7 +226,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var orchestrator = new PainterOrchestrator(testCase.mockConsole.Object);
             foreach (var rect in testCase.painterRectangles)
             {
-                orchestrator.Painters.Add(new TestPainter(testCase.mockConsole.Object)
+                orchestrator.Painters.Add(new TestPainter(testCase.mockConsole.Object, MockBorderPainter.Object)
                 {
                     Origin = rect.Origin,
                     InnerSize = rect.Size,

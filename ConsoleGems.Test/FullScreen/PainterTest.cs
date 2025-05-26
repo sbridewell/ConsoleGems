@@ -5,6 +5,7 @@
 
 namespace Sde.ConsoleGems.Test.FullScreen
 {
+    using System.Runtime.CompilerServices;
     using Xunit.Abstractions;
 
     /// <summary>
@@ -22,12 +23,13 @@ namespace Sde.ConsoleGems.Test.FullScreen
         public void Constructor_SetsPropertiesCorrectly(bool hasBorder)
         {
             // Arrange
-            var console = new Mock<IConsole>();
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
             var position = new ConsolePoint(1, 2);
             var size = new ConsoleSize(3, 4);
 
             // Act
-            var painter = new TestPainter(console.Object)
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object)
             {
                 Origin = position,
                 InnerSize = size,
@@ -65,10 +67,11 @@ namespace Sde.ConsoleGems.Test.FullScreen
             bool hasBorder)
         {
             // Arrange
-            var console = new Mock<IConsole>();
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
             var position = new ConsolePoint(1, 2);
             var size = new ConsoleSize(11, 4);
-            var painter = new TestPainter(console.Object)
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object)
             {
                 Origin = position,
                 InnerSize = size,
@@ -87,7 +90,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 painter.PublicScreenBuffer[lineNumber][x].Character.Should().Be(text[x]);
             }
 
-            console.VerifyNoOtherCalls();
+            mockConsole.VerifyNoOtherCalls();
         }
 
         /// <summary>
@@ -107,13 +110,14 @@ namespace Sde.ConsoleGems.Test.FullScreen
         public void WriteToScreenBuffer_XOutOfRange_Throws(int x, bool hasBorder)
         {
             // Arrange
-            var console = new Mock<IConsole>();
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
             var position = new ConsolePoint(1, 2);
             var size = new ConsoleSize(11, 4);
             var expectedMsg =
                 $"X coordinate {x} is outside the bounds of the painter's area. "
                 + $"Must be between zero and {size.Width - 1}. (Parameter 'x')";
-            var painter = new TestPainter(console.Object)
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object)
             {
                 Origin = position,
                 InnerSize = size,
@@ -146,13 +150,14 @@ namespace Sde.ConsoleGems.Test.FullScreen
         public void WriteToScreenBuffer_YOutOfRange_Throws(int lineNumber, bool hasBorder)
         {
             // Arrange
-            var console = new Mock<IConsole>();
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
             var position = new ConsolePoint(1, 2);
             var size = new ConsoleSize(11, 4);
             var expectedMsg =
                 $"Y coordinate {lineNumber} is outside the bounds of the painter's area. "
                 + $"Must be between zero and {size.Height - 1}. (Parameter 'y')";
-            var painter = new TestPainter(console.Object)
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object)
             {
                 Origin = position,
                 InnerSize = size,
@@ -179,10 +184,11 @@ namespace Sde.ConsoleGems.Test.FullScreen
         public void Paint_WritesScreenBufferToConsole(bool hasBorder)
         {
             // Arrange
-            var console = new Mock<IConsole>();
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
             var position = new ConsolePoint(1, 2);
             var size = new ConsoleSize(11, 4);
-            var painter = new TestPainter(console.Object)
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object)
             {
                 Origin = position,
                 InnerSize = size,
@@ -209,12 +215,12 @@ namespace Sde.ConsoleGems.Test.FullScreen
             painter.Paint();
 
             // Assert
-            console.VerifySet(m => m.CursorLeft = 1);
-            console.VerifySet(m => m.CursorTop = 2);
-            console.Verify(m => m.Write(linesToWrite[0], It.IsAny<ConsoleOutputType>()), Times.Once);
-            console.Verify(m => m.Write(linesToWrite[1], It.IsAny<ConsoleOutputType>()), Times.Once);
-            console.Verify(m => m.Write(linesToWrite[2], It.IsAny<ConsoleOutputType>()), Times.Once);
-            console.Verify(m => m.Write(linesToWrite[3], It.IsAny<ConsoleOutputType>()), Times.Once);
+            mockConsole.VerifySet(m => m.CursorLeft = 1);
+            mockConsole.VerifySet(m => m.CursorTop = 2);
+            mockConsole.Verify(m => m.Write(linesToWrite[0], It.IsAny<ConsoleOutputType>()), Times.Once);
+            mockConsole.Verify(m => m.Write(linesToWrite[1], It.IsAny<ConsoleOutputType>()), Times.Once);
+            mockConsole.Verify(m => m.Write(linesToWrite[2], It.IsAny<ConsoleOutputType>()), Times.Once);
+            mockConsole.Verify(m => m.Write(linesToWrite[3], It.IsAny<ConsoleOutputType>()), Times.Once);
         }
 
         /// <summary>
@@ -234,8 +240,9 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 innerSize.Height + (hasBorder ? 2 : 0));
             var console = new TestOutputHelperConsole(output, consoleSize);
             console.Clear();
+            var borderPainter = new BorderPainter(console);
             var position = new ConsolePoint(0, 0);
-            var painter = new TestPainter(console)
+            var painter = new TestPainter(console, borderPainter)
             {
                 Origin = position,
                 InnerSize = innerSize,

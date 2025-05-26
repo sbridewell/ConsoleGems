@@ -8,12 +8,11 @@ namespace Sde.ConsoleGems.FullScreen
     /// <summary>
     /// Abstract base class for <see cref="IPainter"/> implementations.
     /// </summary>
-    public abstract class Painter(IConsole console)
+    public abstract class Painter(IConsole console, IBorderPainter borderPainter)
         : IPainter
     {
         private readonly HashSet<int> dirtyLines = new ();
         private ConsoleSize innerSize;
-        private bool borderHasBeenPainted;
         private ConsolePixel[][] screenBuffer = new ConsolePixel[0][];
 
         /// <inheritdoc/>
@@ -25,6 +24,7 @@ namespace Sde.ConsoleGems.FullScreen
             get => this.innerSize;
             set
             {
+                borderPainter.Painter = this;
                 this.innerSize = value;
                 this.screenBuffer = new ConsolePixel[value.Height][];
                 for (var y = 0; y < value.Height; y++)
@@ -50,16 +50,15 @@ namespace Sde.ConsoleGems.FullScreen
         /// <inheritdoc/>
         public void Paint()
         {
-            // TODO: this is still slow
             console.CursorLeft = this.Origin.X;
             console.CursorTop = this.Origin.Y;
-            this.PaintTopBorderIfRequired();
+            borderPainter.PaintTopBorderIfRequired();
 
             foreach (var y in this.dirtyLines.OrderBy(i => i))
             {
                 console.CursorLeft = this.Origin.X;
                 console.CursorTop = y + this.Origin.Y;
-                this.PaintSideBorderIfRequired();
+                borderPainter.PaintSideBorderIfRequired();
                 var x = 0;
                 while (x < this.innerSize.Width)
                 {
@@ -80,13 +79,12 @@ namespace Sde.ConsoleGems.FullScreen
                     console.Write(new string(chars), currentOutputType);
                 }
 
-                this.PaintSideBorderIfRequired();
+                borderPainter.PaintSideBorderIfRequired();
             }
 
             this.dirtyLines.Clear();
             console.CursorLeft = this.Origin.X;
-            this.PaintBottomBorderIfRequired();
-            this.borderHasBeenPainted = true;
+            borderPainter.PaintBottomBorderIfRequired();
         }
 
         /// <inheritdoc/>
@@ -138,60 +136,6 @@ namespace Sde.ConsoleGems.FullScreen
                 IsDirty = true,
             };
             this.dirtyLines.Add(y);
-        }
-
-        // TODO: BorderPainter class?
-        private void PaintTopBorderIfRequired()
-        {
-            if (this.borderHasBeenPainted)
-            {
-                return;
-            }
-
-            if (this.HasBorder)
-            {
-                console.Write("╭");
-                for (var x = 0; x < this.InnerSize.Width; x++)
-                {
-                    console.Write("─");
-                }
-
-                console.Write("╮");
-                console.CursorTop++;
-            }
-        }
-
-        private void PaintSideBorderIfRequired()
-        {
-            if (this.borderHasBeenPainted)
-            {
-                return;
-            }
-
-            if (this.HasBorder)
-            {
-                console.Write("│");
-            }
-        }
-
-        private void PaintBottomBorderIfRequired()
-        {
-            if (this.borderHasBeenPainted)
-            {
-                return;
-            }
-
-            if (this.HasBorder)
-            {
-                console.CursorLeft = this.Origin.X;
-                console.Write("╰");
-                for (var x = 0; x < this.InnerSize.Width; x++)
-                {
-                    console.Write("─");
-                }
-
-                console.Write("╯");
-            }
         }
     }
 }

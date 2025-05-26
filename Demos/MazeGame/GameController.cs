@@ -47,7 +47,7 @@ namespace Sde.MazeGame
                 .WithStatusOrigin(0, 0);
             mazePainter.Origin = options.MazeOrigin;
             mazePainter.InnerSize = new ConsoleSize(maze.Width, maze.Height);
-            mazePainter.HasBorder = true; // TODO: not painting a border around the maze
+            ////mazePainter.HasBorder = true; // TODO: not painting a border correctly around the maze
 
             // TODO: restore mazePainter3D
             ////mazePainter3D.SetOrigin(new ConsolePoint(0, 1));

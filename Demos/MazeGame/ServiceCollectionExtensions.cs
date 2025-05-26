@@ -6,6 +6,7 @@
 namespace Sde.MazeGame
 {
     using Microsoft.Extensions.DependencyInjection;
+    using Sde.ConsoleGems.FullScreen;
     using Sde.MazeGame.CharacterProviders;
     using Sde.MazeGame.FogOfWar;
     using Sde.MazeGame.KeyPressHandlers;
@@ -28,6 +29,7 @@ namespace Sde.MazeGame
         {
             services.AddSingleton<MazeGameKeyPressMappings>();
             services.AddSingleton<IStatusPainter, StatusPainter>();
+            services.AddScoped<IBorderPainter, BorderPainter>();
             services.AddSingleton<IMazePainter, MazePainter2D>();
             services.AddSingleton<IMazePainter3D, MazePainter3D>();
             services.AddSingleton<IGameController, GameController>();
