@@ -27,7 +27,12 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var size = new ConsoleSize(3, 4);
 
             // Act
-            var painter = new TestPainter(console.Object, position, size, hasBorder);
+            var painter = new TestPainter(console.Object)
+            {
+                Origin = position,
+                InnerSize = size,
+                HasBorder = hasBorder,
+            };
 
             // Assert
             painter.InnerSize.Should().Be(size);
@@ -37,8 +42,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
         }
 
         /// <summary>
-        /// Tests that the WriteToScreenBuffer method writes to the
-        /// <see cref="Painter.ScreenBuffer"/> property correctly,
+        /// Tests that the WriteToScreenBuffer method writes to the screen buffer correctly,
         /// and does not make any calls to the <see cref="IConsole"/>.
         /// </summary>
         /// <param name="lineNumber">
@@ -64,104 +68,104 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var console = new Mock<IConsole>();
             var position = new ConsolePoint(1, 2);
             var size = new ConsoleSize(11, 4);
-            var painter = new TestPainter(console.Object, position, size, hasBorder);
+            var painter = new TestPainter(console.Object)
+            {
+                Origin = position,
+                InnerSize = size,
+                HasBorder = hasBorder,
+            };
 
             // Act
-            painter.PublicWriteToScreenBuffer(lineNumber, text);
+            for (var i = 0; i < text.Length; i++)
+            {
+                painter.PublicWriteToScreenBuffer(i, lineNumber, text[i], ConsoleOutputType.Default);
+            }
 
             // Assert
-            painter.PublicScreenBuffer[lineNumber].Should().Be(text);
+            for (var x = 0; x < size.Width; x++)
+            {
+                painter.PublicScreenBuffer[lineNumber][x].Character.Should().Be(text[x]);
+            }
+
             console.VerifyNoOtherCalls();
         }
 
         /// <summary>
         /// Tests that the correct exception is thrown when the
-        /// <see cref="Painter.WriteToScreenBuffer(int, string)"/> method
-        /// is passed a line number which is outside the vertical range
+        /// <see cref="Painter.WriteToScreenBuffer"/> method
+        /// is passed a X coordinate which is outside the horizontal range
+        /// of the are of the console window which the painter is responsible
+        /// for.
+        /// </summary>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="hasBorder">True to draw a border around the painter's content.</param>
+        [InlineData(-1, true)]
+        [InlineData(11, true)]
+        [InlineData(-1, false)]
+        [InlineData(11, false)]
+        [Theory]
+        public void WriteToScreenBuffer_XOutOfRange_Throws(int x, bool hasBorder)
+        {
+            // Arrange
+            var console = new Mock<IConsole>();
+            var position = new ConsolePoint(1, 2);
+            var size = new ConsoleSize(11, 4);
+            var expectedMsg =
+                $"X coordinate {x} is outside the bounds of the painter's area. "
+                + $"Must be between zero and {size.Width - 1}. (Parameter 'x')";
+            var painter = new TestPainter(console.Object)
+            {
+                Origin = position,
+                InnerSize = size,
+                HasBorder = hasBorder,
+            };
+
+            // Act
+            var action = () => painter.PublicWriteToScreenBuffer(x, 0, 'a', ConsoleOutputType.Default);
+
+            // Assert
+            var ex = action.Should().ThrowExactly<ArgumentOutOfRangeException>().Which;
+            ex.Message.Should().Be(expectedMsg);
+            ex.ParamName.Should().Be("x");
+        }
+
+        /// <summary>
+        /// Tests that the correct exception is thrown when the
+        /// <see cref="Painter.WriteToScreenBuffer"/> method
+        /// is passed a Y coordinate which is outside the vertical range
         /// of the are of the console window which the painter is responsible
         /// for.
         /// </summary>
         /// <param name="lineNumber">The line number.</param>
-        /// <param name="expectedMessage">Expected exception message.</param>
         /// <param name="hasBorder">True to draw a border around the painter's content.</param>
-        [InlineData(
-            -1,
-            "Line number -1 is outside the bounds of the painter's area. Must be between zero and 3. (Parameter 'lineNumber')",
-            true)]
-        [InlineData(
-            4,
-            "Line number 4 is outside the bounds of the painter's area. Must be between zero and 3. (Parameter 'lineNumber')",
-            true)]
-        [InlineData(
-            -1,
-            "Line number -1 is outside the bounds of the painter's area. Must be between zero and 3. (Parameter 'lineNumber')",
-            false)]
-        [InlineData(
-            4,
-            "Line number 4 is outside the bounds of the painter's area. Must be between zero and 3. (Parameter 'lineNumber')",
-            false)]
+        [InlineData(-1, true)]
+        [InlineData(4, true)]
+        [InlineData(-1, false)]
+        [InlineData(4, false)]
         [Theory]
-        public void WriteToScreenBuffer_LineNumberOutOfRange_Throws(int lineNumber, string expectedMessage, bool hasBorder)
+        public void WriteToScreenBuffer_YOutOfRange_Throws(int lineNumber, bool hasBorder)
         {
             // Arrange
             var console = new Mock<IConsole>();
             var position = new ConsolePoint(1, 2);
             var size = new ConsoleSize(11, 4);
-            var painter = new TestPainter(console.Object, position, size, hasBorder);
+            var expectedMsg =
+                $"Y coordinate {lineNumber} is outside the bounds of the painter's area. "
+                + $"Must be between zero and {size.Height - 1}. (Parameter 'y')";
+            var painter = new TestPainter(console.Object)
+            {
+                Origin = position,
+                InnerSize = size,
+                HasBorder = hasBorder,
+            };
 
             // Act
-            var action = () => painter.PublicWriteToScreenBuffer(lineNumber, "Hello world");
+            var action = () => painter.PublicWriteToScreenBuffer(0, lineNumber, 'a', ConsoleOutputType.Default);
 
             // Assert
             var ex = action.Should().ThrowExactly<ArgumentOutOfRangeException>().Which;
-            ex.Message.Should().Be(expectedMessage);
-            ex.ParamName.Should().Be("lineNumber");
-        }
-
-        /// <summary>
-        /// Tests that the <see cref="Painter.WriteToScreenBuffer"/> method throws
-        /// the correct exception when the length of the supplied text does
-        /// not match the width of the area of the console window that the
-        /// painter is responsible for.
-        /// </summary>
-        /// <param name="text">The text to write.</param>
-        /// <param name="expectedMessage">Expected error message.</param>
-        /// <param name="hasBorder">True to draw a border around the painter's content.</param>
-        [InlineData(
-            "Hello worl",
-            "The length of the supplied text (10) does not match the width of the painter's area (11). (Parameter 'text')",
-            true)]
-        [InlineData(
-            "Hello world!",
-            "The length of the supplied text (12) does not match the width of the painter's area (11). (Parameter 'text')",
-            true)]
-        [InlineData(
-            "Hello worl",
-            "The length of the supplied text (10) does not match the width of the painter's area (11). (Parameter 'text')",
-            false)]
-        [InlineData(
-            "Hello world!",
-            "The length of the supplied text (12) does not match the width of the painter's area (11). (Parameter 'text')",
-            false)]
-        [Theory]
-        public void WriteToScreenBuffer_TextLengthDoesNotMatchPainterWidth_Throws(
-            string text,
-            string expectedMessage,
-            bool hasBorder)
-        {
-            // Arrange
-            var console = new Mock<IConsole>();
-            var position = new ConsolePoint(1, 2);
-            var size = new ConsoleSize(11, 4);
-            var painter = new TestPainter(console.Object, position, size, hasBorder);
-
-            // Act
-            var action = () => painter.PublicWriteToScreenBuffer(0, text);
-
-            // Assert
-            var ex = action.Should().ThrowExactly<ArgumentOutOfRangeException>().Which;
-            ex.Message.Should().Be(expectedMessage);
-            ex.ParamName.Should().Be("text");
+            ex.Message.Should().Be(expectedMsg);
+            ex.ParamName.Should().Be("y");
         }
 
         /// <summary>
@@ -178,7 +182,12 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var console = new Mock<IConsole>();
             var position = new ConsolePoint(1, 2);
             var size = new ConsoleSize(11, 4);
-            var painter = new TestPainter(console.Object, position, size, hasBorder);
+            var painter = new TestPainter(console.Object)
+            {
+                Origin = position,
+                InnerSize = size,
+                HasBorder = hasBorder,
+            };
             var linesToWrite = new string[]
             {
                 "Hello world",
@@ -186,12 +195,15 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 "ConsoleGems",
                 "TestPainter",
             };
-            ////painter.ScreenBuffer[0] = linesToWrite[0]; // CS0200 - ScreenBuffer is read only :-)
             ////painter.WriteToScreenBuffer(0, linesToWrite[0]); // CS0122 - WriteToScreenBuffer is protected :-)
-            painter.PublicWriteToScreenBuffer(0, linesToWrite[0]);
-            painter.PublicWriteToScreenBuffer(1, linesToWrite[1]);
-            painter.PublicWriteToScreenBuffer(2, linesToWrite[2]);
-            painter.PublicWriteToScreenBuffer(3, linesToWrite[3]);
+            for (var y = 0; y < linesToWrite.Length; y++)
+            {
+                var lineToWrite = linesToWrite[y];
+                for (var x = 0; x < lineToWrite.Length; x++)
+                {
+                    painter.PublicWriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
+                }
+            }
 
             // Act
             painter.Paint();
@@ -223,7 +235,12 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var console = new TestOutputHelperConsole(output, consoleSize);
             console.Clear();
             var position = new ConsolePoint(0, 0);
-            var painter = new TestPainter(console, position, innerSize, hasBorder);
+            var painter = new TestPainter(console)
+            {
+                Origin = position,
+                InnerSize = innerSize,
+                HasBorder = hasBorder,
+            };
             var linesToWrite = new string[]
             {
                 "Hello world",
@@ -231,10 +248,14 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 "ConsoleGems",
                 "TestPainter",
             };
-            painter.PublicWriteToScreenBuffer(0, linesToWrite[0]);
-            painter.PublicWriteToScreenBuffer(1, linesToWrite[1]);
-            painter.PublicWriteToScreenBuffer(2, linesToWrite[2]);
-            painter.PublicWriteToScreenBuffer(3, linesToWrite[3]);
+            for (var y = 0; y < linesToWrite.Length; y++)
+            {
+                var lineToWrite = linesToWrite[y];
+                for (var x = 0; x < lineToWrite.Length; x++)
+                {
+                    painter.PublicWriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
+                }
+            }
 
             // Act
             painter.Paint();

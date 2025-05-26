@@ -7,6 +7,7 @@ namespace Sde.MazeGame.Painters
 {
     using System.Text;
     using Sde.ConsoleGems.Consoles;
+    using Sde.ConsoleGems.FullScreen;
     using Sde.ConsoleGems.Text;
     using Sde.MazeGame.CharacterProviders;
     using Sde.MazeGame.Models;
@@ -18,51 +19,38 @@ namespace Sde.MazeGame.Painters
         IConsole console,
         IWallCharacterProvider wallCharacterProvider,
         IPlayerCharacterProvider playerCharacterProvider)
-        : IMazePainter
+        : Painter(console),
+        IMazePainter
     {
         private readonly char pathChar = ' ';
         private readonly char fogChar = '░';
-        private ConsolePoint origin;
-
-        /// <inheritdoc/>
-        public void SetOrigin(ConsolePoint origin)
-        {
-            this.origin = origin;
-        }
 
         /// <inheritdoc/>
         public void Paint(Maze maze, Player player)
         {
-            PaintMaze(maze);
-            PaintPlayer(player);
-            console.CursorLeft = 0;
-            console.CursorTop = console.WindowHeight - 1;
+            this.PaintMaze(maze);
+            this.PaintPlayer(player);
         }
 
         /// <inheritdoc/>
         public void ErasePlayer(Player player)
         {
-            console.CursorLeft = origin.X + player.Position.X;
-            console.CursorTop = origin.Y + player.Position.Y;
-            console.Write(pathChar);
+            this.WriteToScreenBuffer(player.Position.X, player.Position.Y, this.pathChar, ConsoleOutputType.Default);
+            this.Paint();
         }
 
         /// <inheritdoc/>
         public void PaintPlayer(Player player)
         {
-            console.CursorLeft = origin.X + player.Position.X;
-            console.CursorTop = origin.Y + player.Position.Y;
             var playerChar = playerCharacterProvider.GetPlayerChar(player);
-            console.Write(playerChar, ConsoleOutputType.Prompt);
+            this.WriteToScreenBuffer(player.Position.X, player.Position.Y, playerChar, ConsoleOutputType.Prompt);
+            this.Paint();
         }
 
         private void PaintMaze(Maze maze)
         {
             for (var mazeY = 0; mazeY < maze.Height; mazeY++)
             {
-                console.CursorLeft = origin.X;
-                console.CursorTop = origin.Y + mazeY;
-                var sb = new StringBuilder();
                 for (var mazeX = 0; mazeX < maze.Width; mazeX++)
                 {
                     var mazePoint = maze.GetMazePoint(mazeX, mazeY);
@@ -71,10 +59,14 @@ namespace Sde.MazeGame.Painters
                         switch (mazePoint.PointType)
                         {
                             case MazePointType.Path:
-                                sb.Append(pathChar);
+                                this.WriteToScreenBuffer(mazeX, mazeY, this.pathChar, ConsoleOutputType.Default);
                                 break;
                             case MazePointType.Wall:
-                                sb.Append(wallCharacterProvider.GetWallChar(maze, new ConsolePoint(mazeX, mazeY)));
+                                this.WriteToScreenBuffer(
+                                    mazeX,
+                                    mazeY,
+                                    wallCharacterProvider.GetWallChar(maze, new ConsolePoint(mazeX, mazeY)),
+                                    ConsoleOutputType.Default);
                                 break;
                             default:
                                 break;
@@ -82,11 +74,11 @@ namespace Sde.MazeGame.Painters
                     }
                     else
                     {
-                        sb.Append(fogChar);
+                        this.WriteToScreenBuffer(mazeX, mazeY, this.fogChar, ConsoleOutputType.Default);
                     }
                 }
 
-                console.Write(sb.ToString());
+                this.Paint();
             }
         }
     }

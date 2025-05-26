@@ -5,22 +5,18 @@
 
 namespace Sde.MazeGame.Painters
 {
+    using Sde.ConsoleGems.FullScreen;
     using Sde.ConsoleGems.Text;
     using Sde.MazeGame.Models;
 
     // TODO: contents of console window are mangled when window is moved from one screen to another
+    // TODO: implement IPainter
 
     /// <summary>
     /// Interface for painting a maze to the console window.
     /// </summary>
-    public interface IMazePainter
+    public interface IMazePainter : IPainter
     {
-        /// <summary>
-        /// Sets the top left corner of the maze within the console window.
-        /// </summary>
-        /// <param name="origin">Top-left corner of the maze.</param>
-        public void SetOrigin(ConsolePoint origin);
-
         /// <summary>
         /// Paints the supplied maze to the console window.
         /// </summary>

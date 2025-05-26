@@ -12,16 +12,17 @@ namespace Sde.ConsoleGems.FullScreen
     public interface IPainter
     {
         /// <summary>
-        /// Gets the position of the area of the console window that the
-        /// painter is responsible for.
+        /// Gets or sets the position of the area of the console window
+        /// that the painter is responsible for.
         /// </summary>
-        public ConsolePoint Origin { get; }
+        public ConsolePoint Origin { get; set; }
 
         /// <summary>
-        /// Gets the size of the area of the console window that the painter
-        /// is responsible for, excluding any space taken up by a border.
+        /// Gets or sets the size of the area of the console window that
+        /// the painter is responsible for, excluding any space taken up
+        /// by a border.
         /// </summary>
-        public ConsoleSize InnerSize { get; }
+        public ConsoleSize InnerSize { get; set; }
 
         /// <summary>
         /// Gets the size of the area of the console window that the painter
@@ -32,22 +33,19 @@ namespace Sde.ConsoleGems.FullScreen
         public ConsoleSize OuterSize { get; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the painter has a border.
+        /// </summary>
+        public bool HasBorder { get; set; }
+
+        /// <summary>
         /// Gets the rectangle representing the space taken up by the painter,
         /// including any space taken up by a border.
         /// </summary>
         public ConsoleRectangle OuterBounds => new ConsoleRectangle(this.Origin, this.OuterSize);
 
         /// <summary>
-        /// Gets the screen buffer for the area of the console window that
-        /// the painter is responsible for.
-        /// </summary>
-        public IReadOnlyList<string> ScreenBuffer { get; }
-
-        /// <summary>
         /// Paints the area of the console window that this painter is responsible
-        /// for from its <see cref="ScreenBuffer"/> property.
-        /// Concrete implementations are expected to have already populated the
-        /// <see cref="ScreenBuffer"/> before this method is called.
+        /// for from its screen buffer.
         /// </summary>
         public void Paint();
     }

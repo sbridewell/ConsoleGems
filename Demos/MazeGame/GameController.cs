@@ -12,11 +12,16 @@ namespace Sde.MazeGame
     using Sde.MazeGame.Models;
     using Sde.MazeGame.Painters;
 
+    /// <summary>
+    /// The controlling module for the maze game.
+    /// </summary>
     public class GameController(
         IConsole console,
         IStatusPainter statusPainter,
         IMazePainter mazePainter,
-        IMazePainter3D mazePainter3D,
+
+        // TODO: restore mazePainter3D
+        ////IMazePainter3D mazePainter3D,
         MazeVisibilityUpdater mazeVisibilityUpdater,
         MazeGameKeyPressMappings keyPressMappings)
         : IGameController
@@ -40,8 +45,12 @@ namespace Sde.MazeGame
             var options = new MazeGameOptions()
                 .WithMazeOrigin(41, 1)
                 .WithStatusOrigin(0, 0);
-            mazePainter.SetOrigin(options.MazeOrigin);
-            mazePainter3D.SetOrigin(new ConsolePoint(0, 1));
+            mazePainter.Origin = options.MazeOrigin;
+            mazePainter.InnerSize = new ConsoleSize(maze.Width, maze.Height);
+            mazePainter.HasBorder = true; // TODO: not painting a border around the maze
+
+            // TODO: restore mazePainter3D
+            ////mazePainter3D.SetOrigin(new ConsolePoint(0, 1));
             statusPainter.SetOrigin(options.StatusOrigin);
             statusPainter.SetWidth(console.WindowWidth - options.StatusOrigin.X);
             this.UpdateVisibility(maze, player);
@@ -87,7 +96,9 @@ namespace Sde.MazeGame
 
             this.UpdateVisibility(maze, player);
             this.WritePositionStatusMessage(player);
-            mazePainter3D.Render(maze, player);
+
+            // TODO: restore mazePainter3D
+            ////mazePainter3D.Render(maze, player);
         }
 
         /// <summary>
@@ -108,7 +119,9 @@ namespace Sde.MazeGame
 
             this.UpdateVisibility(maze, player);
             this.WritePositionStatusMessage(player);
-            mazePainter3D.Render(maze, player);
+
+            // TODO: restore mazePainter3D
+            ////mazePainter3D.Render(maze, player);
         }
 
         /// <summary>
@@ -147,7 +160,9 @@ namespace Sde.MazeGame
                 player.Position = newPosition;
                 this.UpdateVisibility(maze, player);
                 this.WritePositionStatusMessage(player);
-                mazePainter3D.Render(maze, player);
+
+                // TODO: restore mazePainter3D
+                ////mazePainter3D.Render(maze, player);
             }
             else
             {

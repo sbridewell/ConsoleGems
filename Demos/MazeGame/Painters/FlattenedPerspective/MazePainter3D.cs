@@ -5,12 +5,17 @@
 
 namespace Sde.MazeGame.Painters.FlattenedPerspective
 {
+    using System.Text;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Text;
     using Sde.MazeGame.Models;
-    using System.Text;
 
-    public class MazePainter3D(IConsole console) : IMazePainter3D
+    /// <summary>
+    /// Provides a flattened perspective player's point of view of a maze.
+    /// </summary>
+    /// <param name="console">The console to write to.</param>
+    public class MazePainter3D(IConsole console)
+        : IMazePainter3D
     {
         private readonly int screenWidth = 24;
         private readonly int screenHeight = 24;
@@ -30,7 +35,7 @@ namespace Sde.MazeGame.Painters.FlattenedPerspective
         {
             var screenBuffer = new char[this.screenWidth, this.screenHeight];
             var forwardView = this.GetForwardView(maze, player);
-            //this.PaintSection0Left(maze, player, screenBuffer);
+            ////this.PaintSection0Left(maze, player, screenBuffer);
             this.PaintSection0(forwardView, screenBuffer);
             for (var screenY = 0; screenY < screenBuffer.GetLength(0); screenY++)
             {
@@ -104,6 +109,8 @@ namespace Sde.MazeGame.Painters.FlattenedPerspective
         private void PaintSection0(MazePointType[,] forwardView, char[,] screenBuffer)
         {
             var screenX = 0;
+
+            // FIXME: ArgumentOutOfRangeException
             if (forwardView[1, 2] == MazePointType.Wall)
             {
                 for (var screenY = 0; screenY < 24; screenY++)

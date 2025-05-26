@@ -29,8 +29,6 @@ namespace Sde.ConsoleGems.MazeGameDemo
             services.AddMazeGame();
 
             var provider = services.BuildServiceProvider();
-            //var gameController = provider.GetRequiredService<IGameController>();
-            //gameController.Play();
             var mainMenu = provider.GetRequiredService<MainMenu>();
             mainMenu.ShowCommand.Execute();
         }
