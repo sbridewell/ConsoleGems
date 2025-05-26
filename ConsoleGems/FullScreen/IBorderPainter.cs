@@ -25,7 +25,10 @@ namespace Sde.ConsoleGems.FullScreen
         /// Paints a line of left or right border, if the painter requires
         /// a border and the border hasn't already been painted.
         /// </summary>
-        void PaintSideBorderIfRequired();
+        /// <param name="isLeftBorder">
+        /// True to paint the left border, false to paint the right border.
+        /// </param>
+        void PaintSideBorderIfRequired(bool isLeftBorder);
 
         /// <summary>
         /// Paints the bottom border, if the painter requires a border and

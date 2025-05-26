@@ -6,30 +6,14 @@
 namespace Sde.MazeGame.Painters
 {
     using Sde.ConsoleGems.Consoles;
-    using Sde.ConsoleGems.Text;
+    using Sde.ConsoleGems.FullScreen;
 
     /// <summary>
     /// For writing status messages to the console window.
     /// </summary>
-    /// <param name="console">The console to write to.</param>
-    public class StatusPainter(IConsole console)
-        : IStatusPainter
+    public class StatusPainter(IConsole console, IBorderPainter borderPainter)
+        : Painter(console, borderPainter), IStatusPainter
     {
-        private ConsolePoint origin;
-        private int width;
-
-        /// <inheritdoc/>
-        public void SetOrigin(ConsolePoint origin)
-        {
-            this.origin = origin;
-        }
-
-        /// <inheritdoc/>
-        public void SetWidth(int width)
-        {
-            this.width = width;
-        }
-
         /// <inheritdoc/>
         public void Paint(string text, ConsoleOutputType outputType = ConsoleOutputType.Default)
         {
@@ -38,12 +22,17 @@ namespace Sde.MazeGame.Painters
                 return;
             }
 
-            console.CursorLeft = this.origin.X;
-            console.CursorTop = this.origin.Y;
-            console.Write(new string(' ', this.width), ConsoleOutputType.Default);
-            console.CursorLeft = this.origin.X;
-            console.CursorTop = this.origin.Y;
-            console.Write(new string(text.Take(this.width).ToArray()), outputType);
+            for (var i = 0; i < this.InnerSize.Width; i++)
+            {
+                this.WriteToScreenBuffer(i, 0, ' ', outputType);
+            }
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                this.WriteToScreenBuffer(i, 0, text[i], outputType);
+            }
+
+            this.Paint();
         }
     }
 }

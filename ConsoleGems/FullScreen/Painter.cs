@@ -50,15 +50,13 @@ namespace Sde.ConsoleGems.FullScreen
         /// <inheritdoc/>
         public void Paint()
         {
-            console.CursorLeft = this.Origin.X;
-            console.CursorTop = this.Origin.Y;
             borderPainter.PaintTopBorderIfRequired();
 
             foreach (var y in this.dirtyLines.OrderBy(i => i))
             {
-                console.CursorLeft = this.Origin.X;
-                console.CursorTop = y + this.Origin.Y;
-                borderPainter.PaintSideBorderIfRequired();
+                console.CursorLeft = this.Origin.X + (this.HasBorder ? 1 : 0);
+                console.CursorTop = y + this.Origin.Y + (this.HasBorder ? 1 : 0);
+                borderPainter.PaintSideBorderIfRequired(isLeftBorder: true);
                 var x = 0;
                 while (x < this.innerSize.Width)
                 {
@@ -79,11 +77,10 @@ namespace Sde.ConsoleGems.FullScreen
                     console.Write(new string(chars), currentOutputType);
                 }
 
-                borderPainter.PaintSideBorderIfRequired();
+                borderPainter.PaintSideBorderIfRequired(isLeftBorder: false);
             }
 
             this.dirtyLines.Clear();
-            console.CursorLeft = this.Origin.X;
             borderPainter.PaintBottomBorderIfRequired();
         }
 

@@ -5,7 +5,6 @@
 
 namespace Sde.ConsoleGems.Test.FullScreen
 {
-    using System.Runtime.CompilerServices;
     using Xunit.Abstractions;
 
     /// <summary>
@@ -186,12 +185,12 @@ namespace Sde.ConsoleGems.Test.FullScreen
             // Arrange
             var mockConsole = new Mock<IConsole>();
             var mockBorderPainter = new Mock<IBorderPainter>();
-            var position = new ConsolePoint(1, 2);
-            var size = new ConsoleSize(11, 4);
+            var painterOrigin = new ConsolePoint(1, 2);
+            var painterSize = new ConsoleSize(11, 4);
             var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object)
             {
-                Origin = position,
-                InnerSize = size,
+                Origin = painterOrigin,
+                InnerSize = painterSize,
                 HasBorder = hasBorder,
             };
             var linesToWrite = new string[]
@@ -215,12 +214,69 @@ namespace Sde.ConsoleGems.Test.FullScreen
             painter.Paint();
 
             // Assert
-            mockConsole.VerifySet(m => m.CursorLeft = 1);
-            mockConsole.VerifySet(m => m.CursorTop = 2);
             mockConsole.Verify(m => m.Write(linesToWrite[0], It.IsAny<ConsoleOutputType>()), Times.Once);
             mockConsole.Verify(m => m.Write(linesToWrite[1], It.IsAny<ConsoleOutputType>()), Times.Once);
             mockConsole.Verify(m => m.Write(linesToWrite[2], It.IsAny<ConsoleOutputType>()), Times.Once);
             mockConsole.Verify(m => m.Write(linesToWrite[3], It.IsAny<ConsoleOutputType>()), Times.Once);
+            if (hasBorder)
+            {
+                mockBorderPainter.Verify(m => m.PaintTopBorderIfRequired(), Times.Once);
+                mockBorderPainter.Verify(m => m.PaintSideBorderIfRequired(true), Times.Exactly(painterSize.Height));
+                mockBorderPainter.Verify(m => m.PaintSideBorderIfRequired(false), Times.Exactly(painterSize.Height));
+                mockBorderPainter.Verify(m => m.PaintBottomBorderIfRequired(), Times.Once);
+            }
+        }
+
+        /// <summary>
+        /// Tests that when the HasBorder property of a painter is set to true,
+        /// the painter paints the border correctly.
+        /// </summary>
+        [Fact]
+        public void Paint_WithBorder_PaintsBorderCorrectly()
+        {
+            // Arrange
+            var painterOrigin = new ConsolePoint(1, 2);
+            var painterInnerSize = new ConsoleSize(11, 4);
+            var console = new TextWriterConsole();
+            console.WindowWidth = painterInnerSize.Width + 2 + painterOrigin.X;
+            console.WindowHeight = painterInnerSize.Height + 2 + painterOrigin.Y;
+            var borderPainter = new BorderPainter(console);
+            var painter = new TestPainter(console, borderPainter)
+            {
+                Origin = painterOrigin,
+                InnerSize = painterInnerSize,
+                HasBorder = true,
+            };
+            var linesToWrite = new string[]
+            {
+                "Hello world",
+                "Paint test ",
+                "ConsoleGems",
+                "TestPainter",
+            };
+            for (var y = 0; y < linesToWrite.Length; y++)
+            {
+                var lineToWrite = linesToWrite[y];
+                for (var x = 0; x < lineToWrite.Length; x++)
+                {
+                    painter.PublicWriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
+                }
+            }
+
+            // Act
+            painter.Paint();
+
+            // Assert
+            output.WriteLine(console.ToString());
+            console.ToString().Should().Be(
+                "              " + Environment.NewLine +
+                "              " + Environment.NewLine +
+                " ╭───────────╮" + Environment.NewLine +
+                " │Hello world│" + Environment.NewLine +
+                " │Paint test │" + Environment.NewLine +
+                " │ConsoleGems│" + Environment.NewLine +
+                " │TestPainter│" + Environment.NewLine +
+                " ╰───────────╯" + Environment.NewLine);
         }
 
         /// <summary>

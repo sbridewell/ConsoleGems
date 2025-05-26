@@ -29,7 +29,7 @@ namespace Sde.MazeGame
         {
             services.AddSingleton<MazeGameKeyPressMappings>();
             services.AddSingleton<IStatusPainter, StatusPainter>();
-            services.AddScoped<IBorderPainter, BorderPainter>();
+            services.AddTransient<IBorderPainter, BorderPainter>();
             services.AddSingleton<IMazePainter, MazePainter2D>();
             services.AddSingleton<IMazePainter3D, MazePainter3D>();
             services.AddSingleton<IGameController, GameController>();

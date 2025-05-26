@@ -26,6 +26,8 @@ namespace Sde.ConsoleGems.FullScreen
 
             if (this.Painter.HasBorder)
             {
+                console.CursorLeft = this.Painter.Origin.X;
+                console.CursorTop = this.Painter.Origin.Y;
                 console.Write("╭", ConsoleOutputType.MenuBody);
                 console.Write(new string('─', this.Painter.InnerSize.Width), ConsoleOutputType.MenuBody);
                 console.Write("╮", ConsoleOutputType.MenuBody);
@@ -34,7 +36,7 @@ namespace Sde.ConsoleGems.FullScreen
         }
 
         /// <inheritdoc/>
-        public void PaintSideBorderIfRequired()
+        public void PaintSideBorderIfRequired(bool isLeftBorder)
         {
             if (this.borderHasBeenPainted || this.Painter is null)
             {
@@ -43,6 +45,15 @@ namespace Sde.ConsoleGems.FullScreen
 
             if (this.Painter.HasBorder)
             {
+                if (isLeftBorder)
+                {
+                    console.CursorLeft = this.Painter.Origin.X;
+                }
+                else
+                {
+                    console.CursorLeft = this.Painter.Origin.X + this.Painter.InnerSize.Width + 1;
+                }
+
                 console.Write("│", ConsoleOutputType.MenuBody);
             }
         }
@@ -58,6 +69,7 @@ namespace Sde.ConsoleGems.FullScreen
             if (this.Painter.HasBorder)
             {
                 console.CursorLeft = this.Painter.Origin.X;
+                console.CursorTop = this.Painter.Origin.Y + this.Painter.InnerSize.Height + 1;
                 console.Write("╰", ConsoleOutputType.MenuBody);
                 console.Write(new string('─', this.Painter.InnerSize.Width), ConsoleOutputType.MenuBody);
                 console.Write("╯", ConsoleOutputType.MenuBody);

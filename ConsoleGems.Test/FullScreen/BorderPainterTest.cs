@@ -35,18 +35,38 @@ namespace Sde.ConsoleGems.Test.FullScreen
         }
 
         /// <summary>
-        /// Tests that the PaintSideBorderIfRequired writes the correct output to the console.
+        /// Tests that the PaintSideBorderIfRequired writes the correct output to the console when
+        /// painting the left border.
         /// </summary>
         [Fact]
-        public void PaintSideBorderIfRequired_BorderIsRequired_WritesToConsoleCorrectly()
+        public void PaintSideBorderIfRequired_BorderIsRequired_WritesLeftBorderToConsoleCorrectly()
         {
             // Arrange
             var (mockConsole, borderPainter) = Arrange(new ConsoleSize(5, 5), true, false, false);
 
             // Act
-            borderPainter.PaintSideBorderIfRequired();
+            borderPainter.PaintSideBorderIfRequired(isLeftBorder: true);
 
             // Assert
+            mockConsole.VerifySet(m => m.CursorLeft = 0, Times.Once);
+            mockConsole.Verify(c => c.Write("│", ExpectedConsoleOutputType), Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that the PaintSideBorderIfRequired writes the correct output to the console when
+        /// painting the right border.
+        /// </summary>
+        [Fact]
+        public void PaintSideBorderIfRequired_BorderIsRequired_WritesRightBorderToConsoleCorrectly()
+        {
+            // Arrange
+            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(5, 5), true, false, false);
+
+            // Act
+            borderPainter.PaintSideBorderIfRequired(isLeftBorder: false);
+
+            // Assert
+            mockConsole.VerifySet(m => m.CursorLeft = 6, Times.Once);
             mockConsole.Verify(c => c.Write("│", ExpectedConsoleOutputType), Times.Once);
         }
 
@@ -126,7 +146,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var (mockConsole, borderPainter) = Arrange(new ConsoleSize(10, 5), hasBorder, painterIsNull, borderIsAlreadyPainted);
 
             // Act
-            borderPainter.PaintSideBorderIfRequired();
+            borderPainter.PaintSideBorderIfRequired(isLeftBorder: false);
 
             // Assert
             mockConsole.VerifyNoOtherCalls();

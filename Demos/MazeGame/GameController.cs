@@ -43,16 +43,18 @@ namespace Sde.MazeGame
             };
             this.CurrentGame = new Game(maze, player);
             var options = new MazeGameOptions()
-                .WithMazeOrigin(41, 1)
+                .WithMazeOrigin(41, 3)
                 .WithStatusOrigin(0, 0);
             mazePainter.Origin = options.MazeOrigin;
             mazePainter.InnerSize = new ConsoleSize(maze.Width, maze.Height);
-            ////mazePainter.HasBorder = true; // TODO: not painting a border correctly around the maze
+            mazePainter.HasBorder = true;
 
             // TODO: restore mazePainter3D
             ////mazePainter3D.SetOrigin(new ConsolePoint(0, 1));
-            statusPainter.SetOrigin(options.StatusOrigin);
-            statusPainter.SetWidth(console.WindowWidth - options.StatusOrigin.X);
+            statusPainter.Origin = options.StatusOrigin;
+            statusPainter.InnerSize = new ConsoleSize(console.WindowWidth - options.StatusOrigin.X - 2, 1);
+            statusPainter.HasBorder = true;
+
             this.UpdateVisibility(maze, player);
             mazePainter.Paint(maze, player);
             this.WritePositionStatusMessage(player);
