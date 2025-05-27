@@ -104,6 +104,7 @@ namespace Sde.ConsoleGems.Consoles
         }
 
         /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
         public virtual void Clear()
         {
             System.Console.Clear();
