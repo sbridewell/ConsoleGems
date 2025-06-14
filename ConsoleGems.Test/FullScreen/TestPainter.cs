@@ -20,13 +20,13 @@ namespace Sde.ConsoleGems.Test.FullScreen
         /// <summary>
         /// Gets the value of the screen buffer.
         /// </summary>
-        public ConsolePixel[][] PublicScreenBuffer
+        public ScreenBuffer PublicScreenBuffer
         {
             get
             {
                 var type = typeof(Painter);
                 var fieldInfo = type.GetField("screenBuffer", BindingFlags.NonPublic | BindingFlags.Instance);
-                var screenBuffer = fieldInfo!.GetValue(this) as ConsolePixel[][];
+                var screenBuffer = fieldInfo!.GetValue(this) as ScreenBuffer;
                 return screenBuffer!;
             }
         }
@@ -44,5 +44,10 @@ namespace Sde.ConsoleGems.Test.FullScreen
         /// <param name="outputType">The <see cref="ConsoleOutputType"/> to use when writing the character.</param>"/>
         public void PublicWriteToScreenBuffer(int x, int y, char character, ConsoleOutputType outputType)
             => this.WriteToScreenBuffer(x, y, character, outputType);
+
+        /// <summary>
+        /// Calls the protected <see cref="Painter.ClearScreenBuffer"/> method.
+        /// </summary>
+        public void PublicClearScreenBuffer() => this.ClearScreenBuffer();
     }
 }

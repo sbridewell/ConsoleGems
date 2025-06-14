@@ -48,5 +48,11 @@ namespace Sde.ConsoleGems.FullScreen
         /// for from its screen buffer.
         /// </summary>
         public void Paint();
+
+        /// <summary>
+        /// Resets the painter to ensure that it is initialised correctly the next
+        /// time it is used.
+        /// </summary>
+        public void Reset();
     }
 }

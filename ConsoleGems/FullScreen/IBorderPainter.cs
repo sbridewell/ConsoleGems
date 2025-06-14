@@ -16,26 +16,14 @@ namespace Sde.ConsoleGems.FullScreen
         IPainter? Painter { get; set; }
 
         /// <summary>
-        /// Paints a top border, if the painter requires a border and the border
-        /// hasn't already been painted.
+        /// Paints a border around the painter, if it should have a border
+        /// and the border has not already been painter.
         /// </summary>
-        void PaintTopBorderIfRequired();
+        void PaintBorderIfRequired();
 
         /// <summary>
-        /// Paints a line of left or right border, if the painter requires
-        /// a border and the border hasn't already been painted.
+        /// Resets the flag which tracks whether the border has already been painted.
         /// </summary>
-        /// <param name="isLeftBorder">
-        /// True to paint the left border, false to paint the right border.
-        /// </param>
-        void PaintSideBorderIfRequired(bool isLeftBorder);
-
-        /// <summary>
-        /// Paints the bottom border, if the painter requires a border and
-        /// the border hasn't already been painted.
-        /// Also sets a flag to indicate that the border has been painted
-        /// now, so we don't need to paint it again.
-        /// </summary>
-        void PaintBottomBorderIfRequired();
+        void Reset();
     }
 }

@@ -84,11 +84,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             }
 
             // Assert
-            for (var x = 0; x < size.Width; x++)
-            {
-                painter.PublicScreenBuffer[lineNumber][x].Character.Should().Be(text[x]);
-            }
-
+            painter.PublicScreenBuffer.ToStringArray()[lineNumber].Should().Be(text);
             mockConsole.VerifyNoOtherCalls();
         }
 
@@ -173,6 +169,27 @@ namespace Sde.ConsoleGems.Test.FullScreen
         }
 
         /// <summary>
+        /// Tests that the correct exception is thrown if the WriteToScreenBuffer method is
+        /// called before the screen buffer has been initialised.
+        /// </summary>
+        [Fact]
+        public void WriteScreenBufferToConsole_ScreenBufferNotInitialised_Throws()
+        {
+            // Arrange
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var expectedMsg = "ScreenBuffer is not initialised. Set InnerSize before writing to the screen buffer.";
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object);
+
+            // Act
+            var actionn = () => painter.PublicWriteToScreenBuffer(0, 0, 'a', ConsoleOutputType.Default);
+
+            // Assert
+            var ex = actionn.Should().ThrowExactly<InvalidOperationException>().Which;
+            ex.Message.Should().Be(expectedMsg);
+        }
+
+        /// <summary>
         /// Tests that the <see cref="Painter.Paint"/> method writes the
         /// contents of the screen buffer to the console.
         /// </summary>
@@ -218,13 +235,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             mockConsole.Verify(m => m.Write(linesToWrite[1], It.IsAny<ConsoleOutputType>()), Times.Once);
             mockConsole.Verify(m => m.Write(linesToWrite[2], It.IsAny<ConsoleOutputType>()), Times.Once);
             mockConsole.Verify(m => m.Write(linesToWrite[3], It.IsAny<ConsoleOutputType>()), Times.Once);
-            if (hasBorder)
-            {
-                mockBorderPainter.Verify(m => m.PaintTopBorderIfRequired(), Times.Once);
-                mockBorderPainter.Verify(m => m.PaintSideBorderIfRequired(true), Times.Exactly(painterSize.Height));
-                mockBorderPainter.Verify(m => m.PaintSideBorderIfRequired(false), Times.Exactly(painterSize.Height));
-                mockBorderPainter.Verify(m => m.PaintBottomBorderIfRequired(), Times.Once);
-            }
+            mockBorderPainter.Verify(m => m.PaintBorderIfRequired(), Times.Once);
         }
 
         /// <summary>
@@ -280,6 +291,84 @@ namespace Sde.ConsoleGems.Test.FullScreen
         }
 
         /// <summary>
+        /// Tests that the correct exception is thrown if the Paint method is
+        /// called before the screen buffer is initialised.
+        /// </summary>
+        [Fact]
+        public void Paint_ScreenBufferNotInitialised_Throws()
+        {
+            // Arrange
+            var console = new TextWriterConsole();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var painter = new TestPainter(console, mockBorderPainter.Object);
+
+            // Act
+            var action = () => painter.Paint();
+
+            // Assert
+            var ex = action.Should().ThrowExactly<InvalidOperationException>().Which;
+            ex.Message.Should().Be("ScreenBuffer is not initialised. Set InnerSize before calling Paint.");
+        }
+
+        /// <summary>
+        /// Tests that the Reset method calls the border painter's Reset method.
+        /// </summary>
+        [Fact]
+        public void Reset_ResetsBorderPainter()
+        {
+            // Arrange
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object);
+
+            // Act
+            painter.Reset();
+
+            // Assert
+            mockBorderPainter.Verify(m => m.Reset(), Times.Once);
+        }
+
+        /// <summary>
+        /// Tests that the ClearScreenBuffer method sets all characters in the
+        /// screen buffer to spaces.
+        /// </summary>
+        [Fact]
+        public void ClearScreenBuffer_SetsAllCharactersToSpaces()
+        {
+            // Arrange
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var innerWidth = 11;
+            var innerHeight = 4;
+            var painterOrigin = new ConsolePoint(1, 2);
+            var painterInnerSize = new ConsoleSize(innerWidth, innerHeight);
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object)
+            {
+                Origin = painterOrigin,
+                InnerSize = painterInnerSize,
+                HasBorder = false,
+            };
+            for (var y = 0; y < innerHeight; y++)
+            {
+                for (var x = 0; x < innerWidth; x++)
+                {
+                    painter.PublicWriteToScreenBuffer(x, y, 'X', ConsoleOutputType.Default);
+                }
+            }
+
+            // Act
+            painter.PublicClearScreenBuffer();
+
+            // Assert
+            var screenBuffer = painter.PublicScreenBuffer;
+            screenBuffer.ToStringArray().Should().Equal(
+                new string(' ', innerWidth),
+                new string(' ', innerWidth),
+                new string(' ', innerWidth),
+                new string(' ', innerWidth));
+        }
+
+        /// <summary>
         /// Not really a unit test, instead it writes to the test output window using
         /// <see cref="TestOutputHelperConsole"/> to enable a visual check.
         /// </summary>
@@ -325,7 +414,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
 
             // Assert
             console.Flush();
-            Assert.True(true); // just to stop the analyzer compalining that there are no asserts
+            Assert.True(true); // just to stop the analyzer complaining that there are no asserts
         }
     }
 }

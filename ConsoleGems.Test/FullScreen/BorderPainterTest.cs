@@ -20,80 +20,30 @@ namespace Sde.ConsoleGems.Test.FullScreen
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(5)]
-        public void PaintTopBorderIfRequired_BorderIsRequired_WritesToConsoleCorrectly(int innerWidth)
+        public void PaintBorderIfRequired_BorderIsRequired_WritesToConsoleCorrectly(int innerWidth)
         {
             // Arrange
-            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(innerWidth, 5), true, false, false);
+            var innerHeight = 5;
+            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(innerWidth, innerHeight), true, false, false);
 
             // Act
-            borderPainter.PaintTopBorderIfRequired();
+            borderPainter.PaintBorderIfRequired();
 
-            // Assert
+            // Assert - top & bottom border
             mockConsole.Verify(c => c.Write("╭", ExpectedConsoleOutputType), Times.Once);
-            mockConsole.Verify(c => c.Write(new string('─', innerWidth), ExpectedConsoleOutputType), Times.Once);
             mockConsole.Verify(c => c.Write("╮", ExpectedConsoleOutputType), Times.Once);
-        }
-
-        /// <summary>
-        /// Tests that the PaintSideBorderIfRequired writes the correct output to the console when
-        /// painting the left border.
-        /// </summary>
-        [Fact]
-        public void PaintSideBorderIfRequired_BorderIsRequired_WritesLeftBorderToConsoleCorrectly()
-        {
-            // Arrange
-            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(5, 5), true, false, false);
-
-            // Act
-            borderPainter.PaintSideBorderIfRequired(isLeftBorder: true);
-
-            // Assert
-            mockConsole.VerifySet(m => m.CursorLeft = 0, Times.Once);
-            mockConsole.Verify(c => c.Write("│", ExpectedConsoleOutputType), Times.Once);
-        }
-
-        /// <summary>
-        /// Tests that the PaintSideBorderIfRequired writes the correct output to the console when
-        /// painting the right border.
-        /// </summary>
-        [Fact]
-        public void PaintSideBorderIfRequired_BorderIsRequired_WritesRightBorderToConsoleCorrectly()
-        {
-            // Arrange
-            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(5, 5), true, false, false);
-
-            // Act
-            borderPainter.PaintSideBorderIfRequired(isLeftBorder: false);
-
-            // Assert
-            mockConsole.VerifySet(m => m.CursorLeft = 6, Times.Once);
-            mockConsole.Verify(c => c.Write("│", ExpectedConsoleOutputType), Times.Once);
-        }
-
-        /// <summary>
-        /// Tests that the PaintBottomBorderIfRequired writes the correct output to the console.
-        /// </summary>
-        /// <param name="innerWidth">Width of the painter excluding the border.</param>
-        [Theory]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(5)]
-        public void PaintBottomBorderIfRequired_BorderIsRequired_WritesToConsoleCorrectly(int innerWidth)
-        {
-            // Arrange
-            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(innerWidth, 5), true, false, false);
-
-            // Act
-            borderPainter.PaintBottomBorderIfRequired();
-
-            // Assert
             mockConsole.Verify(c => c.Write("╰", ExpectedConsoleOutputType), Times.Once);
-            mockConsole.Verify(c => c.Write(new string('─', innerWidth), ExpectedConsoleOutputType), Times.Once);
             mockConsole.Verify(c => c.Write("╯", ExpectedConsoleOutputType), Times.Once);
+            mockConsole.Verify(c => c.Write(new string('─', innerWidth), ExpectedConsoleOutputType), Times.Exactly(2));
+
+            // Assert - side borders
+            mockConsole.VerifySet(m => m.CursorLeft = 0, Times.Exactly(innerHeight + 2));
+            mockConsole.VerifySet(m => m.CursorLeft = innerWidth + 1, Times.Exactly(innerHeight));
+            mockConsole.Verify(c => c.Write("│", ExpectedConsoleOutputType), Times.Exactly(innerHeight * 2));
         }
 
         /// <summary>
-        /// Tests that nothing is written to the console by the PaintTopBorderIfRequired
+        /// Tests that nothing is written to the console by the PaintBorderIfRequired
         /// method for scenarios where the border does not need painting.
         /// Output should only be written to the console if HasBorder is true,
         /// the border painter's painter is not null, and the border hasn't already
@@ -110,76 +60,37 @@ namespace Sde.ConsoleGems.Test.FullScreen
         [InlineData(true, false, true)]
         [InlineData(true, true, false)]
         [InlineData(true, true, true)]
-        public void PaintTopBorderIfRequired_BorderNotRequired_NothingWrittenToConsole(bool hasBorder, bool painterIsNull, bool borderIsAlreadyPainted)
+        public void PaintBorderIfRequired_BorderNotRequired_NothingWrittenToConsole(bool hasBorder, bool painterIsNull, bool borderIsAlreadyPainted)
         {
             // Arrange
             var (mockConsole, borderPainter) = Arrange(new ConsoleSize(10, 5), hasBorder, painterIsNull, borderIsAlreadyPainted);
 
             // Act
-            borderPainter.PaintTopBorderIfRequired();
+            borderPainter.PaintBorderIfRequired();
 
             // Assert
             mockConsole.VerifyNoOtherCalls();
         }
 
         /// <summary>
-        /// Tests that nothing is written to the console by the PaintSideBorderIfRequired
-        /// method for scenarios where the border does not need painting.
-        /// Output should only be written to the console if HasBorder is true,
-        /// the border painter's painter is not null, and the border hasn't already
-        /// been painted.
+        /// Tests that the Reset method causes the border to be repainted the next time
+        /// the PaintBorderIfRequired method is called.
         /// </summary>
-        /// <param name="hasBorder">True if the painter should have a border.</param>
-        /// <param name="painterIsNull">True if the border painter's painter should be null.</param>
-        /// <param name="borderIsAlreadyPainted">True if the border should have already been painted.</param>
-        [Theory]
-        [InlineData(false, false, false)]
-        [InlineData(false, false, true)]
-        [InlineData(false, true, false)]
-        [InlineData(false, true, true)]
-        [InlineData(true, false, true)]
-        [InlineData(true, true, false)]
-        [InlineData(true, true, true)]
-        public void PaintSideBorderIfRequired_BorderNotRequired_NothingWrittenToConsole(bool hasBorder, bool painterIsNull, bool borderIsAlreadyPainted)
+        [Fact]
+        public void Reset_ResetsBorderPaintedFlag()
         {
             // Arrange
-            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(10, 5), hasBorder, painterIsNull, borderIsAlreadyPainted);
+            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(10, 5), true, false, true);
 
             // Act
-            borderPainter.PaintSideBorderIfRequired(isLeftBorder: false);
+            borderPainter.Reset();
 
-            // Assert
-            mockConsole.VerifyNoOtherCalls();
-        }
-
-        /// <summary>
-        /// Tests that nothing is written to the console by the PaintBottomBorderIfRequired
-        /// method for scenarios where the border does not need painting.
-        /// Output should only be written to the console if HasBorder is true,
-        /// the border painter's painter is not null, and the border hasn't already
-        /// been painted.
-        /// </summary>
-        /// <param name="hasBorder">True if the painter should have a border.</param>
-        /// <param name="painterIsNull">True if the border painter's painter should be null.</param>
-        /// <param name="borderIsAlreadyPainted">True if the border should have already been painted.</param>
-        [Theory]
-        [InlineData(false, false, false)]
-        [InlineData(false, false, true)]
-        [InlineData(false, true, false)]
-        [InlineData(false, true, true)]
-        [InlineData(true, false, true)]
-        [InlineData(true, true, false)]
-        [InlineData(true, true, true)]
-        public void PaintBottomBorderIfRequired_BorderNotRequired_NothingWrittenToConsole(bool hasBorder, bool painterIsNull, bool borderIsAlreadyPainted)
-        {
-            // Arrange
-            var (mockConsole, borderPainter) = Arrange(new ConsoleSize(10, 5), hasBorder, painterIsNull, borderIsAlreadyPainted);
-
-            // Act
-            borderPainter.PaintBottomBorderIfRequired();
-
-            // Assert
-            mockConsole.VerifyNoOtherCalls();
+            // Assert - the border should be painted again after reset
+            borderPainter.PaintBorderIfRequired();
+            mockConsole.Verify(c => c.Write("╭", ExpectedConsoleOutputType), Times.Once);
+            mockConsole.Verify(c => c.Write("╮", ExpectedConsoleOutputType), Times.Once);
+            mockConsole.Verify(c => c.Write("╰", ExpectedConsoleOutputType), Times.Once);
+            mockConsole.Verify(c => c.Write("╯", ExpectedConsoleOutputType), Times.Once);
         }
 
         /// <summary>
@@ -202,7 +113,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             borderPainter.Painter = painterIsNull ? null : testPainter;
             if (borderShouldAlreadyBePainted)
             {
-                borderPainter.PaintBottomBorderIfRequired();
+                borderPainter.PaintBorderIfRequired();
             }
 
             mockConsole.Invocations.Clear();
