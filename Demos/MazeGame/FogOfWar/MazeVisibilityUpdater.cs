@@ -39,6 +39,7 @@ namespace Sde.MazeGame.FogOfWar
             Justification = "Not really a simplification")]
         public bool UpdateVisibility(Maze maze, Player player)
         {
+            // TODO: align the visibility on the map view with the visibility on the POV view
             var repaintRequired = false;
             foreach (var pointOnLimit in limitOfViewProvider.LimitOfView)
             {

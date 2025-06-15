@@ -20,8 +20,8 @@ namespace Sde.MazeGame
     public class GameController(
         IConsole console,
         IStatusPainter statusPainter,
-        IMazePainter mazePainter,
-        IMazePainterPov mazePainter3D,
+        IMazePainter mazePainterMap,
+        IMazePainterPov mazePainterPov,
         MazeVisibilityUpdater mazeVisibilityUpdater,
         MazeGameKeyPressMappings keyPressMappings)
         : IGameController
@@ -45,19 +45,24 @@ namespace Sde.MazeGame
             var options = new MazeGameOptions()
                 .WithMazeOrigin(41, 3)
                 .WithStatusOrigin(0, 0);
-            mazePainter.Origin = options.MazeOrigin;
-            mazePainter.InnerSize = new ConsoleSize(maze.Width, maze.Height);
-            mazePainter.HasBorder = true;
-            mazePainter3D.Origin = new ConsolePoint(0, 3); // TODO: put painter sizes and origins in MazeGameOptions
-            mazePainter3D.InnerSize = new ConsoleSize(24, 24);
 
-            mazePainter3D.HasBorder = true; // TODO: tries to write above the top of the window
+            mazePainterMap.Origin = options.MazeOrigin;
+            mazePainterMap.InnerSize = new ConsoleSize(maze.Width, maze.Height);
+            mazePainterMap.HasBorder = true;
+
+            mazePainterPov.Origin = new ConsolePoint(0, 3);
+            mazePainterPov.InnerSize = new ConsoleSize(
+                MazePainterPovConstants.PainterInnerWidth,
+                MazePainterPovConstants.PainterInnerHeight);
+            mazePainterPov.HasBorder = true;
+
             statusPainter.Origin = options.StatusOrigin;
             statusPainter.InnerSize = new ConsoleSize(console.WindowWidth - options.StatusOrigin.X - 2, 1);
             statusPainter.HasBorder = true;
 
             this.UpdateVisibility(maze, player);
-            mazePainter.Paint(maze, player);
+            mazePainterMap.Paint(maze, player);
+            mazePainterPov.Render(maze, player);
             this.WritePositionStatusMessage(player);
             console.CursorVisible = false;
             while (this.CurrentGame.ContinuePlaying && !this.CurrentGame.PlayerHasWon)
@@ -99,7 +104,7 @@ namespace Sde.MazeGame
 
             this.UpdateVisibility(maze, player);
             this.WritePositionStatusMessage(player);
-            mazePainter3D.Render(maze, player);
+            mazePainterPov.Render(maze, player);
         }
 
         /// <summary>
@@ -120,7 +125,7 @@ namespace Sde.MazeGame
 
             this.UpdateVisibility(maze, player);
             this.WritePositionStatusMessage(player);
-            mazePainter3D.Render(maze, player);
+            mazePainterPov.Render(maze, player);
         }
 
         /// <summary>
@@ -150,8 +155,8 @@ namespace Sde.MazeGame
                 statusPainter.Paint(msg, ConsoleOutputType.Prompt);
                 this.CurrentGame.PlayerHasWon = true;
                 char spaceKey = '\0';
-                mazePainter.Reset();
-                mazePainter3D.Reset();
+                mazePainterMap.Reset();
+                mazePainterPov.Reset();
                 statusPainter.Reset();
                 while (spaceKey != ' ')
                 {
@@ -163,11 +168,11 @@ namespace Sde.MazeGame
 
             if (maze.GetMazePoint(newPosition).PointType == MazePointType.Path)
             {
-                mazePainter.ErasePlayer(player);
+                mazePainterMap.ErasePlayer(player);
                 player.Position = newPosition;
                 this.UpdateVisibility(maze, player);
                 this.WritePositionStatusMessage(player);
-                mazePainter3D.Render(maze, player);
+                mazePainterPov.Render(maze, player);
             }
             else
             {
@@ -189,8 +194,8 @@ namespace Sde.MazeGame
             console.CursorTop = this.CurrentGame.Maze.Height + 1;
             statusPainter.Paint("Thank you for playing!");
             this.CurrentGame.ContinuePlaying = false;
-            mazePainter.Reset();
-            mazePainter3D.Reset();
+            mazePainterMap.Reset();
+            mazePainterPov.Reset();
             statusPainter.Reset();
         }
 
@@ -226,12 +231,12 @@ namespace Sde.MazeGame
             var updateRequired = mazeVisibilityUpdater.UpdateVisibility(maze, player);
             if (updateRequired)
             {
-                mazePainter.Paint(maze, player);
+                mazePainterMap.Paint(maze, player);
             }
             else
             {
-                mazePainter.ErasePlayer(player);
-                mazePainter.PaintPlayer(player);
+                mazePainterMap.ErasePlayer(player);
+                mazePainterMap.PaintPlayer(player);
             }
         }
     }
