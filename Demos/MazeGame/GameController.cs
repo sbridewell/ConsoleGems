@@ -88,11 +88,17 @@ namespace Sde.MazeGame
         /// <summary>
         /// Turns the player to the left.
         /// </summary>
-        /// <param name="maze">The maze that the player is in.</param>
-        /// <param name="player">The player.</param>
-        public void TurnPlayerLeft(Maze maze, Player player)
+        public void TurnPlayerLeft()
         {
             // TODO: PlayerManager.TurnLeft and TurnRight methods?
+            if (this.CurrentGame == null)
+            {
+                // TOOD: ThrowIfGameNotStarted method?
+                throw new InvalidOperationException("The game has not been started.");
+            }
+
+            var maze = this.CurrentGame.Maze;
+            var player = this.CurrentGame.Player;
             player.FacingDirection = player.FacingDirection switch
             {
                 Direction.North => Direction.West,
@@ -110,10 +116,15 @@ namespace Sde.MazeGame
         /// <summary>
         /// Turns the player to the right.
         /// </summary>
-        /// <param name="maze">The maze that the player is in.</param>
-        /// <param name="player">The player.</param>
-        public void TurnPlayerRight(Maze maze, Player player)
+        public void TurnPlayerRight()
         {
+            if (this.CurrentGame == null)
+            {
+                throw new InvalidOperationException("The game has not been started.");
+            }
+
+            var maze = this.CurrentGame.Maze;
+            var player = this.CurrentGame.Player;
             player.FacingDirection = player.FacingDirection switch
             {
                 Direction.North => Direction.East,

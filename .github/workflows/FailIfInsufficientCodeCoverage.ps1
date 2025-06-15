@@ -2,7 +2,7 @@ Write-Verbose "You are running in verbose mode";
 $ErrorActionPreference = 'Stop';
 $coverageFilenames = Get-ChildItem -Recurse -Filter "coverage.opencover.xml";
 Write-Output "The following coverage files were found:";
-Write-Output ($coverageFilenames | Format-List | Out-String);
+Write-Output ($coverageFilenames | Format-Table | Out-String);
 
 # TODO: we're only taking the first coverage file, we probably need to take all of them
 $coverageFilename = $coverageFilenames[0].FullName;
