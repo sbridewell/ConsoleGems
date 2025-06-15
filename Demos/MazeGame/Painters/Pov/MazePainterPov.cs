@@ -7,18 +7,34 @@ namespace Sde.MazeGame.Painters.Pov
 {
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;
+    using Sde.ConsoleGems.Text;
     using Sde.MazeGame.Models;
 
     /// <summary>
     /// Provides a flattened perspective player's point of view of a maze.
     /// </summary>
-    public class MazePainterPov(
-        IConsole console,
-        IBorderPainter borderPainter,
-        ISectionRenderer sectionRenderer)
-        : Painter(console, borderPainter), IMazePainterPov
+    public class MazePainterPov : Painter, IMazePainterPov
     {
         private readonly int[] sectionWidths = MazePainterPovConstants.SectionWidths;
+        private readonly ISectionRenderer sectionRenderer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MazePainterPov"/> class.
+        /// </summary>
+        /// <param name="console">IConsole implementation.</param>
+        /// <param name="borderPainter">Paints a border around the painter.</param>
+        /// <param name="sectionRenderer">Renders sections of the view.</param>
+        public MazePainterPov(
+            IConsole console,
+            IBorderPainter borderPainter,
+            ISectionRenderer sectionRenderer)
+            : base(console, borderPainter)
+        {
+            this.sectionRenderer = sectionRenderer;
+            this.InnerSize = new ConsoleSize(
+                MazePainterPovConstants.PainterInnerWidth,
+                MazePainterPovConstants.PainterInnerHeight);
+        }
 
         /// <inheritdoc/>
         public void Render(Maze maze, Player player)
@@ -35,20 +51,20 @@ namespace Sde.MazeGame.Painters.Pov
             var i = 0;
             for (i = 0; i < forwardView.VisibleDistance; i++)
             {
-                sectionRenderer.RenderSection(this, i, forwardView);
+                this.sectionRenderer.RenderSection(this, i, forwardView);
             }
 
             for (var section = i - 1; section < this.sectionWidths.Length - 1; section++)
             {
                 if (forwardView.MiddleRow[i - 1] == MazePointType.Wall)
                 {
-                    sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Left, forwardView.VisibleDistance);
-                    sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Right, forwardView.VisibleDistance);
+                    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Left, forwardView.VisibleDistance);
+                    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Right, forwardView.VisibleDistance);
                 }
                 else
                 {
-                    sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Left);
-                    sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Right);
+                    this.sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Left);
+                    this.sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Right);
                 }
             }
         }

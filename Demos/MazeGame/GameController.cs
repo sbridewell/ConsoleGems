@@ -51,9 +51,6 @@ namespace Sde.MazeGame
             mazePainterMap.HasBorder = true;
 
             mazePainterPov.Origin = new ConsolePoint(0, 3);
-            mazePainterPov.InnerSize = new ConsoleSize(
-                MazePainterPovConstants.PainterInnerWidth,
-                MazePainterPovConstants.PainterInnerHeight);
             mazePainterPov.HasBorder = true;
 
             statusPainter.Origin = options.StatusOrigin;

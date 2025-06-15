@@ -70,10 +70,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             this.painterProxy = new MazePainterPovProxy(
                 this.mockConsole.Object,
                 this.mockBorderPainter.Object,
-                this.sectionRenderer)
-            {
-                InnerSize = new ConsoleSize(24, 24), // TODO: shouldn't need to pass the size to painterProxy
-            };
+                this.sectionRenderer);
         }
 
         #region public static test case names
