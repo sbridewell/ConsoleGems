@@ -5,7 +5,8 @@ Write-Verbose ($coverageFilenames | Format-List | Out-String);
 $coverageFilename = $coverageFilenames[0].FullName;
 $coverageFileContent = Get-Content $coverageFilename;
 $coverageXml = [xml]$coverageFileContent;
-$methods = $coverageXml.GetElementsByTagName("Method");
+$nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
+$methods = $nonTestAssemblies.GetElementsByTagName("Method");
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";
 Write-Verbose ($methods | Format-List -Property name,sequenceCoverage,branchCoverage | Out-String);
@@ -15,10 +16,9 @@ Write-Verbose ($methods | Format-List -Property name,sequenceCoverage,branchCove
 $failures = @($methods | Where-Object {[int]$_.sequenceCoverage -lt 80 -or [int]$_.branchCoverage -lt 80});
 if ($failures.Count -gt 0) {
     Write-Output "The following methods have insufficient code coverage";
-    $failures | ForEach-Object {
-        $_ | Select-Object -Property name,sequenceCoverage,branchCoverage
-    } | Format-List
-    throw "Insufficient code coverage";
+    $failures | Format-Table sequenceCoverage, branchCoverage, name
+    $failureCount = $failures.Count;
+    throw "Insufficient code coverage - $failureCount failures.";
 } else {
     Write-Output "Congratulations, your code coverage looks good :-)";
 }
