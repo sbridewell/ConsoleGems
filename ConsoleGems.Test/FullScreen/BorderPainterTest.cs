@@ -31,15 +31,16 @@ namespace Sde.ConsoleGems.Test.FullScreen
 
             // Assert - top & bottom border
             mockConsole.Verify(c => c.Write("╭", ExpectedConsoleOutputType), Times.Once);
-            mockConsole.Verify(c => c.Write("╮", ExpectedConsoleOutputType), Times.Once);
+            mockConsole.Verify(c => c.WriteLine("╮", ExpectedConsoleOutputType), Times.Once);
             mockConsole.Verify(c => c.Write("╰", ExpectedConsoleOutputType), Times.Once);
-            mockConsole.Verify(c => c.Write("╯", ExpectedConsoleOutputType), Times.Once);
+            mockConsole.Verify(c => c.WriteLine("╯", ExpectedConsoleOutputType), Times.Once);
             mockConsole.Verify(c => c.Write(new string('─', innerWidth), ExpectedConsoleOutputType), Times.Exactly(2));
 
             // Assert - side borders
             mockConsole.VerifySet(m => m.CursorLeft = 0, Times.Exactly(innerHeight + 2));
             mockConsole.VerifySet(m => m.CursorLeft = innerWidth + 1, Times.Exactly(innerHeight));
-            mockConsole.Verify(c => c.Write("│", ExpectedConsoleOutputType), Times.Exactly(innerHeight * 2));
+            mockConsole.Verify(c => c.Write("│", ExpectedConsoleOutputType), Times.Exactly(innerHeight));
+            mockConsole.Verify(c => c.WriteLine("│", ExpectedConsoleOutputType), Times.Exactly(innerHeight));
         }
 
         /// <summary>
@@ -88,9 +89,9 @@ namespace Sde.ConsoleGems.Test.FullScreen
             // Assert - the border should be painted again after reset
             borderPainter.PaintBorderIfRequired();
             mockConsole.Verify(c => c.Write("╭", ExpectedConsoleOutputType), Times.Once);
-            mockConsole.Verify(c => c.Write("╮", ExpectedConsoleOutputType), Times.Once);
+            mockConsole.Verify(c => c.WriteLine("╮", ExpectedConsoleOutputType), Times.Once);
             mockConsole.Verify(c => c.Write("╰", ExpectedConsoleOutputType), Times.Once);
-            mockConsole.Verify(c => c.Write("╯", ExpectedConsoleOutputType), Times.Once);
+            mockConsole.Verify(c => c.WriteLine("╯", ExpectedConsoleOutputType), Times.Once);
         }
 
         /// <summary>
