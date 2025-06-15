@@ -11,6 +11,8 @@ namespace Sde.MazeGame
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Models;
     using Sde.MazeGame.Painters;
+    using Sde.MazeGame.Painters.Pov;
+    using Sde.MazeGame.Painters.Status;
 
     /// <summary>
     /// The controlling module for the maze game.
@@ -19,9 +21,7 @@ namespace Sde.MazeGame
         IConsole console,
         IStatusPainter statusPainter,
         IMazePainter mazePainter,
-
-        // TODO: restore mazePainter3D
-        ////IMazePainter3D mazePainter3D,
+        IMazePainterPov mazePainter3D,
         MazeVisibilityUpdater mazeVisibilityUpdater,
         MazeGameKeyPressMappings keyPressMappings)
         : IGameController
@@ -29,7 +29,7 @@ namespace Sde.MazeGame
         /// <summary>
         /// Gets the instance of the game which is currnetly being played.
         /// </summary>
-        public Game CurrentGame { get; private set; }
+        public Game? CurrentGame { get; private set; }
 
         /// <inheritdoc/>
         public void Play(string mazeFile)
@@ -48,9 +48,10 @@ namespace Sde.MazeGame
             mazePainter.Origin = options.MazeOrigin;
             mazePainter.InnerSize = new ConsoleSize(maze.Width, maze.Height);
             mazePainter.HasBorder = true;
+            mazePainter3D.Origin = new ConsolePoint(0, 3); // TODO: put painter sizes and origins in MazeGameOptions
+            mazePainter3D.InnerSize = new ConsoleSize(24, 24);
 
-            // TODO: restore mazePainter3D
-            ////mazePainter3D.SetOrigin(new ConsolePoint(0, 1));
+            mazePainter3D.HasBorder = true; // TODO: tries to write above the top of the window
             statusPainter.Origin = options.StatusOrigin;
             statusPainter.InnerSize = new ConsoleSize(console.WindowWidth - options.StatusOrigin.X - 2, 1);
             statusPainter.HasBorder = true;
@@ -98,9 +99,7 @@ namespace Sde.MazeGame
 
             this.UpdateVisibility(maze, player);
             this.WritePositionStatusMessage(player);
-
-            // TODO: restore mazePainter3D
-            ////mazePainter3D.Render(maze, player);
+            mazePainter3D.Render(maze, player);
         }
 
         /// <summary>
@@ -121,9 +120,7 @@ namespace Sde.MazeGame
 
             this.UpdateVisibility(maze, player);
             this.WritePositionStatusMessage(player);
-
-            // TODO: restore mazePainter3D
-            ////mazePainter3D.Render(maze, player);
+            mazePainter3D.Render(maze, player);
         }
 
         /// <summary>
@@ -132,6 +129,11 @@ namespace Sde.MazeGame
         /// </summary>
         public void TryToMovePlayerForward()
         {
+            if (this.CurrentGame == null)
+            {
+                throw new InvalidOperationException("The game has not been started.");
+            }
+
             var player = this.CurrentGame.Player;
             var maze = this.CurrentGame.Maze;
             var newPosition = player.FacingDirection switch
@@ -148,6 +150,9 @@ namespace Sde.MazeGame
                 statusPainter.Paint(msg, ConsoleOutputType.Prompt);
                 this.CurrentGame.PlayerHasWon = true;
                 char spaceKey = '\0';
+                mazePainter.Reset();
+                mazePainter3D.Reset();
+                statusPainter.Reset();
                 while (spaceKey != ' ')
                 {
                     spaceKey = console.ReadKey().KeyChar;
@@ -162,9 +167,7 @@ namespace Sde.MazeGame
                 player.Position = newPosition;
                 this.UpdateVisibility(maze, player);
                 this.WritePositionStatusMessage(player);
-
-                // TODO: restore mazePainter3D
-                ////mazePainter3D.Render(maze, player);
+                mazePainter3D.Render(maze, player);
             }
             else
             {
@@ -178,9 +181,17 @@ namespace Sde.MazeGame
         /// </summary>
         public void Quit()
         {
+            if (this.CurrentGame == null)
+            {
+                throw new InvalidOperationException("The game has not been started.");
+            }
+
             console.CursorTop = this.CurrentGame.Maze.Height + 1;
             statusPainter.Paint("Thank you for playing!");
             this.CurrentGame.ContinuePlaying = false;
+            mazePainter.Reset();
+            mazePainter3D.Reset();
+            statusPainter.Reset();
         }
 
         private static Direction GetPlayersStartingDirection()

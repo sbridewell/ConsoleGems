@@ -248,9 +248,11 @@ namespace Sde.ConsoleGems.Test.FullScreen
             // Arrange
             var painterOrigin = new ConsolePoint(1, 2);
             var painterInnerSize = new ConsoleSize(11, 4);
-            var console = new TextWriterConsole();
-            console.WindowWidth = painterInnerSize.Width + 2 + painterOrigin.X;
-            console.WindowHeight = painterInnerSize.Height + 2 + painterOrigin.Y;
+            var console = new TextWriterConsole
+            {
+                WindowWidth = painterInnerSize.Width + 2 + painterOrigin.X,
+                WindowHeight = painterInnerSize.Height + 2 + painterOrigin.Y,
+            };
             var borderPainter = new BorderPainter(console);
             var painter = new TestPainter(console, borderPainter)
             {
@@ -414,7 +416,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
 
             // Assert
             console.Flush();
-            Assert.True(true); // just to stop the analyzer complaining that there are no asserts
+            true.Should().BeTrue(); // just to stop the analyzer complaining that there are no asserts
         }
     }
 }

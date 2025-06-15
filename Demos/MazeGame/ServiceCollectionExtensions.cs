@@ -12,7 +12,8 @@ namespace Sde.MazeGame
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Models;
     using Sde.MazeGame.Painters;
-    using Sde.MazeGame.Painters.FlattenedPerspective;
+    using Sde.MazeGame.Painters.Pov;
+    using Sde.MazeGame.Painters.Status;
 
     /// <summary>
     /// Extension methods for <see cref="IServiceCollection"/> to register services for the Maze Game.
@@ -29,9 +30,12 @@ namespace Sde.MazeGame
         {
             services.AddSingleton<MazeGameKeyPressMappings>();
             services.AddSingleton<IStatusPainter, StatusPainter>();
-            services.AddTransient<IBorderPainter, BorderPainter>();
+            services.AddTransient<IBorderPainter, BorderPainter>(); // transient because we have multiple instances which need to act independently
             services.AddSingleton<IMazePainter, MazePainter2D>();
-            services.AddSingleton<IMazePainter3D, MazePainter3D>();
+            services.AddSingleton<IMazePainterPov, MazePainterPov>();
+            services.AddSingleton<IColumnRenderer, ColumnRenderer>();
+            services.AddSingleton<ISectionRenderer, SectionRenderer>();
+            ////services.AddSingleton<IMazePainter3D, SimpleMazePainter3D>();
             services.AddSingleton<IGameController, GameController>();
             services.AddSingleton<ILimitOfViewProvider>(new LimitOfViewProvider(5));
             services.AddSingleton<MazeVisibilityUpdater>(); // TODO: IMazeVisibilityUpdater?

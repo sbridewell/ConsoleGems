@@ -81,7 +81,7 @@ namespace Sde.ConsoleGems.FullScreen
         /// <exception cref="ArgumentOutOfRangeException">
         /// The X or Y coordinates are outside the bounds of the painter's area.
         /// </exception>
-        protected void WriteToScreenBuffer(int x, int y, char character, ConsoleOutputType outputType)
+        public void WriteToScreenBuffer(int x, int y, char character, ConsoleOutputType outputType)
         {
             if (this.screenBuffer == null)
             {

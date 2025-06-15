@@ -15,6 +15,7 @@ namespace Sde.MazeGame.KeyPressHandlers
         public void Handle(ConsoleKeyInfo keyInfo, GameController controller)
         {
             // TODO: shouldn't need to pass the controller to its own methods
+            ArgumentNullException.ThrowIfNull(controller.CurrentGame);
             controller.TurnPlayerRight(controller.CurrentGame.Maze, controller.CurrentGame.Player);
         }
     }

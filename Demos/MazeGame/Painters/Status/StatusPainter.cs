@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.Painters
+namespace Sde.MazeGame.Painters.Status
 {
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;

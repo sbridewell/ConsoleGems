@@ -52,16 +52,9 @@ namespace Sde.MazeGame.Models
         /// <returns>The point at the supplied coordeinates.</returns>
         public MazePoint GetMazePoint(int x, int y)
         {
-            if (x < 0 || x >= this.Width)
+            if (x < 0 || y < 0 || x >= this.Width || y >= this.Height)
             {
-                var msg = $"X coordinate {x} is out of range. Valid range is 0 to {this.Width - 1}.";
-                throw new ArgumentOutOfRangeException(nameof(x), msg);
-            }
-
-            if (y < 0 || y >= this.Height)
-            {
-                var msg = $"Y coordinate {y} is out of range. Valid range is 0 to {this.Height - 1}.";
-                throw new ArgumentOutOfRangeException(nameof(y), msg);
+                return new MazePoint { PointType = MazePointType.OutsideMaze };
             }
 
             return this.mazePoints[x, y];
@@ -168,20 +161,15 @@ namespace Sde.MazeGame.Models
         /// </returns>
         public bool PositionIsWithinMaze(ConsolePoint position)
         {
-            //if (position.X < 0 || position.X >= this.Width)
-            //{
-            //    return false;
-            //}
-
-            //if (position.Y < 0 || position.Y >= this.Height)
-            //{
-            //    return false;
-            //}
-
-            //return true;
             return this.PositionIsWithinMaze(position.X, position.Y);
         }
 
+        /// <summary>
+        /// Determines whether or not the supplied coordinates are within the maze.
+        /// </summary>
+        /// <param name="x">Horizontal coordinate.</param>
+        /// <param name="y">Vertical coordinate.</param>
+        /// <returns>True if the coordinates are within the maze, otherwise false.</returns>
         public bool PositionIsWithinMaze(int x, int y)
         {
             if (x < 0 || x >= this.Width)

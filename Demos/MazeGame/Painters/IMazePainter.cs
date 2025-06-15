@@ -6,11 +6,9 @@
 namespace Sde.MazeGame.Painters
 {
     using Sde.ConsoleGems.FullScreen;
-    using Sde.ConsoleGems.Text;
     using Sde.MazeGame.Models;
 
     // TODO: contents of console window are mangled when window is moved from one screen to another
-    // TODO: implement IPainter
 
     /// <summary>
     /// Interface for painting a maze to the console window.

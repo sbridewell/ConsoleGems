@@ -5,6 +5,7 @@
 
 namespace Sde.MazeGame.FogOfWar
 {
+    using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Text;
     using Sde.MazeGame.Models;
 
@@ -32,6 +33,10 @@ namespace Sde.MazeGame.FogOfWar
         /// True if a repaint is required because points which were not previously
         /// visible are now visible.
         /// </returns>
+        [SuppressMessage(
+            "Minor Code Smell",
+            "S3267:Loops should be simplified with \"LINQ\" expressions",
+            Justification = "Not really a simplification")]
         public bool UpdateVisibility(Maze maze, Player player)
         {
             var repaintRequired = false;

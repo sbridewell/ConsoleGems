@@ -20,5 +20,10 @@ namespace Sde.MazeGame.Models
         /// Players cannot walk through walls.
         /// </summary>
         Wall,
+
+        /// <summary>
+        /// The point is outside the bounds of the maze.
+        /// </summary>
+        OutsideMaze,
     }
 }

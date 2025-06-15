@@ -44,6 +44,27 @@ namespace Sde.ConsoleGems.FullScreen
         public ConsoleRectangle OuterBounds => new ConsoleRectangle(this.Origin, this.OuterSize);
 
         /// <summary>
+        /// Writes a character to the screen buffer at the specified coordinates.
+        /// The console window is not written to until the Paint method is called.
+        /// </summary>
+        /// <param name="x">
+        /// The horizontal coordinate of the character, relative to the left edge
+        /// of the painter.
+        /// </param>
+        /// <param name="y">
+        /// The vertical coordinate of the character, relative to the top edge
+        /// of the painter.
+        /// </param>
+        /// <param name="character">The character to paint.</param>
+        /// <param name="outputType">
+        /// The <see cref="ConsoleOutputType"/> to use to render the character.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The X or Y coordinates are outside the bounds of the painter's area.
+        /// </exception>
+        public void WriteToScreenBuffer(int x, int y, char character, ConsoleOutputType outputType);
+
+        /// <summary>
         /// Paints the area of the console window that this painter is responsible
         /// for from its screen buffer.
         /// </summary>

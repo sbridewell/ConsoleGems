@@ -31,7 +31,7 @@ namespace Sde.ConsoleGems.FullScreen
                 console.CursorTop = this.Painter.Origin.Y;
                 console.Write("╭", ConsoleOutputType.MenuBody);
                 console.Write(new string('─', this.Painter.InnerSize.Width), ConsoleOutputType.MenuBody);
-                console.Write("╮", ConsoleOutputType.MenuBody);
+                console.WriteLine("╮", ConsoleOutputType.MenuBody);
 
                 // Left and right borders
                 for (var y = this.Painter.Origin.Y + 1; y <= this.Painter.Origin.Y + this.Painter.InnerSize.Height; y++)
@@ -40,7 +40,7 @@ namespace Sde.ConsoleGems.FullScreen
                     console.CursorLeft = this.Painter.Origin.X;
                     console.Write("│", ConsoleOutputType.MenuBody);
                     console.CursorLeft = this.Painter.Origin.X + this.Painter.InnerSize.Width + 1;
-                    console.Write("│", ConsoleOutputType.MenuBody);
+                    console.WriteLine("│", ConsoleOutputType.MenuBody);
                 }
 
                 // Bottom border
@@ -48,7 +48,7 @@ namespace Sde.ConsoleGems.FullScreen
                 console.CursorTop = this.Painter.Origin.Y + this.Painter.InnerSize.Height + 1;
                 console.Write("╰", ConsoleOutputType.MenuBody);
                 console.Write(new string('─', this.Painter.InnerSize.Width), ConsoleOutputType.MenuBody);
-                console.Write("╯", ConsoleOutputType.MenuBody);
+                console.WriteLine("╯", ConsoleOutputType.MenuBody);
 
                 this.borderHasBeenPainted = true;
             }
