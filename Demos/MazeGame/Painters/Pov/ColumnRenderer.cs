@@ -7,6 +7,7 @@ namespace Sde.MazeGame.Painters.Pov
 {
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;
+    using Sde.MazeGame.Models;
 
     /// <summary>
     /// Class for rendering a single column of the player's point of view in a maze game.
@@ -21,17 +22,51 @@ namespace Sde.MazeGame.Painters.Pov
         private readonly char parallelWallChar = MazePainterPovConstants.ParallelWallChar;
 
         /// <inheritdoc/>
-        public void RenderColumn(IMazePainterPov painter, int screenX, bool wallIsPerpendicular)
+        public void RenderColumn(IMazePainterPov painter, int screenX, bool wallIsPerpendicular, Direction playerFacingDirection)
         {
             this.RenderCeilingColumn(painter, screenX);
             this.RenderFloorColumn(painter, screenX);
             if (wallIsPerpendicular)
             {
-                this.RenderPerpendicularWallColumn(painter, screenX);
+                var wallColour = playerFacingDirection switch
+                {
+                    Direction.North => MazePainterPovConstants.NorthColour,
+                    Direction.South => MazePainterPovConstants.SouthColour,
+                    Direction.East => MazePainterPovConstants.EastColour,
+                    Direction.West => MazePainterPovConstants.WestColour,
+                    _ => ConsoleOutputType.Default,
+                };
+                this.RenderPerpendicularWallColumn(painter, screenX, wallColour);
             }
             else
             {
-                this.RenderParallelWallColumn(painter, screenX);
+                ConsoleOutputType wallColour;
+                if (screenX < this.screenWidth / 2)
+                {
+                    // It's a wall to the left
+                    wallColour = playerFacingDirection switch
+                    {
+                        Direction.North => MazePainterPovConstants.WestColour,
+                        Direction.South => MazePainterPovConstants.EastColour,
+                        Direction.East => MazePainterPovConstants.NorthColour,
+                        Direction.West => MazePainterPovConstants.SouthColour,
+                        _ => ConsoleOutputType.Default,
+                    };
+                }
+                else
+                {
+                    // It's a wall to the right
+                    wallColour = playerFacingDirection switch
+                    {
+                        Direction.North => MazePainterPovConstants.EastColour,
+                        Direction.South => MazePainterPovConstants.WestColour,
+                        Direction.East => MazePainterPovConstants.SouthColour,
+                        Direction.West => MazePainterPovConstants.NorthColour,
+                        _ => ConsoleOutputType.Default,
+                    };
+                }
+
+                this.RenderParallelWallColumn(painter, screenX, wallColour);
             }
         }
 
@@ -54,13 +89,13 @@ namespace Sde.MazeGame.Painters.Pov
         }
 
         /// <inheritdoc/>
-        public void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX, int sectionIndent)
+        public void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX, int sectionIndent, ConsoleOutputType wallColour)
         {
             var topY = sectionIndent;
             var bottomY = this.screenHeight - topY;
             for (var screenY = topY; screenY < bottomY; screenY++)
             {
-                painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, ConsoleOutputType.Default);
+                painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, wallColour);
             }
         }
 
@@ -72,7 +107,7 @@ namespace Sde.MazeGame.Painters.Pov
         /// The painter which will write the column to the screen buffer.
         /// </param>
         /// <param name="screenX">Horizontal co-ordinate of the column.</param>
-        private void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX)
+        private void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX, ConsoleOutputType wallColour)
         {
             var nextSectionIndent = screenX switch
             {
@@ -104,7 +139,16 @@ namespace Sde.MazeGame.Painters.Pov
             };
             for (var screenY = nextSectionIndent; screenY < this.screenHeight - nextSectionIndent; screenY++)
             {
-                painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, ConsoleOutputType.Default);
+                //var consoleOutputType = playerFacingDirection switch
+                //{
+                //    Direction.North => MazePainterPovConstants.NorthColour,
+                //    Direction.South => MazePainterPovConstants.SouthColour,
+                //    Direction.East => MazePainterPovConstants.EastColour,
+                //    Direction.West => MazePainterPovConstants.WestColour,
+                //    _ => ConsoleOutputType.Default,
+                //};
+                //painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, consoleOutputType);
+                painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, wallColour);
             }
         }
 
@@ -116,12 +160,12 @@ namespace Sde.MazeGame.Painters.Pov
         /// The painter which will write the column to the screen buffer.
         /// </param>
         /// <param name="screenX">Horizontal co-ordinate of the column.</param>
-        private void RenderParallelWallColumn(IMazePainterPov painter, int screenX)
+        private void RenderParallelWallColumn(IMazePainterPov painter, int screenX, ConsoleOutputType consoleOutputType)
         {
             var columnIndent = screenX < this.screenWidth / 2 ? screenX : this.screenWidth - screenX - 1;
             for (var screenY = columnIndent; screenY < this.screenHeight - columnIndent; screenY++)
             {
-                painter.WriteToScreenBuffer(screenX, screenY, this.parallelWallChar, ConsoleOutputType.Default);
+                painter.WriteToScreenBuffer(screenX, screenY, this.parallelWallChar, consoleOutputType);
             }
         }
     }

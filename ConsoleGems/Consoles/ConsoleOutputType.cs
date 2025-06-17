@@ -40,5 +40,25 @@ namespace Sde.ConsoleGems.Consoles
         /// The body text of a menu.
         /// </summary>
         MenuBody,
+
+        /// <summary>
+        /// Red foreground, black background.
+        /// </summary>
+        Red,
+
+        /// <summary>
+        /// Yellow foreground, black background.
+        /// </summary>
+        Yellow,
+
+        /// <summary>
+        /// Blue foreground, black background.
+        /// </summary>
+        Blue,
+
+        /// <summary>
+        /// Green foreground, black background.
+        /// </summary>
+        Green,
     }
 }

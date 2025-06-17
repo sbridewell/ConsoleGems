@@ -8,6 +8,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
     using System.Reflection;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;
+    using Sde.MazeGame.Models;
     using Sde.MazeGame.Painters.Pov;
 
     /// <summary>
@@ -38,9 +39,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
         /// Calls the RenderForwardView method of the base class.
         /// </summary>
         /// <param name="forwardView">The ForwardView to render.</param>
-        public void CallRenderForwardView(ForwardView forwardView)
+        public void CallRenderForwardView(ForwardView forwardView, Direction playerFacingDirection)
         {
-            this.RenderForwardView(forwardView);
+            this.RenderForwardView(forwardView, playerFacingDirection);
         }
     }
 }

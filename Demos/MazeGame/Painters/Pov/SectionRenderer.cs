@@ -19,16 +19,30 @@ namespace Sde.MazeGame.Painters.Pov
         private readonly int[] sectionIndents = MazePainterPovConstants.SectionIndents;
 
         /// <inheritdoc/>
-        public void RenderSectionAllWall(IMazePainterPov painter, int sectionNumber, LeftOrRight leftOrRight, int forwardDistance)
+        public void RenderSectionAllWall(
+            IMazePainterPov painter,
+            int sectionNumber,
+            LeftOrRight leftOrRight,
+            int forwardDistance,
+            Direction playerFacingDirection)
         {
             var sectionIndent = this.sectionIndents[sectionNumber];
             var floorCeilingIndent = this.sectionIndents[forwardDistance - 1];
+            //var wallColour = ConsoleOutputType.MenuBody; // TODO: need to set this based on player's facing direction
+            var wallColour = playerFacingDirection switch
+            {
+                Direction.North => MazePainterPovConstants.NorthColour,
+                Direction.South => MazePainterPovConstants.SouthColour,
+                Direction.East => MazePainterPovConstants.EastColour,
+                Direction.West => MazePainterPovConstants.WestColour,
+                _ => ConsoleOutputType.Default,
+            };
             for (var columnIndent = sectionIndent; columnIndent < this.sectionWidths[sectionNumber] + sectionIndent; columnIndent++)
             {
                 var screenX = leftOrRight == LeftOrRight.Left ? columnIndent : this.screenWidth - columnIndent - 1;
                 columnRenderer.RenderCeilingColumn(painter, screenX);
                 columnRenderer.RenderFloorColumn(painter, screenX);
-                columnRenderer.RenderPerpendicularWallColumn(painter, screenX, floorCeilingIndent);
+                columnRenderer.RenderPerpendicularWallColumn(painter, screenX, floorCeilingIndent, wallColour);
             }
         }
 
@@ -43,22 +57,27 @@ namespace Sde.MazeGame.Painters.Pov
         }
 
         /// <inheritdoc/>
-        public void RenderSection(IMazePainterPov painter, int sectionNumber, ForwardView forwardView)
+        public void RenderSection(IMazePainterPov painter, int sectionNumber, ForwardView forwardView, Direction playerFacingDirection)
         {
             if (sectionNumber < forwardView.LeftRow.Count)
             {
                 var wallToTheLeft = forwardView.LeftRow[sectionNumber] == MazePointType.Wall;
-                this.RenderSection(painter, sectionNumber, LeftOrRight.Left, wallToTheLeft);
+                this.RenderSection(painter, sectionNumber, LeftOrRight.Left, wallToTheLeft, playerFacingDirection);
             }
 
             if (sectionNumber < forwardView.RightRow.Count)
             {
                 var wallToTheRight = forwardView.RightRow[sectionNumber] == MazePointType.Wall;
-                this.RenderSection(painter, sectionNumber, LeftOrRight.Right, wallToTheRight);
+                this.RenderSection(painter, sectionNumber, LeftOrRight.Right, wallToTheRight, playerFacingDirection);
             }
         }
 
-        private void RenderSection(IMazePainterPov painter, int sectionNumber, LeftOrRight leftOrRight, bool wallToTheSide)
+        private void RenderSection(
+            IMazePainterPov painter,
+            int sectionNumber,
+            LeftOrRight leftOrRight,
+            bool wallToTheSide,
+            Direction playerFacingDirection)
         {
             var sectionIndent = this.sectionIndents[sectionNumber];
             for (var columnIndent = sectionIndent; columnIndent < this.sectionWidths[sectionNumber] + sectionIndent; columnIndent++)
@@ -66,11 +85,11 @@ namespace Sde.MazeGame.Painters.Pov
                 var screenX = leftOrRight == LeftOrRight.Left ? columnIndent : this.screenWidth - columnIndent - 1;
                 if (wallToTheSide)
                 {
-                    columnRenderer.RenderColumn(painter, screenX, wallIsPerpendicular: false);
+                    columnRenderer.RenderColumn(painter, screenX, wallIsPerpendicular: false, playerFacingDirection);
                 }
                 else
                 {
-                    columnRenderer.RenderColumn(painter, screenX, wallIsPerpendicular: true);
+                    columnRenderer.RenderColumn(painter, screenX, wallIsPerpendicular: true, playerFacingDirection);
                 }
             }
         }

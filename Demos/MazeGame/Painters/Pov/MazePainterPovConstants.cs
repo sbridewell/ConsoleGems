@@ -3,6 +3,8 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
+using Sde.ConsoleGems.Consoles;
+
 namespace Sde.MazeGame.Painters.Pov
 {
     /// <summary>
@@ -43,6 +45,11 @@ namespace Sde.MazeGame.Painters.Pov
         /// direction the player is facing.
         /// </summary>
         public static readonly char ParallelWallChar = '░';
+
+        public static readonly ConsoleOutputType NorthColour = ConsoleOutputType.Red;
+        public static readonly ConsoleOutputType SouthColour = ConsoleOutputType.Green;
+        public static readonly ConsoleOutputType EastColour = ConsoleOutputType.Yellow;
+        public static readonly ConsoleOutputType WestColour = ConsoleOutputType.Blue;
 
         /// <summary>
         /// Gets the width of each of the sections of the painter.

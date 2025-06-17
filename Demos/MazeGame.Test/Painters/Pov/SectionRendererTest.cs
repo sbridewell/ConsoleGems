@@ -2671,7 +2671,12 @@ namespace Sde.MazeGame.Test.Painters.Pov
             };
 
             // Act
-            sectionRenderer.RenderSectionAllWall(painter, testCase.sectionNumber, testCase.leftOrRight, testCase.forwardDistance);
+            sectionRenderer.RenderSectionAllWall(
+                painter,
+                testCase.sectionNumber,
+                testCase.leftOrRight,
+                testCase.forwardDistance,
+                Direction.North);
 
             // Assert
             var actualCharacters = painter.PublicScreenBuffer.ToStringArray();
@@ -2707,7 +2712,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             };
 
             // Act
-            sectionRenderer.RenderSection(painter, testCase.sectionNumber, testCase.forwardView);
+            sectionRenderer.RenderSection(painter, testCase.sectionNumber, testCase.forwardView, Direction.North);
 
             // Assert
             var actualCharacters = painter.PublicScreenBuffer.ToStringArray();

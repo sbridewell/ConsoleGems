@@ -43,6 +43,12 @@ namespace Sde.ConsoleGems.Consoles
         /// </summary>
         public static ConsoleColours Error { get; set; } = new ConsoleColours(ConsoleColor.Red, ConsoleColor.Black);
 
+        public static ConsoleColours Red { get; } = new ConsoleColours(ConsoleColor.Red, ConsoleColor.Black);
+        public static ConsoleColours Green { get; } = new ConsoleColours(ConsoleColor.Green, ConsoleColor.Black);
+        public static ConsoleColours Yellow { get; } = new ConsoleColours(ConsoleColor.Yellow, ConsoleColor.Black);
+        public static ConsoleColours Blue { get; } = new ConsoleColours(ConsoleColor.Blue, ConsoleColor.Black);
+
+
         /// <summary>
         /// Gets the foreground colour.
         /// </summary>

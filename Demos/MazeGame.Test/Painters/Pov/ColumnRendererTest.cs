@@ -11,6 +11,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;
     using Sde.ConsoleGems.Text;
+    using Sde.MazeGame.Models;
     using Sde.MazeGame.Painters.Pov;
     using Xunit.Abstractions;
 
@@ -1461,7 +1462,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             };
 
             // Act
-            columnRenderer.RenderColumn(painter, testCase.screenX, testCase.isPerpendicular);
+            columnRenderer.RenderColumn(painter, testCase.screenX, testCase.isPerpendicular, Direction.North);
 
             // Assert
             var actualCharacters = painter.PublicScreenBuffer.ToStringArray();

@@ -40,26 +40,26 @@ namespace Sde.MazeGame.Painters.Pov
         public void Render(Maze maze, Player player)
         {
             var forwardView = new ForwardView(maze, player, this.sectionWidths.Length - 2); // TODO: why -2?
-            this.RenderForwardView(forwardView);
+            this.RenderForwardView(forwardView, player.FacingDirection);
             this.Paint();
         }
 
         /// <inheritdoc/>
-        public void RenderForwardView(ForwardView forwardView)
+        public void RenderForwardView(ForwardView forwardView, Direction playerFacingDirection)
         {
             this.ClearScreenBuffer();
             var i = 0;
             for (i = 0; i < forwardView.VisibleDistance; i++)
             {
-                this.sectionRenderer.RenderSection(this, i, forwardView);
+                this.sectionRenderer.RenderSection(this, i, forwardView, playerFacingDirection);
             }
 
             for (var section = i - 1; section < this.sectionWidths.Length - 1; section++)
             {
                 if (forwardView.MiddleRow[i - 1] == MazePointType.Wall)
                 {
-                    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Left, forwardView.VisibleDistance);
-                    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Right, forwardView.VisibleDistance);
+                    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Left, forwardView.VisibleDistance, playerFacingDirection);
+                    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Right, forwardView.VisibleDistance, playerFacingDirection);
                 }
                 else
                 {

@@ -1126,7 +1126,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             var testCase = RenderForwardViewTestCases[testCaseName];
 
             // Act
-            this.painterProxy.CallRenderForwardView(testCase.forwardView);
+            this.painterProxy.CallRenderForwardView(testCase.forwardView, Direction.North);
 
             // Assert
             var actualCharacters = this.painterProxy.PublicScreenBuffer.ToStringArray();
