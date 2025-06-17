@@ -3,10 +3,10 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-using Sde.ConsoleGems.Consoles;
-
 namespace Sde.MazeGame.Painters.Pov
 {
+    using Sde.ConsoleGems.Consoles;
+
     /// <summary>
     /// Constants used in painting the maze from the player's point of view in 3D.
     /// </summary>
@@ -46,9 +46,24 @@ namespace Sde.MazeGame.Painters.Pov
         /// </summary>
         public static readonly char ParallelWallChar = '░';
 
+        /// <summary>
+        /// The colour of a wall to the north of the player.
+        /// </summary>
         public static readonly ConsoleOutputType NorthColour = ConsoleOutputType.Red;
+
+        /// <summary>
+        /// The colour of a wall to the south of the player.
+        /// </summary>
         public static readonly ConsoleOutputType SouthColour = ConsoleOutputType.Green;
+
+        /// <summary>
+        /// The colour of a wall to the east of the player.
+        /// </summary>
         public static readonly ConsoleOutputType EastColour = ConsoleOutputType.Yellow;
+
+        /// <summary>
+        /// The colour of a wall to the west of the player.
+        /// </summary>
         public static readonly ConsoleOutputType WestColour = ConsoleOutputType.Blue;
 
         /// <summary>

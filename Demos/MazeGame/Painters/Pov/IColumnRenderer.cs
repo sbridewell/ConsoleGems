@@ -25,6 +25,7 @@ namespace Sde.MazeGame.Painters.Pov
         /// <param name="wallIsPerpendicular">
         /// True if the wall in this section is perpendicular to the player.
         /// </param>
+        /// <param name="playerFacingDirection">The direction the player is facing.</param>
         public void RenderColumn(IMazePainterPov painter, int screenX, bool wallIsPerpendicular, Direction playerFacingDirection);
 
         /// <summary>
@@ -54,6 +55,9 @@ namespace Sde.MazeGame.Painters.Pov
         /// </param>
         /// <param name="screenX">Horizonal coordinate of the column to render.</param>
         /// <param name="sectionIndent">Vertical indent where the wall meets the ceiling / wall.</param>
+        /// <param name="wallColour">
+        /// The colour of the wall, represented as a <see cref="ConsoleOutputType"/>.
+        /// </param>
         public void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX, int sectionIndent, ConsoleOutputType wallColour);
     }
 }

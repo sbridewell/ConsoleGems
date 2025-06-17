@@ -28,7 +28,6 @@ namespace Sde.MazeGame.Painters.Pov
         {
             var sectionIndent = this.sectionIndents[sectionNumber];
             var floorCeilingIndent = this.sectionIndents[forwardDistance - 1];
-            //var wallColour = ConsoleOutputType.MenuBody; // TODO: need to set this based on player's facing direction
             var wallColour = playerFacingDirection switch
             {
                 Direction.North => MazePainterPovConstants.NorthColour,

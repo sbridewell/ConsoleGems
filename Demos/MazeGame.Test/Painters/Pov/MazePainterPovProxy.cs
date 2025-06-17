@@ -39,6 +39,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
         /// Calls the RenderForwardView method of the base class.
         /// </summary>
         /// <param name="forwardView">The ForwardView to render.</param>
+        /// <param name="playerFacingDirection">The direction the player is facing.</param>
         public void CallRenderForwardView(ForwardView forwardView, Direction playerFacingDirection)
         {
             this.RenderForwardView(forwardView, playerFacingDirection);

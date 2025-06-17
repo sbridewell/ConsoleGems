@@ -107,6 +107,9 @@ namespace Sde.MazeGame.Painters.Pov
         /// The painter which will write the column to the screen buffer.
         /// </param>
         /// <param name="screenX">Horizontal co-ordinate of the column.</param>
+        /// <param name="wallColour">
+        /// The colour of the wall, represented as a <see cref="ConsoleOutputType"/>.
+        /// </param>
         private void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX, ConsoleOutputType wallColour)
         {
             var nextSectionIndent = screenX switch
@@ -139,15 +142,6 @@ namespace Sde.MazeGame.Painters.Pov
             };
             for (var screenY = nextSectionIndent; screenY < this.screenHeight - nextSectionIndent; screenY++)
             {
-                //var consoleOutputType = playerFacingDirection switch
-                //{
-                //    Direction.North => MazePainterPovConstants.NorthColour,
-                //    Direction.South => MazePainterPovConstants.SouthColour,
-                //    Direction.East => MazePainterPovConstants.EastColour,
-                //    Direction.West => MazePainterPovConstants.WestColour,
-                //    _ => ConsoleOutputType.Default,
-                //};
-                //painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, consoleOutputType);
                 painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, wallColour);
             }
         }
@@ -160,12 +154,15 @@ namespace Sde.MazeGame.Painters.Pov
         /// The painter which will write the column to the screen buffer.
         /// </param>
         /// <param name="screenX">Horizontal co-ordinate of the column.</param>
-        private void RenderParallelWallColumn(IMazePainterPov painter, int screenX, ConsoleOutputType consoleOutputType)
+        /// <param name="wallColour">
+        /// The colour of the wall, represented as a <see cref="ConsoleOutputType"/>.
+        /// </param>
+        private void RenderParallelWallColumn(IMazePainterPov painter, int screenX, ConsoleOutputType wallColour)
         {
             var columnIndent = screenX < this.screenWidth / 2 ? screenX : this.screenWidth - screenX - 1;
             for (var screenY = columnIndent; screenY < this.screenHeight - columnIndent; screenY++)
             {
-                painter.WriteToScreenBuffer(screenX, screenY, this.parallelWallChar, consoleOutputType);
+                painter.WriteToScreenBuffer(screenX, screenY, this.parallelWallChar, wallColour);
             }
         }
     }
