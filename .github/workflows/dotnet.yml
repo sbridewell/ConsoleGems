@@ -10,6 +10,12 @@ on:
   pull_request:
     branches: [ "main", "epic/*" ]
 
+env:
+  CONSOLEGEMS_TEST_FOLDER: "./ConsoleGems.Test/"
+  CONSOLEGEMS_TEST_PROJECT: "${{ CONSOLEGEMS_TEST_FOLDER }}ConsoleGems.Test.csproj"
+  MAZEGAME_TEST_FOLDER: "./Demos/MazeGame.Test/"
+  MAZEGAME_TEST_PROJECT: "MazeGame.Test.csproj"
+
 jobs:
   build:
 
@@ -33,7 +39,7 @@ jobs:
       run: dotnet build --no-restore
 
     - name: Run tests with code coverage on ConsoleGems
-      run: dotnet test ./ConsoleGems.Test/ConsoleGems.Test.csproj --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      run: dotnet test ${{ env.CONSOLEGEMS_TEST_PROJECT }} --no-build --verbosity normal --filter "Category!=Integration" --results-directory ${{ env.CONSOLEGEMS_TEST_FOLDER }}\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
     - name: Run tests with code coverage on MazeGame
       run: dotnet test ./Demos/MazeGame.Test/MazeGame.Test.csproj --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
