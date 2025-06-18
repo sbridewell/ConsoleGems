@@ -10,11 +10,11 @@ on:
   pull_request:
     branches: [ "main", "epic/*" ]
 
-env:
-  CONSOLEGEMS_TEST_FOLDER: "./ConsoleGems.Test/"
-  CONSOLEGEMS_TEST_PROJECT: "${{ CONSOLEGEMS_TEST_FOLDER }}ConsoleGems.Test.csproj"
-  MAZEGAME_TEST_FOLDER: "./Demos/MazeGame.Test/"
-  MAZEGAME_TEST_PROJECT: "MazeGame.Test.csproj"
+# env:
+#   CONSOLEGEMS_TEST_FOLDER: "./ConsoleGems.Test/"
+#   CONSOLEGEMS_TEST_PROJECT: "${{ CONSOLEGEMS_TEST_FOLDER }}ConsoleGems.Test.csproj"
+#   MAZEGAME_TEST_FOLDER: "./Demos/MazeGame.Test/"
+#   MAZEGAME_TEST_PROJECT: "MazeGame.Test.csproj"
 
 jobs:
   build:
@@ -22,7 +22,15 @@ jobs:
     runs-on: windows-latest
 
     steps:
+
     - uses: actions/checkout@v4
+  
+    - name: Set up environment variables
+      run: |
+        echo "CONSOLEGEMS_TEST_FOLDER=ConsoleGems.Test" >> $GITHUB_ENV
+        echo "CONSOLEGEMS_TEST_PROJECT=${{ env.CONSOLEGEMS_TEST_FOLDER }}\\ConsoleGems.Test.csproj" >> $GITHUB_ENV
+        echo "MAZEGAME_TEST_FOLDER=Demos\\MazeGame.Test" >> $GITHUB_ENV
+        echo "MAZEGAME_TEST_PROJECT=${{ env.MAZEGAME_TEST_FOLDER }}\\MazeGame.Test.csproj" >> $GITHUB_ENV
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
