@@ -38,8 +38,8 @@ jobs:
     - name: Run tests with code coverage on ConsoleGems
       run: dotnet test --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
-    - name: Set-Location to MazeGames.Test
-      run: Set-Location ./Demos/MazeGames.Test
+    - name: Set-Location to MazeGame.Test
+      run: Set-Location ./Demos/MazeGame.Test
       
     - name: Run tests with code coverage on MazeGame
       run: dotnet test --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
