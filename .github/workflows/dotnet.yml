@@ -26,12 +26,11 @@ jobs:
     - uses: actions/checkout@v4
   
     - name: Set up environment variables
+      shell: pwsh # PowerShell - Windows only
       run: |
-        CONSOLEGEMS_TEST_FOLDER="ConsoleGems.Test"
-        CONSOLEGEMS_TEST_PROJECT="${CONSOLEGEMS_TEST_FOLDER}ConsoleGems.Test.csproj"
-        MAZEGAME_TEST_FOLDER="Demos\\MazeGame.Test"
-        MAZEGAME_TEST_PROJECT="${MAZEGAME_TEST_FOLDER}MazeGame.Test.csproj"
-    
+        echo "CONSOLEGEMS_TEST_FOLDER=ConsoleGems.Test" | Out-File -FilePath $env:GITHUB_ENV -Append
+        echo "CONSOLEGEMS_TEST_PROJECT=${env:CONSOLEGEMS_TEST_FOLDER}\ConsoleGems.Test.csproj" | Out-File -FilePath $env:GITHUB_ENV -Append  
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
