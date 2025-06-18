@@ -41,6 +41,9 @@ jobs:
     - name: CD to MazeGames.Test
       run: cd ./Demos/MazeGames.Test
       
+    - name: Run tests with code coverage on MazeGame
+      run: dotnet test --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
     - name: Display test results directory
       run: dir -r ./TestResults
 
