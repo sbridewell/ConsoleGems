@@ -108,9 +108,11 @@ namespace Sde.ConsoleGems.Test.FullScreen
         {
             var mockConsole = new Mock<IConsole>();
             var borderPainter = new BorderPainter(mockConsole.Object);
-            var testPainter = new TestPainter(mockConsole.Object, borderPainter);
-            testPainter.InnerSize = innerSize;
-            testPainter.HasBorder = hasBorder;
+            var testPainter = new TestPainter(mockConsole.Object, borderPainter)
+            {
+                InnerSize = innerSize,
+                HasBorder = hasBorder,
+            };
             borderPainter.Painter = painterIsNull ? null : testPainter;
             if (borderShouldAlreadyBePainted)
             {
