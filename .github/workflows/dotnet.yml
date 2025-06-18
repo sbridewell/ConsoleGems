@@ -31,10 +31,16 @@ jobs:
       
     - name: Build
       run: dotnet build --no-restore
+
+    - name: CD to ConsoleGems.Test
+      run: cd ConsoleGems.Test
       
-    - name: Run tests with code coverage but skip integration tests
+    - name: Run tests with code coverage on ConsoleGems
       run: dotnet test --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
+    - name: CD to MazeGames.Test
+      run: cd MazeGames.Test
+      
     - name: Display test results directory
       run: dir -r ./TestResults
 
