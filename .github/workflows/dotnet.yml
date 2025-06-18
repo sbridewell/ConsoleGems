@@ -27,10 +27,10 @@ jobs:
   
     - name: Set up environment variables
       run: |
-        echo "CONSOLEGEMS_TEST_FOLDER=ConsoleGems.Test" >> $GITHUB_ENV
-        echo "CONSOLEGEMS_TEST_PROJECT=${{ env.CONSOLEGEMS_TEST_FOLDER }}\\ConsoleGems.Test.csproj" >> $GITHUB_ENV
-        echo "MAZEGAME_TEST_FOLDER=Demos\\MazeGame.Test" >> $GITHUB_ENV
-        echo "MAZEGAME_TEST_PROJECT=${{ env.MAZEGAME_TEST_FOLDER }}\\MazeGame.Test.csproj" >> $GITHUB_ENV
+        CONSOLEGEMS_TEST_FOLDER="ConsoleGems.Test"
+        CONSOLEGEMS_TEST_PROJECT="${CONSOLEGEMS_TEST_FOLDER}ConsoleGems.Test.csproj"
+        MAZEGAME_TEST_FOLDER="Demos\\MazeGame.Test"
+        MAZEGAME_TEST_PROJECT="${MAZEGAME_TEST_FOLDER}MazeGame.Test.csproj"
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
