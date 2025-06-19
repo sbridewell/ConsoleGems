@@ -16,7 +16,7 @@ env:
   # TODO: separate PowerShell script to set all the environment variables?
   CONSOLEGEMS_TEST_FOLDER: "./ConsoleGems.Test/"
   MAZEGAME_TEST_FOLDER: "./Demos/MazeGame.Test/"
-  DOTNET_TEST_EXTRA_PARAMS: '--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover--no-build --verbosity normal --filter "Category!=Integration" --results-directory ${{ env.CONSOLEGEMS_TEST_FOLDER }}\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
+  DOTNET_TEST_EXTRA_PARAMS: '--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
   # TODO: common dotnet test parameters
 
 jobs:
