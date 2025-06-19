@@ -11,10 +11,13 @@ on:
     branches: [ "main", "epic/*" ]
 
 env:
+  # These variables aren't dependent on any other variables, so we can set them here
+  # in an `env` block.
+  # TODO: separate PowerShell script to set all the environment variables?
   CONSOLEGEMS_TEST_FOLDER: "./ConsoleGems.Test/"
-#   CONSOLEGEMS_TEST_PROJECT: "${{ CONSOLEGEMS_TEST_FOLDER }}ConsoleGems.Test.csproj"
   MAZEGAME_TEST_FOLDER: "./Demos/MazeGame.Test/"
-#   MAZEGAME_TEST_PROJECT: "MazeGame.Test.csproj"
+  DOTNET_TEST_EXTRA_PARAMS: '--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover--no-build --verbosity normal --filter "Category!=Integration" --results-directory ${{ env.CONSOLEGEMS_TEST_FOLDER }}\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
+  # TODO: common dotnet test parameters
 
 jobs:
   build:
@@ -26,10 +29,11 @@ jobs:
     - uses: actions/checkout@v4
   
     - name: Set up variables containg test project paths
-      shell: pwsh # PowerShell - Windows only
+      shell: pwsh # PowerShell - Windows runners only
       run: |
-        # echo "CONSOLEGEMS_TEST_FOLDER=ConsoleGems.Test" | Out-File -FilePath $env:GITHUB_ENV -Append
         echo "CONSOLEGEMS_TEST_PROJECT=${env:CONSOLEGEMS_TEST_FOLDER}/ConsoleGems.Test.csproj" | Out-File -FilePath $env:GITHUB_ENV -Append  
+        # TODO: repeat for MazeGame.Test
+        echo "MAZEGAME_TEST_PROJECT=${env:MAZEGAME_TEST_FOLDER}/ConsoleGems.Test.csproj" | Out-File -FilePath $env:GITHUB_ENV -Append  
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -39,20 +43,24 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Directory structure
+    - name: Show directory structure
       run: Get-ChildItem -Recurse -Directory
       
     - name: Build
       run: dotnet build --no-restore
 
     - name: Run tests with code coverage on ConsoleGems
-      run: dotnet test ${{ env.CONSOLEGEMS_TEST_PROJECT }} --no-build --verbosity normal --filter "Category!=Integration" --results-directory ${{ env.CONSOLEGEMS_TEST_FOLDER }}\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      run: dotnet test ${{ env.CONSOLEGEMS_TEST_PROJECT }}  --results-directory ${{ env.CONSOLEGEMS_TEST_FOLDER }}\\TestResults ${{ env.DOTNET_TEST_EXTRA_PARAMS }}
+
+    - name: Display ConsoleGems test results directory
+      run: dir -r ${{ env.CONSOLEGEMS_TEST_FOLDER }}\\TestResults
 
     - name: Run tests with code coverage on MazeGame
-      run: dotnet test ./Demos/MazeGame.Test/MazeGame.Test.csproj --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      # run: dotnet test ./Demos/MazeGame.Test/MazeGame.Test.csproj --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      run: dotnet test ${{ env.MAZEGAME_TEST_PROJECT }}  --results-directory ${{ env.MAZEGAME_TEST_FOLDER }}\\TestResults ${{ env.DOTNET_TEST_EXTRA_PARAMS }}
 
-    - name: Display test results directory
-      run: dir -r ./TestResults
+    - name: Display MazeGame test results directory
+      run: dir -r ${{ env.MAZEGAME_TEST_FOLDER }}\\TestResults
 
     - name: Report code coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
