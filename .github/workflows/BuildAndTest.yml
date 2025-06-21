@@ -48,6 +48,9 @@ jobs:
 
     - name: Run tests with code coverage
       run: dotnet test ${{ env.TEST_PROJECT_PATH }} --results-directory ${{ env.TEST_RESULTS_FOLDER }} ${{ env.DOTNET_TEST_EXTRA_PARAMS }}
+    
+    - name: Show raw code coverage results
+      run: cat ${{ inputs.TEST_FOLDER}}/coverage.opencover.xml
 
     - name: Show contents of test results directory
       shell: pwsh # PowerShell
