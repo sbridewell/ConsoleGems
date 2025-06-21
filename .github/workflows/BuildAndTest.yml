@@ -77,7 +77,7 @@ jobs:
         # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
         #verbosity: # optional, default is Info
         # Optional title.
-        title: ConsoleGems
+        title: ${{ inputs.TEST_PROJECT }} Code Coverage Report
         # Optional tag or build version.
         #tag: # optional, default is ${{ github.run_number }}_${{ github.run_id }}
         # Optional license for PRO version. Get your license here: https://reportgenerator.io/pro
@@ -88,7 +88,7 @@ jobs:
     - name: Upload coverage report
       uses: actions/upload-artifact@v4.6.1
       with:
-        name: coverage-report
+        name: ${{ inputs.TEST_PROJECT }}-coverage-report
         path: coveragereport
 
     - name: Fail if code coverage is less than 80%
