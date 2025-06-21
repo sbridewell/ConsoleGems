@@ -14,37 +14,12 @@ env:
   DOTNET_TEST_EXTRA_PARAMS: '--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
 
 jobs:
-  setup:
-    uses: ./.github/workflows/Setup.yml
+  # setup:
+  #   uses: ./.github/workflows/Setup.yml
 
   build_and_test:
     runs-on: windows-latest
     steps:
-    
-    # - uses: github-actions/expect-expressions@v1
-    #   with:
-    #     expressions: |
-    #       env.TEST_FOLDER
-    #       env.TEST_PROJECT
-    #       env.TEST_PROJECT_PATH
-    #       env.TEST_RESULTS_FOLDER
-    #       env.DOTNET_TEST_EXTRA_PARAMS
-          
-    # - uses: actions/checkout@v4
-    
-    # - name: Setup .net
-    #   uses: actions/setup-dotnet@v4
-    #   with:
-    #     dotnet-version: 8.0.x
-
-    # - name: Restore dependencies
-    #   run: dotnet restore
-
-    # - name: Set environment variables for ConsoleGems
-    #   run: |
-    #     powershell.exe -File ./.github/workflows/Set-EnvironmentVariables.ps1 `
-    #       -TestFolder "./ConsoleGems.Test" `
-    #       -TestProject "ConsoleGems.Test.csproj"
 
     - name: Show directory structure of test project folder
       shell: pwsh # Powershell
@@ -107,6 +82,3 @@ jobs:
 
     - name: Fail if code coverage is less than 80%
       run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose
-
-    # - name: Run integration tests
-    #   run: dotnet test --no-build --verbosity normal --filter "Category=Integration"

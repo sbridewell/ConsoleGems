@@ -23,16 +23,18 @@ jobs:
   setup:
     uses: ./.github/workflows/Setup.yml
 
-  set_environment_variables_for_consolegems:
-    runs-on: windows-latest
-    steps:
-    - name: Set environment variables for ConsoleGems
-      run: |
-        powershell.exe -File ./.github/workflows/Set-EnvironmentVariables.ps1 `
-          -TestFolder "./ConsoleGems.Test" `
-          -TestProject "ConsoleGems.Test.csproj"
+  # set_environment_variables_for_consolegems:
+  #   runs-on: windows-latest
+  #   needs: setup
+  #   steps:
+  #   - name: Set environment variables for ConsoleGems
+  #     run: |
+  #       powershell.exe -File ./.github/workflows/Set-EnvironmentVariables.ps1 `
+  #         -TestFolder "./ConsoleGems.Test" `
+  #         -TestProject "ConsoleGems.Test.csproj"
 
   build_and_test_consolegems:
+    needs: setup
     uses: ./.github/workflows/BuildAndTest.yml
     with:
       TEST_FOLDER: "ConsoleGems.Test"
@@ -48,6 +50,7 @@ jobs:
   #         -TestProject "MazeGame.Test.csproj"
 
   build_and_test_mazegame:
+    needs: setup
     uses: ./.github/workflows/BuildAndTest.yml
     with:
       TEST_FOLDER: "Demo/MazeGame.Test"
@@ -55,6 +58,7 @@ jobs:
 
   run_integration_tests:
     runs-on: windows-latest
+    needs: [setup, build_and_test_consolegems, build_and_test_mazegame]
     steps:
     - name: Run integration tests
       run: dotnet test --no-build --verbosity normal --filter "Category=Integration"
