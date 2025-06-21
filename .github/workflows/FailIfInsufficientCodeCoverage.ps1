@@ -13,7 +13,7 @@ $coverageFilename = $coverageFilenames[0].FullName;
 $coverageFileContent = Get-Content $coverageFilename;
 $coverageXml = [xml]$coverageFileContent;
 # $nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
-$nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath  = $ModuleUnderTest});
+$nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath  = $ModuleUnderTest});
 $methods = $nonTestAssemblies.GetElementsByTagName("Method");
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";
