@@ -10,104 +10,51 @@ on:
   pull_request:
     branches: [ "main", "epic/*" ]
 
-env:
-  # These variables aren't dependent on any other variables, so we can set them here
-  # in an `env` block.
-  # TODO: separate PowerShell script to set all the environment variables?
-  CONSOLEGEMS_TEST_FOLDER: "./ConsoleGems.Test/"
-  MAZEGAME_TEST_FOLDER: "./Demos/MazeGame.Test/"
-  DOTNET_TEST_EXTRA_PARAMS: '--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
-  # TODO: common dotnet test parameters
+# env:
+#   # These variables aren't dependent on any other variables, so we can set them here
+#   # in an `env` block.
+#   # TODO: separate PowerShell script to set all the environment variables?
+#   CONSOLEGEMS_TEST_FOLDER: "./ConsoleGems.Test/"
+#   MAZEGAME_TEST_FOLDER: "./Demos/MazeGame.Test/"
+#   DOTNET_TEST_EXTRA_PARAMS: '--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover--no-build --verbosity normal --filter "Category!=Integration" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover'
+#   # TODO: common dotnet test parameters
 
 jobs:
-  build:
+  setup:
+    uses: ./.github/workflows/Setup.yml
 
+  set_environment_variables_for_consolegems:
     runs-on: windows-latest
-
     steps:
-
-    - uses: actions/checkout@v4
-  
-    - name: Set up variables containg test project paths
-      shell: pwsh # PowerShell - Windows runners only
+    - name: Set environment variables for ConsoleGems
       run: |
-        echo "CONSOLEGEMS_TEST_PROJECT=${env:CONSOLEGEMS_TEST_FOLDER}/ConsoleGems.Test.csproj" | Out-File -FilePath $env:GITHUB_ENV -Append  
-        # TODO: repeat for MazeGame.Test
-        echo "MAZEGAME_TEST_PROJECT=${env:MAZEGAME_TEST_FOLDER}/ConsoleGems.Test.csproj" | Out-File -FilePath $env:GITHUB_ENV -Append  
+        powershell.exe -File ./.github/workflows/Set-EnvironmentVariables.ps1 `
+          -TestFolder "./ConsoleGems.Test" `
+          -TestProject "ConsoleGems.Test.csproj"
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-        
-    - name: Restore dependencies
-      run: dotnet restore
+  build_and_test_consolegems:
+    uses: ./.github/workflows/BuildAndTest.yml
+    with:
+      TEST_FOLDER: "./ConsoleGems.Test"
+      TEST_PROJECT: "ConsoleGems.Test.csproj"
 
-    - name: Show directory structure
-      run: Get-ChildItem -Recurse -Directory
-      
-    - name: Build
-      run: dotnet build --no-restore
+  # set_environment_variables_for_mazegame:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - name: Set environment variables forMazeGame
+  #     run: |
+  #       powershell.exe -File ./.github/workflows/Set-EnvironmentVariables.ps1 `
+  #         -TestFolder "./Demo/MazeGame.Test" `
+  #         -TestProject "MazeGame.Test.csproj"
 
-    - name: Run tests with code coverage on ConsoleGems
-      run: dotnet test ${{ env.CONSOLEGEMS_TEST_PROJECT }}  --results-directory ${{ env.CONSOLEGEMS_TEST_FOLDER }}\\TestResults ${{ env.DOTNET_TEST_EXTRA_PARAMS }}
+  build_and_test_mazegame:
+    uses: ./.github/workflows/BuildAndTest.yml
+    with:
+      TEST_FOLDER: "./Demo/MazeGame.Test"
+      TEST_PROJECT: "MazeGame.Test.csproj"
 
-    - name: Display ConsoleGems test results directory
-      run: dir -r ${{ env.CONSOLEGEMS_TEST_FOLDER }}\\TestResults
-
-    - name: Run tests with code coverage on MazeGame
-      # run: dotnet test ./Demos/MazeGame.Test/MazeGame.Test.csproj --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-      run: dotnet test ${{ env.MAZEGAME_TEST_PROJECT }}  --results-directory ${{ env.MAZEGAME_TEST_FOLDER }}\\TestResults ${{ env.DOTNET_TEST_EXTRA_PARAMS }}
-
-    - name: Display MazeGame test results directory
-      run: dir -r ${{ env.MAZEGAME_TEST_FOLDER }}\\TestResults
-
-    - name: Report code coverage
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
-      with:
-        # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
-        reports: ./TestResults/**/*.xml
-        # The directory where the generated report should be saved.
-        #targetdir: # default is coveragereport
-        # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, Html_BlueRed_Summary, JsonSummary, Latex, LatexSummary, lcov, MHtml, SvgChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
-        #reporttypes: # optional, default is HtmlInline;Cobertura
-        # Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.
-        #sourcedirs: # optional, default is 
-        # Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.
-        #historydir: # optional, default is 
-        # Default directory for installing the dotnet tool.
-        #toolpath: # optional, default is reportgeneratortool
-        # Optional plugin files for custom reports or custom history storage (separated by semicolon).
-        #plugins: # optional, default is 
-        # Optional list of assemblies that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #assemblyfilters: # optional, default is +*
-        # Optional list of classes that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #classfilters: # optional, default is +*
-        # Optional list of files that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #filefilters: # optional, default is +*
-        # Optional list of assemblies that should be included or excluded in the risk hotspots. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #riskhotspotassemblyfilters: # optional, default is +*
-        # Optional list of classes that should be included or excluded in the risk hotspots. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #riskhotspotclassfilters: # optional, default is +*
-        # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
-        #verbosity: # optional, default is Info
-        # Optional title.
-        title: ConsoleGems
-        # Optional tag or build version.
-        #tag: # optional, default is ${{ github.run_number }}_${{ github.run_id }}
-        # Optional license for PRO version. Get your license here: https://reportgenerator.io/pro
-        #license: # optional, default is 
-        # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings
-        #customSettings: # optional, default is 
-
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v4.6.1
-      with:
-        name: coverage-report
-        path: coveragereport
-
-    - name: Fail if code coverage is less than 80%
-      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose
-
+  run_integration_tests:
+    runs-on: windows-latest
+    steps:
     - name: Run integration tests
       run: dotnet test --no-build --verbosity normal --filter "Category=Integration"
