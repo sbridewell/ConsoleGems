@@ -48,15 +48,15 @@ jobs:
 
     - name: Run tests with code coverage
       run: dotnet test ${{ env.TEST_PROJECT_PATH }} --results-directory ${{ env.TEST_RESULTS_FOLDER }} ${{ env.DOTNET_TEST_EXTRA_PARAMS }}
-    
-    - name: Show raw code coverage results
-      run: cat ${{ inputs.TEST_FOLDER}}/coverage.opencover.xml
 
     - name: Show contents of test results directory
       shell: pwsh # PowerShell
       run: Get-ChildItem -Recurse -File ${{ env.TEST_RESULTS_FOLDER }}
+    
+    - name: Show raw code coverage results
+      run: cat ${{ inputs.TEST_FOLDER}}/coverage.opencover.xml
 
-    - name: Report code coverage
+    - name: Create HTML report of code coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
       with:
         # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
