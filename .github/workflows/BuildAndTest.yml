@@ -98,4 +98,4 @@ jobs:
         path: coveragereport
 
     - name: Fail if code coverage is less than 80%
-      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose -ModuleUnderTest=${{ inputs.MODULE_UNDER_TEST}}
+      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose -ModuleUnderTest ${{ inputs.MODULE_UNDER_TEST}}
