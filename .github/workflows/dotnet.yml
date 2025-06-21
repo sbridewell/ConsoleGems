@@ -37,6 +37,7 @@ jobs:
     # needs: setup
     uses: ./.github/workflows/BuildAndTest.yml
     with:
+      FOLDER_UNDER_TEST: "ConsoleGems"
       TEST_FOLDER: "ConsoleGems.Test"
       TEST_PROJECT: "ConsoleGems.Test.csproj"
 
@@ -53,6 +54,7 @@ jobs:
     # needs: setup
     uses: ./.github/workflows/BuildAndTest.yml
     with:
+      FOLDER_UNDER_TEST: "Demos/MazeGame"
       TEST_FOLDER: "Demos/MazeGame.Test"
       TEST_PROJECT: "MazeGame.Test.csproj"
 

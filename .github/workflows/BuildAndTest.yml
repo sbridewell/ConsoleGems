@@ -1,6 +1,9 @@
 on:
   workflow_call:
     inputs:
+      FOLDER_UNDER_TEST:
+        required: true
+        type: string
       TEST_FOLDER:
         required: true
         type: string
@@ -57,7 +60,7 @@ jobs:
         # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, Html_BlueRed_Summary, JsonSummary, Latex, LatexSummary, lcov, MHtml, SvgChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
         #reporttypes: # optional, default is HtmlInline;Cobertura
         # Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.
-        #sourcedirs: # optional, default is 
+        sourcedirs: ${{ inputs.FOLDER_UNDER_TEST }}
         # Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.
         #historydir: # optional, default is 
         # Default directory for installing the dotnet tool.
