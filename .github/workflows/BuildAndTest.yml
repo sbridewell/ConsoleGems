@@ -60,7 +60,7 @@ jobs:
         # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, Html_BlueRed_Summary, JsonSummary, Latex, LatexSummary, lcov, MHtml, SvgChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
         #reporttypes: # optional, default is HtmlInline;Cobertura
         # Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.
-        sourcedirs: ${{ inputs.FOLDER_UNDER_TEST }}
+        # sourcedirs: ${{ inputs.FOLDER_UNDER_TEST }}
         # Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.
         #historydir: # optional, default is 
         # Default directory for installing the dotnet tool.
@@ -68,7 +68,7 @@ jobs:
         # Optional plugin files for custom reports or custom history storage (separated by semicolon).
         #plugins: # optional, default is 
         # Optional list of assemblies that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #assemblyfilters: # optional, default is +*
+        assemblyfilters: ${{ inputs.FOLDER_UNDER_TEST }}
         # Optional list of classes that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
         #classfilters: # optional, default is +*
         # Optional list of files that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
