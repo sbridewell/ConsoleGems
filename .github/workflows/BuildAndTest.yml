@@ -48,7 +48,8 @@ jobs:
 
     - name: Show directory structure of test project folder
       shell: pwsh # Powershell
-      run: tree ${{ inputs.TEST_FOLDER }}
+      # run: tree ${{ inputs.TEST_FOLDER }}
+      run: tree
     
     - name: Build test project (which implicitly builds the project under test)
       run: dotnet build ${{ env.TEST_PROJECT_PATH }} --no-restore
