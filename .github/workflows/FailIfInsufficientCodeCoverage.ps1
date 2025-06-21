@@ -1,3 +1,7 @@
+param (
+    [Parameter(Mandatory = $false)][string]$ModuleUnderTest
+)
+
 Write-Verbose "You are running in verbose mode";
 $ErrorActionPreference = 'Stop';
 $coverageFilenames = Get-ChildItem -Recurse -Filter "coverage.opencover.xml";
@@ -8,7 +12,8 @@ Write-Output ($coverageFilenames | Format-Table | Out-String);
 $coverageFilename = $coverageFilenames[0].FullName;
 $coverageFileContent = Get-Content $coverageFilename;
 $coverageXml = [xml]$coverageFileContent;
-$nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
+# $nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
+$nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath  = $ModuleUnderTest});
 $methods = $nonTestAssemblies.GetElementsByTagName("Method");
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";

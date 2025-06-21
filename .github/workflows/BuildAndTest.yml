@@ -4,6 +4,9 @@ on:
       FOLDER_UNDER_TEST:
         required: true
         type: string
+      MODULE_UNDER_TEST:
+        required: true
+        type: string
       TEST_FOLDER:
         required: true
         type: string
