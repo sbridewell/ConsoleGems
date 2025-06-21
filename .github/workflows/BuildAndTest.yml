@@ -68,7 +68,7 @@ jobs:
         # Optional plugin files for custom reports or custom history storage (separated by semicolon).
         #plugins: # optional, default is 
         # Optional list of assemblies that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        assemblyfilters: ${{ inputs.FOLDER_UNDER_TEST }}
+        assemblyfilters: +${{ inputs.FOLDER_UNDER_TEST }}
         # Optional list of classes that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
         #classfilters: # optional, default is +*
         # Optional list of files that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
