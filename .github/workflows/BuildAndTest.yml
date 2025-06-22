@@ -49,13 +49,13 @@ jobs:
     - name: Run tests with code coverage
       run: dotnet test ${{ env.TEST_PROJECT_PATH }} --results-directory ${{ env.TEST_RESULTS_FOLDER }} ${{ env.DOTNET_TEST_EXTRA_PARAMS }}
 
-    - name: Find raw code coverage results
-      shell: pwsh # PowerShell
-      run: $env:CoverageFilename = Get-ChildItem -Recurse -Filter  "coverage.opencover.xml" -Path ${{ env.TEST_RESULTS_FOLDER }} | Select-Object -First 1; $env:CoverageFilename;
+    # - name: Find raw code coverage results
+    #   shell: pwsh # PowerShell
+    #   run: $env:CoverageFilename = Get-ChildItem -Recurse -Filter  "coverage.opencover.xml" -Path ${{ env.TEST_RESULTS_FOLDER }} | Select-Object -First 1; $env:CoverageFilename;
     
-    - name: Show raw code coverage results
-      shell: pwsh # PowerShell
-      run: $env:CoverageXml = Get-Content $env:CoverageFilename; $env:CoverageXml
+    # - name: Show raw code coverage results
+    #   shell: pwsh # PowerShell
+    #   run: $env:CoverageXml = Get-Content $env:CoverageFilename; $env:CoverageXml
 
     - name: Create HTML report of code coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
