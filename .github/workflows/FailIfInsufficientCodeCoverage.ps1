@@ -10,7 +10,7 @@ Write-Output "The following coverage files were found:";
 Write-Output ($coverageFilenames | Format-Table | Out-String);
 
 # TODO: we're only taking the first coverage file, we probably need to take all of them
-$coverageFilename = $coverageFilenames[0].FullName;
+$coverageFilename = $coverageFilenames | Select-Object -First 1;
 Write-Verbose "Coverage filename: $coverageFilename";
 $coverageFileContent = Get-Content $coverageFilename;
 Write-Verbose "Cast content of $coverageFilename file to XML";
@@ -18,12 +18,23 @@ $coverageXml = [xml]$coverageFileContent;
 # $nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
 Write-Verbose "Get modules from coverage XML";
 $modules = $coverageXml.GetElementsByTagName("Module");
+Write-Verbose ($modules | Out-String);
+
 Write-Verbose "Get module where ModuleName is $ModuleUnderTest";
 # $nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") `
 #     | Where-Object {$_.ModuleName -eq $ModuleUnderTest});
-$moduleUnderTest = $modules | Where-Object {$_.ModuleName -eq $ModuleUnderTest};
+# $modules | ForEach-Object { Write-Verbose ($_ | Format-List * | Out-String) }
+# $moduleResult = $modules | Where-Object {$_.ModuleName -eq $ModuleUnderTest};
+$modules | ForEach-Object { Write-Verbose "ModuleName: $($_.ModuleName)" }
+$moduleResult = $modules | Where-Object { $_.ModuleName -and $_.ModuleName -eq $ModuleUnderTest }
+if ($null -eq $moduleResult) {
+    throw "No module found called '$ModuleUnderTest'";
+}
+
 Write-Verbose "Get Method elements from module";
-$methods = $moduleUnderTest.GetElementsByTagName("Method");
+$methods = $moduleResult.GetElementsByTagName("Method");
+Write-Verbose $methods;
+
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";
 if ($methodCount -eq 0) {
