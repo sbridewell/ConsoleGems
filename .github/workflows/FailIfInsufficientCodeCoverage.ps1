@@ -3,6 +3,7 @@ param (
 )
 
 Write-Verbose "You are running in verbose mode";
+Write-Verbose "ModuleUnderTest: $ModuleUnderTest";
 $ErrorActionPreference = 'Stop';
 $coverageFilenames = Get-ChildItem -Recurse -Filter "coverage.opencover.xml";
 Write-Output "The following coverage files were found:";
@@ -10,13 +11,17 @@ Write-Output ($coverageFilenames | Format-Table | Out-String);
 
 # TODO: we're only taking the first coverage file, we probably need to take all of them
 $coverageFilename = $coverageFilenames[0].FullName;
+Write-Verbose "Coverage filename: $coverageFilename";
 $coverageFileContent = Get-Content $coverageFilename;
 $coverageXml = [xml]$coverageFileContent;
 # $nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
-$nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath  = $ModuleUnderTest});
+$nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModuleName = $ModuleUnderTest});
 $methods = $nonTestAssemblies.GetElementsByTagName("Method");
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";
+if ($methodCount -eq 0) {
+    throw "No methods found in the coverage file $coverageFilename";
+}
 Write-Verbose ($methods | Format-List -Property name,sequenceCoverage,branchCoverage | Out-String);
 
 # Explicitly wrap the result in an array, otherwise if there's only one object found then it's returned
