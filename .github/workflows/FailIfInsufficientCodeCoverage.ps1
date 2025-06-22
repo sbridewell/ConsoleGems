@@ -13,10 +13,17 @@ Write-Output ($coverageFilenames | Format-Table | Out-String);
 $coverageFilename = $coverageFilenames[0].FullName;
 Write-Verbose "Coverage filename: $coverageFilename";
 $coverageFileContent = Get-Content $coverageFilename;
+Write-Verbose "Cast content of $coverageFilename file to XML";
 $coverageXml = [xml]$coverageFileContent;
 # $nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
-$nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModuleName -eq $ModuleUnderTest});
-$methods = $nonTestAssemblies.GetElementsByTagName("Method");
+Write-Verbose "Get modules from coverage XML";
+$modules = $coverageXml.GetElementsByTagName("Module");
+Write-Verbose "Get module where ModuleName is $ModuleUnderTest";
+# $nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") `
+#     | Where-Object {$_.ModuleName -eq $ModuleUnderTest});
+$moduleUnderTest = $modules | Where-Object {$_.ModuleName -eq $ModuleUnderTest};
+Write-Verbose "Get Method elements from module";
+$methods = $moduleUnderTest.GetElementsByTagName("Method");
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";
 if ($methodCount -eq 0) {
