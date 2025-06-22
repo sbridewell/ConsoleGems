@@ -10,7 +10,7 @@ Write-Output "The following coverage files were found:";
 Write-Output ($coverageFilenames | Format-Table | Out-String);
 
 # TODO: we're only taking the first coverage file, we probably need to take all of them
-$coverageFilename = $coverageFilenames | Select-Object -First 1;
+$coverageFilename = ($coverageFilenames | Select-Object -First 1).FullName;
 Write-Verbose "Coverage filename: $coverageFilename";
 $coverageFileContent = Get-Content $coverageFilename;
 Write-Verbose "Cast content of $coverageFilename file to XML";
