@@ -51,11 +51,11 @@ jobs:
 
     - name: Find raw code coverage results
       shell: pwsh # PowerShell
-      run: Get-ChildItem -Recurse -Filter  "coverage.opencover.xml" -Path ${{ env.TEST_RESULTS_FOLDER }} | Select-Object -First 1; Write-Host "CoverageXml=$env:CoverageXml"
+      run: Get-ChildItem -Recurse -Filter  "coverage.opencover.xml" -Path ${{ env.TEST_RESULTS_FOLDER }} | Select-Object -First 1
     
     - name: Show raw code coverage results
       shell: pwsh # PowerShell
-      run: $env:CoverageXml = Get-Content $end:CoverageXml[0]; $env:CoverageXml
+      run: $env:CoverageXml = Get-Content $end:CoverageXml; $env:CoverageXml
 
     - name: Create HTML report of code coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
