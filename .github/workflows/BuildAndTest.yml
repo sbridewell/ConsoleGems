@@ -49,12 +49,13 @@ jobs:
     - name: Run tests with code coverage
       run: dotnet test ${{ env.TEST_PROJECT_PATH }} --results-directory ${{ env.TEST_RESULTS_FOLDER }} ${{ env.DOTNET_TEST_EXTRA_PARAMS }}
 
-    - name: Show contents of test results directory
+    - name: Find raw code coverage results
       shell: pwsh # PowerShell
-      run: Get-ChildItem -Recurse -File ${{ env.TEST_RESULTS_FOLDER }}
+      run: $env:CoverageXml = Get-ChildItem -Recurse -File ${{ env.TEST_RESULTS_FOLDER }}
     
     - name: Show raw code coverage results
-      run: cat ${{ inputs.TEST_FOLDER}}/coverage.opencover.xml
+      shell: pwsh # PowerShell
+      run: Get-Content $end:CoverageXml[0]
 
     - name: Create HTML report of code coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
@@ -101,4 +102,4 @@ jobs:
         path: coveragereport
 
     - name: Fail if code coverage is less than 80%
-      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose -ModuleUnderTest ${{ inputs.MODULE_UNDER_TEST}}
+      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose -ModuleUnderTest ${{ inputs.MODULE_UNDER_TEST }}
