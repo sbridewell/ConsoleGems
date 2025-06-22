@@ -51,7 +51,7 @@ jobs:
 
     - name: Find raw code coverage results
       shell: pwsh # PowerShell
-      run: $env:CoverageFilename = Get-ChildItem -Recurse -Filter  "coverage.opencover.xml" -Path ${{ env.TEST_RESULTS_FOLDER }} | Select-Object -First 1
+      run: $env:CoverageFilename = Get-ChildItem -Recurse -Filter  "coverage.opencover.xml" -Path ${{ env.TEST_RESULTS_FOLDER }} | Select-Object -First 1; $env:CoverageFilename;
     
     - name: Show raw code coverage results
       shell: pwsh # PowerShell
