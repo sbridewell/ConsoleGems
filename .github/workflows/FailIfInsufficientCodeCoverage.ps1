@@ -15,7 +15,7 @@ Write-Verbose "Coverage filename: $coverageFilename";
 $coverageFileContent = Get-Content $coverageFilename;
 $coverageXml = [xml]$coverageFileContent;
 # $nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
-$nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModuleName = $ModuleUnderTest});
+$nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModuleName -eq $ModuleUnderTest});
 $methods = $nonTestAssemblies.GetElementsByTagName("Method");
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";
