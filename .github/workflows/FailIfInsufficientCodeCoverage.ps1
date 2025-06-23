@@ -9,22 +9,18 @@ $coverageFilenames = Get-ChildItem -Recurse -Filter "coverage.opencover.xml";
 Write-Output "The following coverage files were found:";
 Write-Output ($coverageFilenames | Format-Table | Out-String);
 
-# TODO: we're only taking the first coverage file, we probably need to take all of them
 $coverageFilename = ($coverageFilenames | Select-Object -First 1).FullName;
 Write-Verbose "Coverage filename: $coverageFilename";
 $coverageFileContent = Get-Content $coverageFilename;
+
 Write-Verbose "Cast content of $coverageFilename file to XML";
 $coverageXml = [xml]$coverageFileContent;
-# $nonTestAssemblies = @($coverageXml.GetElementsByTagName("Module") | Where-Object {$_.ModulePath -notlike "*.Test.dll"})
+
 Write-Verbose "Get modules from coverage XML";
 $modules = $coverageXml.GetElementsByTagName("Module");
 Write-Verbose ($modules | Out-String);
 
 Write-Verbose "Get module where ModuleName is $ModuleUnderTest";
-# $nonTestAssemblies = [xml]@($coverageXml.GetElementsByTagName("Module") `
-#     | Where-Object {$_.ModuleName -eq $ModuleUnderTest});
-# $modules | ForEach-Object { Write-Verbose ($_ | Format-List * | Out-String) }
-# $moduleResult = $modules | Where-Object {$_.ModuleName -eq $ModuleUnderTest};
 $modules | ForEach-Object { Write-Verbose "ModuleName: $($_.ModuleName)" }
 $moduleResult = $modules | Where-Object { $_.ModuleName -and $_.ModuleName -eq $ModuleUnderTest }
 if ($null -eq $moduleResult) {
@@ -40,7 +36,6 @@ Write-Verbose "Found $methodCount methods";
 if ($methodCount -eq 0) {
     throw "No methods found in the coverage file $coverageFilename";
 }
-Write-Verbose ($methods | Format-List -Property name,sequenceCoverage,branchCoverage | Out-String);
 
 # Explicitly wrap the result in an array, otherwise if there's only one object found then it's returned
 # as a XmlElement rather than as an array with a single element.
