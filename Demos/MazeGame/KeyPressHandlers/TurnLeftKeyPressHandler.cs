@@ -12,7 +12,7 @@ namespace Sde.MazeGame.KeyPressHandlers
         : IKeyPressHandler
     {
         /// <inheritdoc/>
-        public void Handle(ConsoleKeyInfo keyInfo, GameController controller)
+        public void Handle(ConsoleKeyInfo keyInfo, IGameController controller)
         {
             controller.TurnPlayerLeft();
         }

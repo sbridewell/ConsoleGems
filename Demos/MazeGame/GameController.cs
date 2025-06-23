@@ -27,7 +27,7 @@ namespace Sde.MazeGame
         : IGameController
     {
         /// <summary>
-        /// Gets the instance of the game which is currnetly being played.
+        /// Gets the instance of the game which is currently being played.
         /// </summary>
         public Game? CurrentGame { get; private set; }
 
@@ -82,9 +82,7 @@ namespace Sde.MazeGame
             console.CursorVisible = true;
         }
 
-        /// <summary>
-        /// Turns the player to the left.
-        /// </summary>
+        /// <inheritdoc/>
         public void TurnPlayerLeft()
         {
             // TODO: PlayerManager.TurnLeft and TurnRight methods?
@@ -110,9 +108,7 @@ namespace Sde.MazeGame
             mazePainterPov.Render(maze, player);
         }
 
-        /// <summary>
-        /// Turns the player to the right.
-        /// </summary>
+        /// <inheritdoc/>
         public void TurnPlayerRight()
         {
             if (this.CurrentGame == null)
@@ -136,10 +132,7 @@ namespace Sde.MazeGame
             mazePainterPov.Render(maze, player);
         }
 
-        /// <summary>
-        /// Attempts to move the player forward.
-        /// The player can only move forward if there isn't a wall in the way.
-        /// </summary>
+        /// <inheritdoc/>
         public void TryToMovePlayerForward()
         {
             if (this.CurrentGame == null)
@@ -189,9 +182,7 @@ namespace Sde.MazeGame
             }
         }
 
-        /// <summary>
-        /// Quits the game.
-        /// </summary>
+        /// <inheritdoc/>
         public void Quit()
         {
             if (this.CurrentGame == null)
