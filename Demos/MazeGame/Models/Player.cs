@@ -11,6 +11,7 @@ namespace Sde.MazeGame.Models
     /// <summary>
     /// Represents a player who is exploring the maze.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Player
     {
         /// <summary>

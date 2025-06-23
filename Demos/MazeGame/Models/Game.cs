@@ -5,9 +5,12 @@
 
 namespace Sde.MazeGame.Models
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Encapsulates the maze, the player and other entities which participate in the game.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class Game(
         Maze maze,
         Player player)

@@ -5,9 +5,12 @@
 
 namespace Sde.MazeGame.Models
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a single location in a two-dimensional maze.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class MazePoint
     {
         /// <summary>
