@@ -2690,6 +2690,52 @@ namespace Sde.MazeGame.Test.Painters.Pov
         }
 
         /// <summary>
+        /// Tests that the RenderSectionAllWall method paints perpendicular walls with the correct colours.
+        /// </summary>
+        /// <param name="facingDirection">The direction the player is facing.</param>
+        /// <param name="expectedOutputType">The expected colour.</param>
+        [Theory]
+        [InlineData(Direction.North, ConsoleOutputType.Red)]
+        [InlineData(Direction.South, ConsoleOutputType.Green)]
+        [InlineData(Direction.East, ConsoleOutputType.Yellow)]
+        [InlineData(Direction.West, ConsoleOutputType.Blue)]
+        [InlineData((Direction)999, ConsoleOutputType.Default)] // Test for an invalid direction
+        public void RenderSectionAllWall_PaintsWallsTheCorrectColours(Direction facingDirection, ConsoleOutputType expectedOutputType)
+        {
+            // Arrange
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var mockColumnRenderer = new Mock<IColumnRenderer>();
+            var sectionRenderer = new SectionRenderer(mockColumnRenderer.Object);
+            var painter = new MazePainterPovProxy(mockConsole.Object, mockBorderPainter.Object, sectionRenderer)
+            {
+                InnerSize = new ConsoleSize(
+                    MazePainterPovConstants.PainterInnerWidth,
+                    MazePainterPovConstants.PainterInnerHeight),
+            };
+            var sectionNumber = 1;
+            var columnsInSection = MazePainterPovConstants.SectionWidths[sectionNumber];
+
+            // Act
+            sectionRenderer.RenderSectionAllWall(
+                painter,
+                sectionNumber: sectionNumber,
+                leftOrRight: LeftOrRight.Left,
+                forwardDistance: 1,
+                playerFacingDirection: facingDirection);
+
+            // Assert
+            painter.Paint();
+            mockColumnRenderer.Verify(
+                m => m.RenderPerpendicularWallColumn(
+                    painter,
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    expectedOutputType),
+                Times.Exactly(columnsInSection));
+        }
+
+        /// <summary>
         /// Tests that the RenderSection method populates the screen buffer with
         /// the correct characters.
         /// </summary>
