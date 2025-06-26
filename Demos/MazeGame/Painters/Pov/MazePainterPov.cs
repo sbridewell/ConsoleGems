@@ -5,6 +5,7 @@
 
 namespace Sde.MazeGame.Painters.Pov
 {
+    using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;
     using Sde.ConsoleGems.Text;
@@ -37,8 +38,10 @@ namespace Sde.MazeGame.Painters.Pov
         }
 
         /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
         public void Render(Maze maze, Player player)
         {
+            // TODO: can we refactor to remove this method?
             var forwardView = new ForwardView(maze, player, this.sectionWidths.Length - 2); // TODO: why -2?
             this.RenderForwardView(forwardView, player.FacingDirection);
             this.Paint();

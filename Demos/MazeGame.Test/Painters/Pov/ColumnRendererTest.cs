@@ -1526,6 +1526,13 @@ namespace Sde.MazeGame.Test.Painters.Pov
             }
         }
 
+        /// <summary>
+        /// Tests that the RenderColumn method paints walls with the correct colours when painting a wall
+        /// which is parallel to the direction that the player is facing.
+        /// </summary>
+        /// <param name="facingDirection">The direction the player is facing.</param>
+        /// <param name="expectedColour">The expected colour.</param>
+        /// <param name="screenX">The screen X coordinate.</param>
         [Theory]
         [InlineData(Direction.North, ConsoleOutputType.Blue, 0)]
         [InlineData(Direction.South, ConsoleOutputType.Yellow, 0)]
