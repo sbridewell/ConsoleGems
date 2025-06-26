@@ -1474,5 +1474,114 @@ namespace Sde.MazeGame.Test.Painters.Pov
             actualCharacters.Should().BeEquivalentTo(testCase.expectedCharacters, options =>
                 options.WithStrictOrdering());
         }
+
+        /// <summary>
+        /// Tests that the RenderColumn method paints walls with the correct colours when painting a wall
+        /// which is perpendicular to the direction that the player is facing.
+        /// </summary>
+        /// <param name="facingDirection">The direction the player is facing.</param>
+        /// <param name="expectedColour">The expected colour.</param>
+        [Theory]
+        [InlineData(Direction.North, ConsoleOutputType.Red)]
+        [InlineData(Direction.South, ConsoleOutputType.Green)]
+        [InlineData(Direction.East, ConsoleOutputType.Yellow)]
+        [InlineData(Direction.West, ConsoleOutputType.Blue)]
+        [InlineData((Direction)999, ConsoleOutputType.Default)] // Test for an invalid direction
+        public void RenderColumn_ColumnIsPerpendicular_PaintsWallsTheCorrectColours(
+            Direction facingDirection,
+            ConsoleOutputType expectedColour)
+        {
+            // Arrange
+            var columnRenderer = new ColumnRenderer();
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var sectionRenderer = new SectionRenderer(columnRenderer);
+            var painter = new MazePainterPovProxy(
+                mockConsole.Object,
+                mockBorderPainter.Object,
+                sectionRenderer)
+            {
+                InnerSize = new ConsoleSize(
+                    MazePainterPovConstants.PainterInnerWidth,
+                    MazePainterPovConstants.PainterInnerHeight),
+            };
+
+            // Act
+            columnRenderer.RenderColumn(
+                painter,
+                0, // screenX
+                true, // isPerpendicular
+                facingDirection);
+
+            // Assert
+            painter.Paint();
+            if (expectedColour == ConsoleOutputType.Default)
+            {
+                // no changes of colour so we write the whole line in one go
+                mockConsole.Verify(m => m.Write("▓                       ", expectedColour), Times.Exactly(22));
+            }
+            else
+            {
+                mockConsole.Verify(m => m.Write("▓", expectedColour), Times.Exactly(22));
+            }
+        }
+
+        [Theory]
+        [InlineData(Direction.North, ConsoleOutputType.Blue, 0)]
+        [InlineData(Direction.South, ConsoleOutputType.Yellow, 0)]
+        [InlineData(Direction.East, ConsoleOutputType.Red, 0)]
+        [InlineData(Direction.West, ConsoleOutputType.Green, 0)]
+        [InlineData((Direction)999, ConsoleOutputType.Default, 0)] // Test for an invalid direction
+        [InlineData(Direction.North, ConsoleOutputType.Yellow, 23)]
+        [InlineData(Direction.South, ConsoleOutputType.Blue, 23)]
+        [InlineData(Direction.East, ConsoleOutputType.Green, 23)]
+        [InlineData(Direction.West, ConsoleOutputType.Red, 23)]
+        [InlineData((Direction)999, ConsoleOutputType.Default, 23)] // Test for an invalid direction
+        public void RenderColumn_ColumnIsParallel_PaintsWallsTheCorrectColours(
+            Direction facingDirection,
+            ConsoleOutputType expectedColour,
+            int screenX)
+        {
+            // Arrange
+            var columnRenderer = new ColumnRenderer();
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var sectionRenderer = new SectionRenderer(columnRenderer);
+            var painter = new MazePainterPovProxy(
+                mockConsole.Object,
+                mockBorderPainter.Object,
+                sectionRenderer)
+            {
+                InnerSize = new ConsoleSize(
+                    MazePainterPovConstants.PainterInnerWidth,
+                    MazePainterPovConstants.PainterInnerHeight),
+            };
+
+            // Act
+            columnRenderer.RenderColumn(
+                painter,
+                screenX,
+                false, // isPerpendicular
+                facingDirection);
+
+            // Assert
+            painter.Paint();
+            if (expectedColour == ConsoleOutputType.Default)
+            {
+                // no changes of colour so we write the whole line in one go
+                if (screenX == 0)
+                {
+                    mockConsole.Verify(m => m.Write("░                       ", expectedColour), Times.Exactly(24));
+                }
+                else
+                {
+                    mockConsole.Verify(m => m.Write("                       ░", expectedColour), Times.Exactly(24));
+                }
+            }
+            else
+            {
+                mockConsole.Verify(m => m.Write("░", expectedColour), Times.Exactly(24));
+            }
+        }
     }
 }
