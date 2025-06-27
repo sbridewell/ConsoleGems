@@ -81,7 +81,6 @@ namespace Sde.MazeGame
                     if (lines[y][x] == ' ' && lines[y + 1][x] == ' '
                         && lines[y][x + 1] == ' ' && lines[y + 1][x + 1] == ' ')
                     {
-                        // This is a 2x2 square of corridors, so mark it as a corridor
                         var msg = "Found a 2x2 square of corridors at "
                             + $"({x}, {y}). This cannot be rendered correctly in the 3D view.";
                         throw new ArgumentException(msg, nameof(lines));
