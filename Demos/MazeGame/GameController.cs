@@ -7,7 +7,6 @@ namespace Sde.MazeGame
 {
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Text;
-    using Sde.MazeGame.FogOfWar;
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Models;
     using Sde.MazeGame.Painters.Map;

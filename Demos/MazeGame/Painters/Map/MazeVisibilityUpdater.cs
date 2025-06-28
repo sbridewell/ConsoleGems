@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.FogOfWar
+namespace Sde.MazeGame.Painters.Map
 {
     using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Text;
@@ -50,8 +50,8 @@ namespace Sde.MazeGame.FogOfWar
                 {
                     dx += direction.dx;
                     dy += direction.dy;
-                    var xToCheck = (int)Math.Round((double)player.Position.X + dx);
-                    var yToCheck = (int)Math.Round((double)player.Position.Y + dy);
+                    var xToCheck = (int)Math.Round(player.Position.X + dx);
+                    var yToCheck = (int)Math.Round(player.Position.Y + dy);
                     var pointToCheck = new ConsolePoint(xToCheck, yToCheck);
                     if (maze.PositionIsWithinMaze(pointToCheck))
                     {

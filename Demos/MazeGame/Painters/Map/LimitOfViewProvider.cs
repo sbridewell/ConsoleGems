@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.FogOfWar
+namespace Sde.MazeGame.Painters.Map
 {
     using Sde.MazeGame.Models;
 
@@ -20,15 +20,15 @@ namespace Sde.MazeGame.FogOfWar
         /// <param name="visibleDistance">How far the player can see.</param>
         public LimitOfViewProvider(int visibleDistance)
         {
-            this.VisibleDistance = visibleDistance;
-            this.LimitOfView = new ();
+            VisibleDistance = visibleDistance;
+            LimitOfView = new ();
             for (var dy = -visibleDistance; dy <= visibleDistance; dy++)
             {
                 for (var dx = -visibleDistance; dx <= visibleDistance; dx++)
                 {
-                    if ((dx * dx) + (dy * dy) <= visibleDistance * visibleDistance)
+                    if (dx * dx + dy * dy <= visibleDistance * visibleDistance)
                     {
-                        this.LimitOfView.Add(new ConsolePointOffset(dx, dy));
+                        LimitOfView.Add(new ConsolePointOffset(dx, dy));
                     }
                 }
             }

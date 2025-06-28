@@ -8,7 +8,6 @@ namespace Sde.MazeGame
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems.FullScreen;
     using Sde.MazeGame.CharacterProviders;
-    using Sde.MazeGame.FogOfWar;
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Painters.Map;
     using Sde.MazeGame.Painters.Pov;

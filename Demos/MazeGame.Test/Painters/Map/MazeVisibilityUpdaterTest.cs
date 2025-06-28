@@ -3,12 +3,12 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.Test.FogOfWar
+namespace Sde.MazeGame.Test.Painters.Map
 {
     using FluentAssertions;
     using Sde.ConsoleGems.Text;
-    using Sde.MazeGame.FogOfWar;
     using Sde.MazeGame.Models;
+    using Sde.MazeGame.Painters.Map;
 
     /// <summary>
     /// Unit tests for the <see cref="MazeVisibilityUpdater"/> class.
