@@ -1,11 +1,10 @@
-﻿// <copyright file="MazePainter2D.cs" company="Simon Bridewell">
+﻿// <copyright file="MazePainterMap.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell.
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.Painters
+namespace Sde.MazeGame.Painters.Map
 {
-    using System.Text;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;
     using Sde.ConsoleGems.Text;
@@ -13,15 +12,15 @@ namespace Sde.MazeGame.Painters
     using Sde.MazeGame.Models;
 
     /// <summary>
-    /// Paints a two-dimensional representation of a maze to the console window.
+    /// Paints a map representation of a maze to the console window.
     /// </summary>
-    public class MazePainter2D(
+    public class MazePainterMap(
         IConsole console,
         IBorderPainter borderPainter,
         IWallCharacterProvider wallCharacterProvider,
         IPlayerCharacterProvider playerCharacterProvider)
         : Painter(console, borderPainter),
-        IMazePainter
+        IMazePainterMap
     {
         private readonly char pathChar = ' ';
         private readonly char fogChar = '░';
@@ -29,23 +28,23 @@ namespace Sde.MazeGame.Painters
         /// <inheritdoc/>
         public void Paint(Maze maze, Player player)
         {
-            this.PaintMaze(maze);
-            this.PaintPlayer(player);
+            PaintMaze(maze);
+            PaintPlayer(player);
         }
 
         /// <inheritdoc/>
         public void ErasePlayer(Player player)
         {
-            this.WriteToScreenBuffer(player.Position.X, player.Position.Y, this.pathChar, ConsoleOutputType.Default);
-            this.Paint();
+            WriteToScreenBuffer(player.Position.X, player.Position.Y, pathChar, ConsoleOutputType.Default);
+            Paint();
         }
 
         /// <inheritdoc/>
         public void PaintPlayer(Player player)
         {
             var playerChar = playerCharacterProvider.GetPlayerChar(player);
-            this.WriteToScreenBuffer(player.Position.X, player.Position.Y, playerChar, ConsoleOutputType.Prompt);
-            this.Paint();
+            WriteToScreenBuffer(player.Position.X, player.Position.Y, playerChar, ConsoleOutputType.Prompt);
+            Paint();
         }
 
         private void PaintMaze(Maze maze)
@@ -60,10 +59,10 @@ namespace Sde.MazeGame.Painters
                         switch (mazePoint.PointType)
                         {
                             case MazePointType.Path:
-                                this.WriteToScreenBuffer(mazeX, mazeY, this.pathChar, ConsoleOutputType.Default);
+                                WriteToScreenBuffer(mazeX, mazeY, pathChar, ConsoleOutputType.Default);
                                 break;
                             case MazePointType.Wall:
-                                this.WriteToScreenBuffer(
+                                WriteToScreenBuffer(
                                     mazeX,
                                     mazeY,
                                     wallCharacterProvider.GetWallChar(maze, new ConsolePoint(mazeX, mazeY)),
@@ -75,11 +74,11 @@ namespace Sde.MazeGame.Painters
                     }
                     else
                     {
-                        this.WriteToScreenBuffer(mazeX, mazeY, this.fogChar, ConsoleOutputType.Default);
+                        WriteToScreenBuffer(mazeX, mazeY, fogChar, ConsoleOutputType.Default);
                     }
                 }
 
-                this.Paint();
+                Paint();
             }
         }
     }

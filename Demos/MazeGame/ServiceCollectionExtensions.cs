@@ -10,8 +10,7 @@ namespace Sde.MazeGame
     using Sde.MazeGame.CharacterProviders;
     using Sde.MazeGame.FogOfWar;
     using Sde.MazeGame.KeyPressHandlers;
-    using Sde.MazeGame.Models;
-    using Sde.MazeGame.Painters;
+    using Sde.MazeGame.Painters.Map;
     using Sde.MazeGame.Painters.Pov;
     using Sde.MazeGame.Painters.Status;
 
@@ -31,7 +30,7 @@ namespace Sde.MazeGame
             services.AddSingleton<MazeGameKeyPressMappings>();
             services.AddSingleton<IStatusPainter, StatusPainter>();
             services.AddTransient<IBorderPainter, BorderPainter>(); // transient because we have multiple instances which need to act independently
-            services.AddSingleton<IMazePainter, MazePainter2D>();
+            services.AddSingleton<IMazePainterMap, MazePainterMap>();
             services.AddSingleton<IMazePainterPov, MazePainterPov>();
             services.AddSingleton<IColumnRenderer, ColumnRenderer>();
             services.AddSingleton<ISectionRenderer, SectionRenderer>();

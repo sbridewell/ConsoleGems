@@ -10,7 +10,7 @@ namespace Sde.MazeGame
     using Sde.MazeGame.FogOfWar;
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Models;
-    using Sde.MazeGame.Painters;
+    using Sde.MazeGame.Painters.Map;
     using Sde.MazeGame.Painters.Pov;
     using Sde.MazeGame.Painters.Status;
 
@@ -20,7 +20,7 @@ namespace Sde.MazeGame
     public class GameController(
         IConsole console,
         IStatusPainter statusPainter,
-        IMazePainter mazePainterMap,
+        IMazePainterMap mazePainterMap,
         IMazePainterPov mazePainterPov,
         MazeVisibilityUpdater mazeVisibilityUpdater,
         MazeGameKeyPressMappings keyPressMappings)
