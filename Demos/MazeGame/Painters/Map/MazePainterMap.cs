@@ -28,23 +28,23 @@ namespace Sde.MazeGame.Painters.Map
         /// <inheritdoc/>
         public void Paint(Maze maze, Player player)
         {
-            PaintMaze(maze);
-            PaintPlayer(player);
+            this.PaintMaze(maze);
+            this.PaintPlayer(player);
         }
 
         /// <inheritdoc/>
         public void ErasePlayer(Player player)
         {
-            WriteToScreenBuffer(player.Position.X, player.Position.Y, pathChar, ConsoleOutputType.Default);
-            Paint();
+            this.WriteToScreenBuffer(player.Position.X, player.Position.Y, this.pathChar, ConsoleOutputType.Default);
+            this.Paint();
         }
 
         /// <inheritdoc/>
         public void PaintPlayer(Player player)
         {
             var playerChar = playerCharacterProvider.GetPlayerChar(player);
-            WriteToScreenBuffer(player.Position.X, player.Position.Y, playerChar, ConsoleOutputType.Prompt);
-            Paint();
+            this.WriteToScreenBuffer(player.Position.X, player.Position.Y, playerChar, ConsoleOutputType.Prompt);
+            this.Paint();
         }
 
         private void PaintMaze(Maze maze)
@@ -59,10 +59,10 @@ namespace Sde.MazeGame.Painters.Map
                         switch (mazePoint.PointType)
                         {
                             case MazePointType.Path:
-                                WriteToScreenBuffer(mazeX, mazeY, pathChar, ConsoleOutputType.Default);
+                                this.WriteToScreenBuffer(mazeX, mazeY, this.pathChar, ConsoleOutputType.Default);
                                 break;
                             case MazePointType.Wall:
-                                WriteToScreenBuffer(
+                                this.WriteToScreenBuffer(
                                     mazeX,
                                     mazeY,
                                     wallCharacterProvider.GetWallChar(maze, new ConsolePoint(mazeX, mazeY)),
@@ -74,11 +74,11 @@ namespace Sde.MazeGame.Painters.Map
                     }
                     else
                     {
-                        WriteToScreenBuffer(mazeX, mazeY, fogChar, ConsoleOutputType.Default);
+                        this.WriteToScreenBuffer(mazeX, mazeY, this.fogChar, ConsoleOutputType.Default);
                     }
                 }
 
-                Paint();
+                this.Paint();
             }
         }
     }

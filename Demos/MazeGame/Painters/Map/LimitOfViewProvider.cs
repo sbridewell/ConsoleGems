@@ -20,15 +20,15 @@ namespace Sde.MazeGame.Painters.Map
         /// <param name="visibleDistance">How far the player can see.</param>
         public LimitOfViewProvider(int visibleDistance)
         {
-            VisibleDistance = visibleDistance;
-            LimitOfView = new ();
+            this.VisibleDistance = visibleDistance;
+            this.LimitOfView = new ();
             for (var dy = -visibleDistance; dy <= visibleDistance; dy++)
             {
                 for (var dx = -visibleDistance; dx <= visibleDistance; dx++)
                 {
-                    if (dx * dx + dy * dy <= visibleDistance * visibleDistance)
+                    if ((dx * dx) + (dy * dy) <= visibleDistance * visibleDistance)
                     {
-                        LimitOfView.Add(new ConsolePointOffset(dx, dy));
+                        this.LimitOfView.Add(new ConsolePointOffset(dx, dy));
                     }
                 }
             }
