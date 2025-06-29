@@ -12,6 +12,8 @@ namespace Sde.MazeGame
     /// </summary>
     public class MazeGameOptions
     {
+        // TODO: IFluentOptions with Validate() method to check all properties are initialised?
+
         /// <summary>
         /// Gets the top left corner of the maze within the console window.
         /// </summary>
@@ -21,11 +23,6 @@ namespace Sde.MazeGame
         /// Gets the top left corner of the status area within the console window.
         /// </summary>
         public ConsolePoint StatusOrigin { get; private set; } = new ConsolePoint(0, 0);
-
-        /// <summary>
-        /// Gets the relative path to the file containing the maze data.
-        /// </summary>
-        public string MazeFile { get; private set; } = @"Data\10x10.txt";
 
         /// <summary>
         /// Sets the top left corner of the maze within the console window.
@@ -50,5 +47,7 @@ namespace Sde.MazeGame
             this.StatusOrigin = new ConsolePoint(x, y);
             return this;
         }
+
+        // TODO: WithPovOrigin method? And rename WithMazeOrigin to WithMapOrigin?
     }
 }
