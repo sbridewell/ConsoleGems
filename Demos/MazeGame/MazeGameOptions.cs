@@ -17,22 +17,39 @@ namespace Sde.MazeGame
         /// <summary>
         /// Gets the top left corner of the maze within the console window.
         /// </summary>
-        public ConsolePoint MazeOrigin { get; private set; } = new ConsolePoint(10, 10);
+        public ConsolePoint MapViewOrigin { get; private set; }
+
+        /// <summary>
+        /// Gets the top left corner of the point of view (POV) view of the maze within the console window.
+        /// </summary>
+        public ConsolePoint PovViewOrigin { get; private set; }
 
         /// <summary>
         /// Gets the top left corner of the status area within the console window.
         /// </summary>
-        public ConsolePoint StatusOrigin { get; private set; } = new ConsolePoint(0, 0);
+        public ConsolePoint StatusOrigin { get; private set; }
 
         /// <summary>
-        /// Sets the top left corner of the maze within the console window.
+        /// Sets the top left corner of the map view of the maze within the console window.
         /// </summary>
         /// <param name="x">Horizontal coordinate.</param>
         /// <param name="y">Vertical coordinate.</param>
         /// <returns>The updated options.</returns>
-        public MazeGameOptions WithMazeOrigin(int x, int y)
+        public MazeGameOptions WithMapViewOrigin(int x, int y)
         {
-            this.MazeOrigin = new ConsolePoint(x, y);
+            this.MapViewOrigin = new ConsolePoint(x, y);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the top left corner of the point-of-view view of the maze within the console window.
+        /// </summary>
+        /// <param name="x">Horizontal coordinate.</param>
+        /// <param name="y">Vertical coordinate.</param>
+        /// <returns>The updated options.</returns>
+        public MazeGameOptions WithPovViewOrigin(int x, int y)
+        {
+            this.PovViewOrigin = new ConsolePoint(x, y);
             return this;
         }
 

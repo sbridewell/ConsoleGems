@@ -41,15 +41,18 @@ namespace Sde.MazeGame
                 Position = this.GetPlayersStartingPosition(maze),
             };
             this.CurrentGame = new Game(maze, player);
+
+            // TODO: shouldn't we set these options in the console app?
             var options = new MazeGameOptions()
-                .WithMazeOrigin(41, 3)
+                .WithMapViewOrigin(41, 3)
+                .WithPovViewOrigin(0, 3)
                 .WithStatusOrigin(0, 0);
 
-            mazePainterMap.Origin = options.MazeOrigin;
+            mazePainterMap.Origin = options.MapViewOrigin;
             mazePainterMap.InnerSize = new ConsoleSize(maze.Width, maze.Height);
             mazePainterMap.HasBorder = true;
 
-            mazePainterPov.Origin = new ConsolePoint(0, 3);
+            mazePainterPov.Origin = options.PovViewOrigin;
             mazePainterPov.HasBorder = true;
 
             statusPainter.Origin = options.StatusOrigin;
@@ -61,6 +64,8 @@ namespace Sde.MazeGame
             mazePainterPov.Render(maze, player);
             this.WritePositionStatusMessage(player);
             console.CursorVisible = false;
+
+            // TODO: MazeGame.Status property with values InProgress, Won, Lost
             while (this.CurrentGame.ContinuePlaying && !this.CurrentGame.PlayerHasWon)
             {
                 var keyInfo = console.ReadKey(intercept: true);

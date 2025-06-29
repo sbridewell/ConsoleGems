@@ -14,7 +14,7 @@ namespace Sde.MazeGame.Test
     public class MazeGameOptionsTest
     {
         /// <summary>
-        /// Tests that the WithMazeOrigin method sets the MazeOrigin property correctly.
+        /// Tests that the WithMapViewOrigin method sets the MapViewOrigin property correctly.
         /// </summary>
         /// <param name="x">The horizontal co-ordinate to set.</param>
         /// <param name="y">The vertical co-ordinate to set.</param>
@@ -23,16 +23,38 @@ namespace Sde.MazeGame.Test
         [InlineData(0, 1)]
         [InlineData(1, 1)]
         [InlineData(5, 4)]
-        public void WithMazeOrigin_SetsMazeOrigin(int x, int y)
+        public void WithMapViewOrigin_SetsMazeOrigin(int x, int y)
         {
             // Arrange
             var options = new MazeGameOptions();
 
             // Act
-            options.WithMazeOrigin(x, y);
+            options.WithMapViewOrigin(x, y);
 
             // Assert
-            options.MazeOrigin.Should().Be(new ConsolePoint(x, y));
+            options.MapViewOrigin.Should().Be(new ConsolePoint(x, y));
+        }
+
+        /// <summary>
+        /// Tests that the WithPovViewOrigin method sets the PovViewOrigin property correctly.
+        /// </summary>
+        /// <param name="x">The horizontal co-ordinate to set.</param>
+        /// <param name="y">The vertical co-ordinate to set.</param>
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(0, 1)]
+        [InlineData(1, 1)]
+        [InlineData(5, 4)]
+        public void WithPovViewOrigin_SetsMazeOrigin(int x, int y)
+        {
+            // Arrange
+            var options = new MazeGameOptions();
+
+            // Act
+            options.WithPovViewOrigin(x, y);
+
+            // Assert
+            options.PovViewOrigin.Should().Be(new ConsolePoint(x, y));
         }
 
         /// <summary>
