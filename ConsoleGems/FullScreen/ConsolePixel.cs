@@ -25,5 +25,12 @@ namespace Sde.ConsoleGems.FullScreen
         /// it was last painted to the console.
         /// </summary>
         public bool IsDirty { get; set; } = true;
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override string ToString()
+        {
+            return $"Character '{this.Character}' ({(int)this.Character}), OutputType {this.OutputType}, IsDirty {this.IsDirty}.";
+        }
     }
 }
