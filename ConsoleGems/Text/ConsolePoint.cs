@@ -68,6 +68,7 @@ namespace Sde.ConsoleGems.Text
         /// <remarks>The hash code is computed based on the values of the <c>x</c> and <c>y</c> fields.
         /// This method is suitable for use in hashing algorithms and data structures such as hash tables.</remarks>
         /// <returns>An integer that represents the hash code for the current object.</returns>
+        [ExcludeFromCodeCoverage]
         public override int GetHashCode()
             => HashCode.Combine(x, y);
 
