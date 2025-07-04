@@ -5,12 +5,14 @@
 
 namespace Sde.MazeGame
 {
+    using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Text;
     using Sde.MazeGame.Models;
 
     /// <summary>
     /// Generates random values for the maze game.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class MazeGameRandomiser : IMazeGameRandomiser
     {
         /// <inheritdoc/>
