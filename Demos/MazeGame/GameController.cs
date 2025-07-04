@@ -5,6 +5,7 @@
 
 namespace Sde.MazeGame
 {
+    using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Text;
     using Sde.MazeGame.KeyPressHandlers;
@@ -22,7 +23,8 @@ namespace Sde.MazeGame
         IMazePainterMap mazePainterMap,
         IMazePainterPov mazePainterPov,
         MazeVisibilityUpdater mazeVisibilityUpdater,
-        MazeGameKeyPressMappings keyPressMappings)
+        MazeGameKeyPressMappings keyPressMappings,
+        IMazeGameRandomiser randomiser)
         : IGameController
     {
         /// <summary>
@@ -31,22 +33,17 @@ namespace Sde.MazeGame
         public Game? CurrentGame { get; private set; }
 
         /// <inheritdoc/>
-        public void Play(string mazeFile)
+        public void Initialise(MazeGameOptions options)
         {
             console.Clear();
-            var maze = new MazeFactory().CreateFromFile(mazeFile);
+
+            var maze = new MazeFactory().CreateFromFile(options.MazeDataFile);
             var player = new Player
             {
-                FacingDirection = GetPlayersStartingDirection(),
-                Position = this.GetPlayersStartingPosition(maze),
+                FacingDirection = randomiser.GetDirection(),
+                Position = randomiser.GetPosition(maze),
             };
-            this.CurrentGame = new Game(maze, player);
-
-            // TODO: shouldn't we set these options in the console app?
-            var options = new MazeGameOptions()
-                .WithMapViewOrigin(41, 3)
-                .WithPovViewOrigin(0, 3)
-                .WithStatusOrigin(0, 0);
+            this.CurrentGame = new Game(maze, player) { Status = MazeGameStatus.NotStarted };
 
             mazePainterMap.Origin = options.MapViewOrigin;
             mazePainterMap.InnerSize = new ConsoleSize(maze.Width, maze.Height);
@@ -64,9 +61,14 @@ namespace Sde.MazeGame
             mazePainterPov.Render(maze, player);
             this.WritePositionStatusMessage(player);
             console.CursorVisible = false;
+        }
 
-            // TODO: MazeGame.Status property with values InProgress, Won, Lost
-            while (this.CurrentGame.ContinuePlaying && !this.CurrentGame.PlayerHasWon)
+        /// <inheritdoc/>
+        public void Play()
+        {
+            this.ThrowIfNotInitialised();
+            this.CurrentGame.Status = MazeGameStatus.InProgress;
+            while (this.CurrentGame.Status == MazeGameStatus.InProgress)
             {
                 var keyInfo = console.ReadKey(intercept: true);
                 keyPressMappings.Mappings.TryGetValue(keyInfo.Key, out var keyPressHandler);
@@ -81,7 +83,7 @@ namespace Sde.MazeGame
                 }
             }
 
-            console.CursorTop = maze.Height + 1;
+            console.CursorTop = this.CurrentGame.Maze.Height + 1;
             console.CursorLeft = 0;
             console.CursorVisible = true;
         }
@@ -89,13 +91,7 @@ namespace Sde.MazeGame
         /// <inheritdoc/>
         public void TurnPlayerLeft()
         {
-            // TODO: PlayerManager.TurnLeft and TurnRight methods?
-            if (this.CurrentGame == null)
-            {
-                // TOOD: ThrowIfGameNotStarted method?
-                throw new InvalidOperationException("The game has not been started.");
-            }
-
+            this.ThrowIfNotInitialised();
             var maze = this.CurrentGame.Maze;
             var player = this.CurrentGame.Player;
             player.FacingDirection = player.FacingDirection switch
@@ -115,11 +111,7 @@ namespace Sde.MazeGame
         /// <inheritdoc/>
         public void TurnPlayerRight()
         {
-            if (this.CurrentGame == null)
-            {
-                throw new InvalidOperationException("The game has not been started.");
-            }
-
+            this.ThrowIfNotInitialised();
             var maze = this.CurrentGame.Maze;
             var player = this.CurrentGame.Player;
             player.FacingDirection = player.FacingDirection switch
@@ -139,11 +131,7 @@ namespace Sde.MazeGame
         /// <inheritdoc/>
         public void TryToMovePlayerForward()
         {
-            if (this.CurrentGame == null)
-            {
-                throw new InvalidOperationException("The game has not been started.");
-            }
-
+            this.ThrowIfNotInitialised();
             var player = this.CurrentGame.Player;
             var maze = this.CurrentGame.Maze;
             var newPosition = player.FacingDirection switch
@@ -158,7 +146,7 @@ namespace Sde.MazeGame
             {
                 var msg = "Congratulations, you have escaped the maze! Press space to continue.";
                 statusPainter.Paint(msg, ConsoleOutputType.Prompt);
-                this.CurrentGame.PlayerHasWon = true;
+                this.CurrentGame.Status = MazeGameStatus.Won;
                 char spaceKey = '\0';
                 mazePainterMap.Reset();
                 mazePainterPov.Reset();
@@ -189,37 +177,21 @@ namespace Sde.MazeGame
         /// <inheritdoc/>
         public void Quit()
         {
-            if (this.CurrentGame == null)
-            {
-                throw new InvalidOperationException("The game has not been started.");
-            }
-
+            this.ThrowIfNotInitialised();
             console.CursorTop = this.CurrentGame.Maze.Height + 1;
             statusPainter.Paint("Thank you for playing!");
-            this.CurrentGame.ContinuePlaying = false;
+            this.CurrentGame.Status = MazeGameStatus.Lost;
             mazePainterMap.Reset();
             mazePainterPov.Reset();
             statusPainter.Reset();
         }
 
-        private static Direction GetPlayersStartingDirection()
+        [MemberNotNull(nameof(CurrentGame))]
+        private void ThrowIfNotInitialised()
         {
-            var random = new Random();
-            var direction = (Direction)random.Next(0, 4);
-            return direction;
-        }
-
-        private ConsolePoint GetPlayersStartingPosition(Maze maze)
-        {
-            var x = new Random().Next(0, maze.Width);
-            var y = new Random().Next(0, maze.Height);
-            if (maze.GetMazePoint(x, y).PointType == MazePointType.Path)
+            if (this.CurrentGame == null)
             {
-                return new ConsolePoint(x, y);
-            }
-            else
-            {
-                return this.GetPlayersStartingPosition(maze);
+                throw new InvalidOperationException("The game has not been initialised. Call Initialise() first.");
             }
         }
 

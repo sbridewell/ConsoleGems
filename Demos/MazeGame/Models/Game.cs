@@ -26,14 +26,8 @@ namespace Sde.MazeGame.Models
         public Maze Maze => maze;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the player has won the game.
+        /// Gets or sets the status of the game.
         /// </summary>
-        public bool PlayerHasWon { get; set; } = false;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the game should continue.
-        /// // TODO: change this to something like QuitRequested?
-        /// </summary>
-        public bool ContinuePlaying { get; set; } = true;
+        public MazeGameStatus Status { get; set; } = MazeGameStatus.NotStarted;
     }
 }

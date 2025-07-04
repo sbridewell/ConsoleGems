@@ -5,6 +5,7 @@
 
 namespace Sde.MazeGame
 {
+    using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Text;
 
     /// <summary>
@@ -28,6 +29,11 @@ namespace Sde.MazeGame
         /// Gets the top left corner of the status area within the console window.
         /// </summary>
         public ConsolePoint StatusOrigin { get; private set; }
+
+        /// <summary>
+        /// Gets the path to a file containing the data from which the maze is constructed.
+        /// </summary>
+        public string MazeDataFile { get; private set; } = string.Empty;
 
         /// <summary>
         /// Sets the top left corner of the map view of the maze within the console window.
@@ -65,6 +71,25 @@ namespace Sde.MazeGame
             return this;
         }
 
-        // TODO: WithPovOrigin method? And rename WithMazeOrigin to WithMapOrigin?
+        /// <summary>
+        /// Sets the path to a file containing the data from which the maze is constructed.
+        /// </summary>
+        /// <param name="path">Path to the maze data file.</param>
+        /// <returns>The updated options.</returns>
+        public MazeGameOptions WithMazeDataFile(string path)
+        {
+            this.MazeDataFile = path;
+            return this;
+        }
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override string ToString()
+        {
+            return $"MapViewOrigin: {this.MapViewOrigin}, " +
+                   $"PovViewOrigin: {this.PovViewOrigin}, " +
+                   $"StatusOrigin: {this.StatusOrigin}, " +
+                   $"MazeDataFile: {this.MazeDataFile}";
+        }
     }
 }

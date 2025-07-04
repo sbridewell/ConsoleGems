@@ -11,13 +11,18 @@ namespace Sde.MazeGame
     public interface IGameController
     {
         /// <summary>
+        /// Initialises the game by loading a maze from the specified file.
+        /// </summary>
+        /// <param name="options">
+        /// Options controlling the behaviour of the game.
+        /// </param>
+        void Initialise(MazeGameOptions options);
+
+        /// <summary>
         /// Starts the game by loading a maze from the specified file and allowing the
         /// player to navigate through it.
         /// </summary>
-        /// <param name="mazeFile">
-        /// Path to a text file representing the maze.
-        /// </param>
-        void Play(string mazeFile);
+        void Play();
 
         /// <summary>
         /// Turns the player to the left.

@@ -5,6 +5,7 @@
 
 namespace Sde.MazeGame
 {
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems.FullScreen;
     using Sde.MazeGame.CharacterProviders;
@@ -23,6 +24,7 @@ namespace Sde.MazeGame
         /// </summary>
         /// <param name="services">The service collection to add the services to.</param>
         /// <returns>The updated service collection.</returns>
+        [ExcludeFromCodeCoverage]
         public static IServiceCollection AddMazeGame(
             this IServiceCollection services)
         {
@@ -43,6 +45,7 @@ namespace Sde.MazeGame
             services.AddSingleton<IPlayerCharacterProvider, ArrowPlayerCharacterProvider>();
             ////services.AddSingleton<IRayDirectionsProvider, StraightAheadDirectionsProvider>();
             ////services.AddSingleton<IRayDirectionsProvider, StraightAheadAndDiagonalsDirectionsProvider>();
+            services.AddSingleton<IMazeGameRandomiser, MazeGameRandomiser>();
             return services;
         }
     }

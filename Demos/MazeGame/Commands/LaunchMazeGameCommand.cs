@@ -7,6 +7,7 @@ namespace Sde.MazeGame.Commands
 {
     using Sde.ConsoleGems.AutoComplete;
     using Sde.ConsoleGems.Commands;
+    using Sde.ConsoleGems.Menus;
 
     /// <summary>
     /// Command to launch the maze game.
@@ -21,7 +22,13 @@ namespace Sde.MazeGame.Commands
             var mazeFile = autoCompleter.ReadLine(
                 mazeFiles,
                 "Tab through the available maze files: ");
-            mazeGameController.Play(mazeFile);
+            var options = new MazeGameOptions()
+                .WithMapViewOrigin(41, 3)
+                .WithPovViewOrigin(0, 3)
+                .WithStatusOrigin(0, 0)
+                .WithMazeDataFile(mazeFile);
+            mazeGameController.Initialise(options);
+            mazeGameController.Play();
         }
     }
 }

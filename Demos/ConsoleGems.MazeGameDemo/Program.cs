@@ -7,7 +7,6 @@ namespace Sde.ConsoleGems.MazeGameDemo
 {
     using Microsoft.Extensions.DependencyInjection;
     using Sde.MazeGame;
-    using Sde.MazeGame.Menus;
 
     /// <summary>
     /// Class containing the main entry point into the program.

@@ -3,8 +3,6 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-using System.Reflection.Metadata;
-
 namespace Sde.ConsoleGems.Test.Text
 {
     /// <summary>
