@@ -20,7 +20,7 @@ namespace Sde.MazeGame.Test.KeyPressHandlers
         public void Handle_ShouldCallTryToMovePlayerForward()
         {
             // Arrange
-            var mockController = new Mock<IGameController>();
+            var mockController = new Mock<IMazeGameController>();
             var handler = new MoveForwardKeyPressHandler();
             var keyInfo = new ConsoleKeyInfo('w', ConsoleKey.W, false, false, false);
 

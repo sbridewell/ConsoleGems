@@ -36,7 +36,7 @@ namespace Sde.MazeGame
             services.AddSingleton<IColumnRenderer, ColumnRenderer>();
             services.AddSingleton<ISectionRenderer, SectionRenderer>();
             ////services.AddSingleton<IMazePainter3D, SimpleMazePainter3D>();
-            services.AddSingleton<IGameController, GameController>();
+            services.AddSingleton<IMazeGameController, MazeGameController>();
             services.AddSingleton<ILimitOfViewProvider>(new LimitOfViewProvider(5));
             services.AddSingleton<MazeVisibilityUpdater>(); // TODO: IMazeVisibilityUpdater?
             services.AddSingleton<IWallCharacterProvider, LinesWallCharacterProvider>();

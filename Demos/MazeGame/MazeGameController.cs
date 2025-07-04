@@ -1,4 +1,4 @@
-﻿// <copyright file="GameController.cs" company="Simon Bridewell">
+﻿// <copyright file="MazeGameController.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell.
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
@@ -17,7 +17,7 @@ namespace Sde.MazeGame
     /// <summary>
     /// The controlling module for the maze game.
     /// </summary>
-    public class GameController(
+    public class MazeGameController(
         IConsole console,
         IStatusPainter statusPainter,
         IMazePainterMap mazePainterMap,
@@ -25,7 +25,7 @@ namespace Sde.MazeGame
         MazeVisibilityUpdater mazeVisibilityUpdater,
         MazeGameKeyPressMappings keyPressMappings,
         IMazeGameRandomiser randomiser)
-        : IGameController
+        : IMazeGameController
     {
         /// <summary>
         /// Gets the instance of the game which is currently being played.

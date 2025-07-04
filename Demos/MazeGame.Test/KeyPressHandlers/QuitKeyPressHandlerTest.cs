@@ -20,7 +20,7 @@ namespace Sde.MazeGame.Test.KeyPressHandlers
         public void Handle_ShouldCallQuitGameOnController()
         {
             // Arrange
-            var mockController = new Mock<IGameController>();
+            var mockController = new Mock<IMazeGameController>();
             var handler = new QuitKeyPressHandler();
             var keyInfo = new ConsoleKeyInfo('q', ConsoleKey.Q, false, false, false);
 

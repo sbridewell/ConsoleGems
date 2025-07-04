@@ -11,7 +11,7 @@ namespace Sde.MazeGame.KeyPressHandlers
     public class QuitKeyPressHandler : IKeyPressHandler
     {
         /// <inheritdoc/>
-        public void Handle(ConsoleKeyInfo keyInfo, IGameController controller)
+        public void Handle(ConsoleKeyInfo keyInfo, IMazeGameController controller)
         {
             controller.Quit();
         }

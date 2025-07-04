@@ -12,7 +12,7 @@ namespace Sde.MazeGame.Commands
     /// <summary>
     /// Command to launch the maze game.
     /// </summary>
-    public class LaunchMazeGameCommand(IAutoCompleter autoCompleter, IGameController mazeGameController)
+    public class LaunchMazeGameCommand(IAutoCompleter autoCompleter, IMazeGameController mazeGameController)
         : ICommand
     {
         /// <inheritdoc/>

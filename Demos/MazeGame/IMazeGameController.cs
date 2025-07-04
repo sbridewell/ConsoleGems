@@ -1,4 +1,4 @@
-﻿// <copyright file="IGameController.cs" company="Simon Bridewell">
+﻿// <copyright file="IMazeGameController.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell.
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
@@ -8,7 +8,7 @@ namespace Sde.MazeGame
     /// <summary>
     /// Interface for the game controller that manages the game flow and interactions.
     /// </summary>
-    public interface IGameController
+    public interface IMazeGameController
     {
         /// <summary>
         /// Initialises the game by loading a maze from the specified file.

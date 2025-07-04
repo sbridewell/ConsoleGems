@@ -15,6 +15,6 @@ namespace Sde.MazeGame.KeyPressHandlers
         /// </summary>
         /// <param name="keyInfo">The key press to handle.</param>
         /// <param name="controller">The maze game controller.</param>
-        void Handle(ConsoleKeyInfo keyInfo, IGameController controller);
+        void Handle(ConsoleKeyInfo keyInfo, IMazeGameController controller);
     }
 }

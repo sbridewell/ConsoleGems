@@ -20,7 +20,7 @@ namespace Sde.MazeGame.Test.KeyPressHandlers
         public void Handle_ShouldCallTurnPlayerRight()
         {
             // Arrange
-            var mockController = new Mock<IGameController>();
+            var mockController = new Mock<IMazeGameController>();
             var handler = new TurnRightKeyPressHandler();
             var keyInfo = new ConsoleKeyInfo('d', ConsoleKey.D, false, false, false);
 

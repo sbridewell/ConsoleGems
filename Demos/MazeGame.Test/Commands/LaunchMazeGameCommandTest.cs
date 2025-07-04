@@ -25,7 +25,7 @@ namespace Sde.MazeGame.Test.Commands
             var mockAutoCompleter = new Mock<IAutoCompleter>();
             mockAutoCompleter.Setup(ac => ac.ReadLine(It.IsAny<List<string>>(), It.IsAny<string>()))
                 .Returns("foo.maze.txt");
-            var mockGameController = new Mock<IGameController>();
+            var mockGameController = new Mock<IMazeGameController>();
             var command = new LaunchMazeGameCommand(mockAutoCompleter.Object, mockGameController.Object);
 
             // Act

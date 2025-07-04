@@ -17,7 +17,7 @@ namespace Sde.MazeGame.Test
     using Xunit.Sdk;
 
     /// <summary>
-    /// Unit tests for the <see cref="GameController"/> class.
+    /// Unit tests for the <see cref="MazeGameController"/> class.
     /// </summary>
     public class MazeGameControllerTest
     {
@@ -466,9 +466,9 @@ namespace Sde.MazeGame.Test
             ex.Message.Should().Contain("The game has not been initialised.");
         }
 
-        private GameController InstantiateController()
+        private MazeGameController InstantiateController()
         {
-            var controller = new GameController(
+            var controller = new MazeGameController(
                 this.mockConsole.Object,
                 this.mockStatusPainter.Object,
                 this.mockMazePainterMap.Object,
