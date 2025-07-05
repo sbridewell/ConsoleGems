@@ -58,6 +58,9 @@ namespace Sde.MazeGame.Painters.Map
                     {
                         switch (mazePoint.PointType)
                         {
+                            case MazePointType.Exit:
+                                this.WriteToScreenBuffer(mazeX, mazeY, '♥', ConsoleOutputType.Default);
+                                break;
                             case MazePointType.Path:
                                 this.WriteToScreenBuffer(mazeX, mazeY, this.pathChar, ConsoleOutputType.Default);
                                 break;

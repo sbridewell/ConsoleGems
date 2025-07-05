@@ -55,9 +55,18 @@ namespace Sde.MazeGame.Painters.Pov
         /// </param>
         /// <param name="screenX">Horizonal coordinate of the column to render.</param>
         /// <param name="sectionIndent">Vertical indent where the wall meets the ceiling / wall.</param>
+        /// <param name="wallChar">
+        /// The character to represent the wall - this could be a solid block for a regular
+        /// wall or a heart to represent the exit.
+        /// </param>
         /// <param name="wallColour">
         /// The colour of the wall, represented as a <see cref="ConsoleOutputType"/>.
         /// </param>
-        public void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX, int sectionIndent, ConsoleOutputType wallColour);
+        public void RenderPerpendicularWallColumn(
+            IMazePainterPov painter,
+            int screenX,
+            int sectionIndent,
+            char wallChar,
+            ConsoleOutputType wallColour);
     }
 }

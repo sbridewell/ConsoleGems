@@ -2676,6 +2676,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                 testCase.sectionNumber,
                 testCase.leftOrRight,
                 testCase.forwardDistance,
+                '▓',
                 Direction.North);
 
             // Assert
@@ -2722,6 +2723,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                 sectionNumber: sectionNumber,
                 leftOrRight: LeftOrRight.Left,
                 forwardDistance: 1,
+                '▓',
                 playerFacingDirection: facingDirection);
 
             // Assert
@@ -2731,6 +2733,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                     painter,
                     It.IsAny<int>(),
                     It.IsAny<int>(),
+                    '▓',
                     expectedOutputType),
                 Times.Exactly(columnsInSection));
         }

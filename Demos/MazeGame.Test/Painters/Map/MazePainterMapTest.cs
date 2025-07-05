@@ -59,9 +59,9 @@ namespace Sde.MazeGame.Test.Painters.Map
             this.ExploreMaze();
             var expectedScreenBuffer = new string[]
             {
-                "╭────────╮",
-                "│        │",
-                "├──────╴ │",
+                "╶────────╮",
+                "♥        │",
+                "╭──────╴ │",
                 "│        │",
                 "│ ╭─┬┬───┤",
                 "│ │ ╰P   │",

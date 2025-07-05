@@ -22,6 +22,11 @@ namespace Sde.MazeGame.Models
         Wall,
 
         /// <summary>
+        /// The point is the exit of the maze.
+        /// </summary>
+        Exit,
+
+        /// <summary>
         /// The point is outside the bounds of the maze.
         /// </summary>
         OutsideMaze,

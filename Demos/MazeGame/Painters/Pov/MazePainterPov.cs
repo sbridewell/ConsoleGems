@@ -59,15 +59,54 @@ namespace Sde.MazeGame.Painters.Pov
 
             for (var section = i - 1; section < this.sectionWidths.Length - 1; section++)
             {
-                if (forwardView.MiddleRow[i - 1] == MazePointType.Wall)
+                //if (forwardView.MiddleRow[i - 1] == MazePointType.Wall)
+                //{
+                //    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Left, forwardView.VisibleDistance, playerFacingDirection);
+                //    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Right, forwardView.VisibleDistance, playerFacingDirection);
+                //}
+                //else
+                //{
+                //    this.sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Left);
+                //    this.sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Right);
+                //}
+                switch (forwardView.MiddleRow[i - 1])
                 {
-                    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Left, forwardView.VisibleDistance, playerFacingDirection);
-                    this.sectionRenderer.RenderSectionAllWall(this, section, LeftOrRight.Right, forwardView.VisibleDistance, playerFacingDirection);
-                }
-                else
-                {
-                    this.sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Left);
-                    this.sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Right);
+                    case MazePointType.Wall:
+                        this.sectionRenderer.RenderSectionAllWall(
+                            this,
+                            section,
+                            LeftOrRight.Left,
+                            forwardView.VisibleDistance,
+                            '▓',
+                            playerFacingDirection);
+                        this.sectionRenderer.RenderSectionAllWall(
+                            this,
+                            section,
+                            LeftOrRight.Right,
+                            forwardView.VisibleDistance,
+                            '▓',
+                            playerFacingDirection);
+                        break;
+                    case MazePointType.Exit:
+                        this.sectionRenderer.RenderSectionAllWall(
+                            this,
+                            section,
+                            LeftOrRight.Left,
+                            forwardView.VisibleDistance,
+                            '♥',
+                            playerFacingDirection);
+                        this.sectionRenderer.RenderSectionAllWall(
+                            this,
+                            section,
+                            LeftOrRight.Right,
+                            forwardView.VisibleDistance,
+                            '♥',
+                            playerFacingDirection);
+                        break;
+                    default:
+                        this.sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Left);
+                        this.sectionRenderer.RenderSectionTooFar(this, LeftOrRight.Right);
+                        break;
                 }
             }
         }

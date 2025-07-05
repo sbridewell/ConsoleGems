@@ -24,6 +24,7 @@ namespace Sde.MazeGame.Painters.Pov
             int sectionNumber,
             LeftOrRight leftOrRight,
             int forwardDistance,
+            char wallChar,
             Direction playerFacingDirection)
         {
             var sectionIndent = this.sectionIndents[sectionNumber];
@@ -41,7 +42,7 @@ namespace Sde.MazeGame.Painters.Pov
                 var screenX = leftOrRight == LeftOrRight.Left ? columnIndent : this.screenWidth - columnIndent - 1;
                 columnRenderer.RenderCeilingColumn(painter, screenX);
                 columnRenderer.RenderFloorColumn(painter, screenX);
-                columnRenderer.RenderPerpendicularWallColumn(painter, screenX, floorCeilingIndent, wallColour);
+                columnRenderer.RenderPerpendicularWallColumn(painter, screenX, floorCeilingIndent, wallChar, wallColour);
             }
         }
 

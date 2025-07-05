@@ -68,7 +68,14 @@ namespace Sde.MazeGame
                     var point = new MazePoint
                     {
                         Explored = false,
-                        PointType = lines[y][x] == '#' ? MazePointType.Wall : MazePointType.Path,
+                        //PointType = lines[y][x] == '#' ? MazePointType.Wall : MazePointType.Path,
+                        PointType = lines[y][x] switch
+                        {
+                            '#' => MazePointType.Wall,
+                            ' ' => MazePointType.Path,
+                            'E' => MazePointType.Exit,
+                            _ => MazePointType.Path,
+                        },
                     };
                     maze.SetMazePoint(new ConsolePoint(x, y), point);
                 }

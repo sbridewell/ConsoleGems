@@ -37,12 +37,14 @@ namespace Sde.MazeGame.Painters.Pov
         /// <param name="sectionNumber">Zero-based section number.</param>
         /// <param name="leftOrRight">Whether the section is in the left or right half of the screen.</param>
         /// <param name="forwardDistance">How far away from the player the wall is.</param>
+        /// <param name="wallChar">Character to represent the wall.</param>
         /// <param name="playerFacingDirection">The direction the player is facing.</param>
         public void RenderSectionAllWall(
             IMazePainterPov painter,
             int sectionNumber,
             LeftOrRight leftOrRight,
             int forwardDistance,
+            char wallChar,
             Direction playerFacingDirection);
 
         /// <summary>

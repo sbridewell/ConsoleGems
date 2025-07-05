@@ -89,13 +89,19 @@ namespace Sde.MazeGame.Painters.Pov
         }
 
         /// <inheritdoc/>
-        public void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX, int sectionIndent, ConsoleOutputType wallColour)
+        public void RenderPerpendicularWallColumn(
+            IMazePainterPov painter,
+            int screenX,
+            int sectionIndent,
+            char wallChar,
+            ConsoleOutputType wallColour)
         {
             var topY = sectionIndent;
             var bottomY = this.screenHeight - topY;
             for (var screenY = topY; screenY < bottomY; screenY++)
             {
-                painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, wallColour);
+                //painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, wallColour);
+                painter.WriteToScreenBuffer(screenX, screenY, wallChar, wallColour);
             }
         }
 

@@ -106,7 +106,7 @@ namespace Sde.MazeGame.Test
                     Direction.East),
                 ["Player facing West"] = new MoveForwardTestCase(
                     new MazeFactory().CreateFromFile(@"MazeData\3x3.maze.txt"),
-                    new ConsolePoint(1, 1),
+                    new ConsolePoint(2, 1),
                     Direction.West),
             };
 
@@ -341,7 +341,7 @@ namespace Sde.MazeGame.Test
                 .Returns(new ConsoleKeyInfo(' ', ConsoleKey.Enter, false, false, false));
             var controller = this.InstantiateController();
             controller.Initialise(this.options);
-            controller.CurrentGame!.Player.Position = new ConsolePoint(0, 1);
+            controller.CurrentGame!.Player.Position = new ConsolePoint(1, 1);
             controller.CurrentGame.Player.FacingDirection = Direction.West;
 
             // Act

@@ -142,7 +142,8 @@ namespace Sde.MazeGame
                 Direction.West => new ConsolePoint(player.Position.X - 1, player.Position.Y),
                 _ => player.Position,
             };
-            if (!maze.PositionIsWithinMaze(newPosition))
+            //if (!maze.PositionIsWithinMaze(newPosition))
+            if (maze.GetMazePoint(newPosition).PointType == MazePointType.Exit)
             {
                 var msg = "Congratulations, you have escaped the maze! Press space to continue.";
                 statusPainter.Paint(msg, ConsoleOutputType.Prompt);
