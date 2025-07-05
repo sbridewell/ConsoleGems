@@ -3,10 +3,9 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.Menus
+namespace Sde.ConsoleGems.GamesDemo
 {
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems;
     using Sde.ConsoleGems.AutoComplete;
     using Sde.ConsoleGems.Consoles;
@@ -16,7 +15,6 @@ namespace Sde.MazeGame.Menus
     /// <summary>
     /// The main menu in the games demo.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public class MainMenu(
         IAutoCompleter autoCompleter,
         IMenuWriter menuWriter,
