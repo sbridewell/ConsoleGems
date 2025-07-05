@@ -15,19 +15,20 @@ namespace Sde.MazeGame
     [ExcludeFromCodeCoverage]
     public class MazeGameRandomiser : IMazeGameRandomiser
     {
+        private readonly Random random = new Random();
+
         /// <inheritdoc/>
         public Direction GetDirection()
         {
-            var random = new Random();
-            var direction = (Direction)random.Next(0, 4);
+            var direction = (Direction)this.random.Next(0, 4);
             return direction;
         }
 
         /// <inheritdoc/>
         public ConsolePoint GetPosition(Maze maze)
         {
-            var x = new Random().Next(0, maze.Width);
-            var y = new Random().Next(0, maze.Height);
+            var x = this.random.Next(0, maze.Width);
+            var y = this.random.Next(0, maze.Height);
             if (maze.GetMazePoint(x, y).PointType == MazePointType.Path)
             {
                 return new ConsolePoint(x, y);

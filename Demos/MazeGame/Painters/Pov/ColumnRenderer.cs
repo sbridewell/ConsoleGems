@@ -100,7 +100,6 @@ namespace Sde.MazeGame.Painters.Pov
             var bottomY = this.screenHeight - topY;
             for (var screenY = topY; screenY < bottomY; screenY++)
             {
-                //painter.WriteToScreenBuffer(screenX, screenY, this.perpendicularWallChar, wallColour);
                 painter.WriteToScreenBuffer(screenX, screenY, wallChar, wallColour);
             }
         }
