@@ -18,32 +18,79 @@ namespace Sde.ConsoleGems.Test.FullScreen
 
         private static readonly Mock<IConsole> MockConsole = new Mock<IConsole>();
 
+        private static readonly Mock<IBorderPainter> MockBorderPainter = new Mock<IBorderPainter>();
+
         private static readonly Dictionary<string, OverlappingPaintersTestCase> OverlappingPaintersTestData = new ()
         {
             ["Two overlapping painters"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
                 {
-                    new TestPainter(MockConsole.Object, new ConsolePoint(1, 1), new ConsoleSize(2, 2), false),
-                    new TestPainter(MockConsole.Object, new ConsolePoint(2, 2), new ConsoleSize(2, 2), false),
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(1, 1),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = false,
+                    },
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(2, 2),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = false,
+                    },
                 }),
             ["Two overlapping painters, both with borders"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
                 {
-                    new TestPainter(MockConsole.Object, new ConsolePoint(1, 1), new ConsoleSize(2, 2), true),
-                    new TestPainter(MockConsole.Object, new ConsolePoint(3, 3), new ConsoleSize(2, 2), true),
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(1, 1),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = true,
+                    },
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(3, 3),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = true,
+                    },
                 }),
             ["Two overlapping painters, one with border"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
                 {
-                    new TestPainter(MockConsole.Object, new ConsolePoint(1, 1), new ConsoleSize(2, 2), true),
-                    new TestPainter(MockConsole.Object, new ConsolePoint(2, 2), new ConsoleSize(2, 2), false),
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(1, 1),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = true,
+                    },
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(2, 2),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = false,
+                    },
                 }),
             ["Three painters, two overlap and one doesn't"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
                 {
-                    new TestPainter(MockConsole.Object, new ConsolePoint(1, 1), new ConsoleSize(2, 2), false),
-                    new TestPainter(MockConsole.Object, new ConsolePoint(2, 2), new ConsoleSize(2, 2), false),
-                    new TestPainter(MockConsole.Object, new ConsolePoint(5, 3), new ConsoleSize(2, 2), false),
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(1, 1),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = false,
+                    },
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(2, 2),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = false,
+                    },
+                    new TestPainter(MockConsole.Object, MockBorderPainter.Object)
+                    {
+                        Origin = new ConsolePoint(5, 3),
+                        InnerSize = new ConsoleSize(2, 2),
+                        HasBorder = false,
+                    },
                 }),
         };
 
@@ -93,15 +140,33 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var console = new TestOutputHelperConsole(output, new ConsoleSize(20, 20));
             console.Clear();
             var orchestrator = new PainterOrchestrator(console);
-            var painter1 = new TestPainter(console, new ConsolePoint(1, 1), new ConsoleSize(5, 5), hasBorder);
-            painter1.PublicWriteToScreenBuffer(0, "12345");
-            painter1.PublicWriteToScreenBuffer(1, "hello");
-            painter1.PublicWriteToScreenBuffer(2, "world");
-            painter1.PublicWriteToScreenBuffer(3, "ABCDE");
-            painter1.PublicWriteToScreenBuffer(4, "67890");
-            var painter2 = new TestPainter(console, new ConsolePoint(10, 0), new ConsoleSize(2, 2), hasBorder);
-            painter2.PublicWriteToScreenBuffer(0, "12");
-            painter2.PublicWriteToScreenBuffer(1, "34");
+            var painter1 = new TestPainter(console, MockBorderPainter.Object)
+            {
+                Origin = new ConsolePoint(1, 1),
+                InnerSize = new ConsoleSize(5, 5),
+                HasBorder = hasBorder,
+            };
+            var painter1Chars = new char[][]
+            {
+                ['1', '2', '3', '4', '5'],
+                ['h', 'e', 'l', 'l', 'o'],
+                ['w', 'o', 'r', 'l', 'd'],
+                ['A', 'B', 'C', 'D', 'E'],
+                ['6', '7', '8', '9', '0'],
+            };
+            WriteToScreenBuffer(painter1Chars, painter1);
+            var painter2 = new TestPainter(console, MockBorderPainter.Object)
+            {
+                Origin = new ConsolePoint(10, 0),
+                InnerSize = new ConsoleSize(2, 2),
+                HasBorder = hasBorder,
+            };
+            var painter2Chars = new char[][]
+            {
+                ['1', '2'],
+                ['3', '4'],
+            };
+            WriteToScreenBuffer(painter2Chars, painter2);
             orchestrator.Painters.Add(painter1);
             orchestrator.Painters.Add(painter2);
 
@@ -161,7 +226,12 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var orchestrator = new PainterOrchestrator(testCase.mockConsole.Object);
             foreach (var rect in testCase.painterRectangles)
             {
-                orchestrator.Painters.Add(new TestPainter(testCase.mockConsole.Object, rect.Origin, rect.Size, false));
+                orchestrator.Painters.Add(new TestPainter(testCase.mockConsole.Object, MockBorderPainter.Object)
+                {
+                    Origin = rect.Origin,
+                    InnerSize = rect.Size,
+                    HasBorder = false,
+                });
             }
 
             // Act
@@ -170,6 +240,17 @@ namespace Sde.ConsoleGems.Test.FullScreen
             // Assert
             testCase.mockConsole.Verify(m => m.Write(It.IsRegex("Please resize the console window"), ConsoleOutputType.Error), Times.Once);
             testCase.mockConsole.Verify(m => m.Write(It.IsRegex("Current window size is"), ConsoleOutputType.Error), Times.Once);
+        }
+
+        private static void WriteToScreenBuffer(char[][] painterChars, TestPainter painter)
+        {
+            for (var y = 0; y < painterChars.Length; y++)
+            {
+                for (var x = 0; x < painterChars[y].Length; x++)
+                {
+                    painter.PublicWriteToScreenBuffer(x, y, painterChars[y][x], ConsoleOutputType.Default);
+                }
+            }
         }
     }
 }

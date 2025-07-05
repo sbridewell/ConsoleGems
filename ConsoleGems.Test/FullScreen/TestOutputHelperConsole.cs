@@ -160,7 +160,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             }
         }
 
-        #region WriteLine methods - not implemented
+        #region WriteLine methods
 
         /// <summary>
         /// Not implemented.
@@ -169,7 +169,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
         /// <param name="outputType">The parameter is not used.</param>
         public void WriteLine(string textToWrite = "", ConsoleOutputType outputType = ConsoleOutputType.Default)
         {
-            throw new NotImplementedException();
+            this.Write(textToWrite + Environment.NewLine, outputType);
         }
 
         /// <summary>

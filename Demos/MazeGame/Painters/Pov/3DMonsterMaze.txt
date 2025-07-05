@@ -1,0 +1,54 @@
+﻿; ----------------
+; Draw the 3D View
+; ----------------
+; The view is divided into 7 sections that correspond to different distances:
+; - Section 0 is 24 characters tall and 1 character wide.
+; - Section 1 is 22 characters tall and 4 characters wide.
+; - Section 2 is 14 characters tall and 3 characters wide
+; - Section 3 is 8 characters tall and 2 characters wide.
+; - Section 4 is 4 characters tall and 1 character wide.
+; - Section 5 is 2 characters tall and 1 character wide.
+; - Section 6 is 2 characters tall and 1 character wide.
+;
+; 0|    |   |  | | | | | |  |   |    |0              |    |   |  | | | | | |  |   |    |0
+; 0|1   |   |  | | | | | |  |   |   1|0             0|1   |   |  | | | | | |  |   |    |0
+; 0|11  |   |  | | | | | |  |   |  11|0             0|11  |   |  | | | | | |  |   |    |0
+; 0|111 |   |  | | | | | |  |   | 111|0             0|111 |   |  | | | | | |  |   |    |0
+; 0|1111|   |  | | | | | |  |   |1111|0             0|1111|   |  | | | | | |  |   |    |0
+; 0|1111|2  |  | | | | | |  |  2|1111|0             0|1111|   |  | | | | | |  |  2|1111|0
+; 0|1111|22 |  | | | | | |  | 22|1111|0             0|1111|   |  | | | | | |  | 22|1111|0
+; 0|1111|222|  | | | | | |  |222|1111|0             0|1111|   |  | | | | | |  |222|1111|0
+; 0|1111|222|3 | | | | | | 3|222|1111|0             0|1111|222|3 | | | | | |  |222|1111|0
+; 0|1111|222|33| | | | | |33|222|1111|0             0|1111|222|33| | | | | |  |222|1111|0
+; 0|1111|222|33|4| | | |4|33|222|1111|0             0|1111|222|33| | | | |4|33|222|1111|0
+; 0|1111|222|33|4|5|6|5|4|33|222|1111|0             0|1111|222|33|4|5|6|5|4|33|222|1111|0
+; 0|1111|222|33|4|5|6|5|4|33|222|1111|0             0|1111|222|33|4|5|6|5|4|33|222|1111|0
+; 0|1111|222|33|4| | | |4|33|222|1111|0             0|1111|222|33| | | | |4|33|222|1111|0
+; 0|1111|222|33| | | | | |33|222|1111|0             0|1111|222|33| | | | | |  |222|1111|0
+; 0|1111|222|3 | | | | | | 3|222|1111|0             0|1111|222|3 | | | | | |  |222|1111|0
+; 0|1111|222|  | | | | | |  |222|1111|0             0|1111|   |  | | | | | |  |222|1111|0
+; 0|1111|22 |  | | | | | |  | 22|1111|0             0|1111|   |  | | | | | |  | 22|1111|0
+; 0|1111|2  |  | | | | | |  |  2|1111|0             0|1111|   |  | | | | | |  |  2|1111|0
+; 0|1111|   |  | | | | | |  |   |1111|0             0|1111|   |  | | | | | |  |   |    |0
+; 0|111 |   |  | | | | | |  |   | 111|0             0|111 |   |  | | | | | |  |   |    |0
+; 0|11  |   |  | | | | | |  |   |  11|0             0|11  |   |  | | | | | |  |   |    |0
+; 0|1   |   |  | | | | | |  |   |   1|0             0|1   |   |  | | | | | |  |   |    |0
+; 0|    |   |  | | | | | |  |   |    |0              |    |   |  | | | | | |  |   |    |0
+;
+; Section 6 will display as chequerboard if there is a wall at this distance, or black if not.
+;
+; The following actions are performed:
+; - Draw the wall side / passageway gap next to the player on the right (section 0)
+; - Draw the wall side / passageway gap next to the player on the left (section 0)
+; - Enter a loop for sections 1 to 5 performing the following actions:
+;    - If a wall is in front of the player then
+;      - Draw the wall face
+;      - If at the Exit then
+;        - Draw the Exit pattern
+;    - Else
+;      - Draw the wall side / passageway gap on the right
+;      - Draw the wall side / passageway gap on the left
+; - Draw distance 6, which is either a wall face (chequerboard) or further distance not visible (black)
+; - Enter a loop from section 5 and moving towards the player performing the following actions:
+;   - Draw all visible wall faces on the left
+;   - Draw all visible wall faces on the right

@@ -12,16 +12,17 @@ namespace Sde.ConsoleGems.FullScreen
     public interface IPainter
     {
         /// <summary>
-        /// Gets the position of the area of the console window that the
-        /// painter is responsible for.
+        /// Gets or sets the position of the area of the console window
+        /// that the painter is responsible for.
         /// </summary>
-        public ConsolePoint Origin { get; }
+        public ConsolePoint Origin { get; set; }
 
         /// <summary>
-        /// Gets the size of the area of the console window that the painter
-        /// is responsible for, excluding any space taken up by a border.
+        /// Gets or sets the size of the area of the console window that
+        /// the painter is responsible for, excluding any space taken up
+        /// by a border.
         /// </summary>
-        public ConsoleSize InnerSize { get; }
+        public ConsoleSize InnerSize { get; set; }
 
         /// <summary>
         /// Gets the size of the area of the console window that the painter
@@ -32,23 +33,47 @@ namespace Sde.ConsoleGems.FullScreen
         public ConsoleSize OuterSize { get; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the painter has a border.
+        /// </summary>
+        public bool HasBorder { get; set; }
+
+        /// <summary>
         /// Gets the rectangle representing the space taken up by the painter,
         /// including any space taken up by a border.
         /// </summary>
         public ConsoleRectangle OuterBounds => new ConsoleRectangle(this.Origin, this.OuterSize);
 
         /// <summary>
-        /// Gets the screen buffer for the area of the console window that
-        /// the painter is responsible for.
+        /// Writes a character to the screen buffer at the specified coordinates.
+        /// The console window is not written to until the Paint method is called.
         /// </summary>
-        public IReadOnlyList<string> ScreenBuffer { get; }
+        /// <param name="x">
+        /// The horizontal coordinate of the character, relative to the left edge
+        /// of the painter.
+        /// </param>
+        /// <param name="y">
+        /// The vertical coordinate of the character, relative to the top edge
+        /// of the painter.
+        /// </param>
+        /// <param name="character">The character to paint.</param>
+        /// <param name="outputType">
+        /// The <see cref="ConsoleOutputType"/> to use to render the character.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The X or Y coordinates are outside the bounds of the painter's area.
+        /// </exception>
+        public void WriteToScreenBuffer(int x, int y, char character, ConsoleOutputType outputType);
 
         /// <summary>
         /// Paints the area of the console window that this painter is responsible
-        /// for from its <see cref="ScreenBuffer"/> property.
-        /// Concrete implementations are expected to have already populated the
-        /// <see cref="ScreenBuffer"/> before this method is called.
+        /// for from its screen buffer.
         /// </summary>
         public void Paint();
+
+        /// <summary>
+        /// Resets the painter to ensure that it is initialised correctly the next
+        /// time it is used.
+        /// </summary>
+        public void Reset();
     }
 }

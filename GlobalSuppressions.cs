@@ -17,3 +17,11 @@ using System.Diagnostics.CodeAnalysis;
     "Minor Code Smell",
     "S6608:Prefer indexing instead of \"Enumerable\" methods on types implementing \"IList\"",
     Justification = "Easier to read, and performance is not an issue here.")]
+[assembly: SuppressMessage(
+    "Code Quality",
+    "IDE0028:Collection initialization can be simplified",
+    Justification = "Just results in more warnings and info messages")]
+[assembly: SuppressMessage(
+    "Style",
+    "IDE0306:Collection initialization can be simplified",
+    Justification = "Just results in more warnings and info messages")]

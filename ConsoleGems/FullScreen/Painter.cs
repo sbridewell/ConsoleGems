@@ -8,124 +8,100 @@ namespace Sde.ConsoleGems.FullScreen
     /// <summary>
     /// Abstract base class for <see cref="IPainter"/> implementations.
     /// </summary>
-    public abstract class Painter(IConsole console, ConsolePoint origin, ConsoleSize innerSize, bool hasBorder)
+    public abstract class Painter(IConsole console, IBorderPainter borderPainter)
         : IPainter
     {
-        private readonly string[] screenBuffer = new string[innerSize.Height];
+        private ConsoleSize innerSize;
+        private ScreenBuffer? screenBuffer;
 
         /// <inheritdoc/>
-        public ConsolePoint Origin => origin;
+        public ConsolePoint Origin { get; set; }
 
         /// <inheritdoc/>
-        public ConsoleSize InnerSize => innerSize;
+        public ConsoleSize InnerSize
+        {
+            get => this.innerSize;
+            set
+            {
+                borderPainter.Painter = this;
+                this.innerSize = value;
+                this.screenBuffer = new ScreenBuffer(console, value.Width, value.Height);
+            }
+        }
+
+        /// <inheritdoc/>
+        public bool HasBorder { get; set; }
 
         /// <inheritdoc/>
         public ConsoleSize OuterSize => new (
-            innerSize.Width + (hasBorder ? 2 : 0),
-            innerSize.Height + (hasBorder ? 2 : 0));
-
-        /// <inheritdoc/>
-        public IReadOnlyList<string> ScreenBuffer => this.screenBuffer;
+            this.InnerSize.Width + (this.HasBorder ? 2 : 0),
+            this.InnerSize.Height + (this.HasBorder ? 2 : 0));
 
         /// <inheritdoc/>
         public void Paint()
         {
-            console.CursorVisible = false;
-            console.CursorLeft = origin.X;
-            console.CursorTop = origin.Y;
-            this.PaintTopBorderIfRequired();
-
-            for (var y = 0; y < innerSize.Height; y++)
+            if (this.screenBuffer == null)
             {
-                console.CursorLeft = origin.X;
-                this.PaintSideBorderIfRequired();
-                console.Write(this.ScreenBuffer[y]);
-                this.PaintSideBorderIfRequired();
-                if (console.CursorTop < console.WindowHeight - 1)
-                {
-                    console.CursorTop++;
-                }
+                throw new InvalidOperationException("ScreenBuffer is not initialised. Set InnerSize before calling Paint.");
             }
 
-            console.CursorLeft = origin.X;
-            this.PaintBottomBorderIfRequired();
-            console.CursorVisible = true;
+            borderPainter.PaintBorderIfRequired();
+            this.screenBuffer.PaintTo(this);
         }
 
         /// <inheritdoc/>
+        public void Reset()
+        {
+            borderPainter.Reset();
+        }
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
         public override string ToString()
         {
-            return $"Origin: {origin}, InnerSize: {innerSize}, HasBorder: {hasBorder}";
+            return $"Origin: {this.Origin}, InnerSize: {this.InnerSize}, HasBorder: {this.HasBorder}";
         }
 
         /// <summary>
-        /// Writes the supplied line of text to the screen buffer at the
-        /// supplied line number.
-        /// Any content which was previously in the line will be overwritten.
+        /// Writes a character to the screen buffer at the specified coordinates.
+        /// The console window is not written to until the Paint method is called.
         /// </summary>
-        /// <param name="lineNumber">The zero-based line number to write to.</param>
-        /// <param name="text">The text to write.</param>
+        /// <param name="x">
+        /// The horizontal coordinate of the character, relative to the left edge
+        /// of the painter.
+        /// </param>
+        /// <param name="y">
+        /// The vertical coordinate of the character, relative to the top edge
+        /// of the painter.
+        /// </param>
+        /// <param name="character">The character to paint.</param>
+        /// <param name="outputType">
+        /// The <see cref="ConsoleOutputType"/> to use to render the character.
+        /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// The supplied line number is outside the bounds of the area of the
-        /// console window that the painter is responsible for, or the length of
-        /// the supplied line of text does not match the width of the area of
-        /// the console window that the painter is responsible for.
+        /// The X or Y coordinates are outside the bounds of the painter's area.
         /// </exception>
-        protected void WriteToScreenBuffer(int lineNumber, string text)
+        public void WriteToScreenBuffer(int x, int y, char character, ConsoleOutputType outputType)
         {
-            // TODO: options to pad with spaces or to justify text?
-            if (lineNumber < 0 || lineNumber >= innerSize.Height)
+            if (this.screenBuffer == null)
             {
-                var msg = $"Line number {lineNumber} is outside the bounds of the painter's area. "
-                    + $"Must be between zero and {innerSize.Height - 1}.";
-                throw new ArgumentOutOfRangeException(nameof(lineNumber), msg);
+                throw new InvalidOperationException("ScreenBuffer is not initialised. Set InnerSize before writing to the screen buffer.");
             }
 
-            if (text.Length != innerSize.Width)
-            {
-                var msg = $"The length of the supplied text ({text.Length}) does not match the "
-                    + $"width of the painter's area ({innerSize.Width}).";
-                throw new ArgumentOutOfRangeException(nameof(text), msg);
-            }
-
-            this.screenBuffer[lineNumber] = text;
+            this.screenBuffer.Write(x, y, character, outputType);
         }
 
-        private void PaintTopBorderIfRequired()
+        /// <summary>
+        /// Initialises all the characters in the screen buffer to spaces.
+        /// </summary>
+        protected void ClearScreenBuffer()
         {
-            if (hasBorder)
+            for (var y = 0; y < this.innerSize.Height; y++)
             {
-                console.Write("╭");
-                for (var x = 0; x < innerSize.Width; x++)
+                for (var x = 0; x < this.innerSize.Width; x++)
                 {
-                    console.Write("─");
+                    this.WriteToScreenBuffer(x, y, ' ', ConsoleOutputType.Default);
                 }
-
-                console.Write("╮");
-                console.CursorTop++;
-            }
-        }
-
-        private void PaintSideBorderIfRequired()
-        {
-            if (hasBorder)
-            {
-                console.Write("│");
-            }
-        }
-
-        private void PaintBottomBorderIfRequired()
-        {
-            if (hasBorder)
-            {
-                console.CursorLeft = origin.X;
-                console.Write("╰");
-                for (var x = 0; x < innerSize.Width; x++)
-                {
-                    console.Write("─");
-                }
-
-                console.Write("╯");
             }
         }
     }

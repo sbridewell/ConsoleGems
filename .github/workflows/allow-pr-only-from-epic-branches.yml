@@ -1,4 +1,4 @@
-name: Only allow pull requests to merge from epic branches
+name: Only allow pull requests to merge into main from epic branches
 
 on:
   pull_request:
