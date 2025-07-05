@@ -11,6 +11,7 @@ namespace Sde.ConsoleGems.GamesDemo
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Menus;
     using Sde.MazeGame.Commands;
+    using Sde.SnakeGame;
 
     /// <summary>
     /// The main menu in the games demo.
@@ -20,7 +21,8 @@ namespace Sde.ConsoleGems.GamesDemo
         IMenuWriter menuWriter,
         IConsole console,
         ApplicationState applicationState,
-        LaunchMazeGameCommand launchMazeGameCommand)
+        LaunchMazeGameCommand launchMazeGameCommand,
+        LaunchSnakeGameCommand launchSnakeGameCommand)
         : AbstractMenu(autoCompleter, menuWriter, console, applicationState)
     {
         /// <inheritdoc/>
@@ -37,6 +39,12 @@ namespace Sde.ConsoleGems.GamesDemo
                 Key = "m",
                 Description = "A simple maze game.",
                 Command = launchMazeGameCommand,
+            },
+            new ()
+            {
+                Key = "s",
+                Description = "A snake game.",
+                Command = launchSnakeGameCommand,
             },
         };
     }
