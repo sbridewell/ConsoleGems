@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.FogOfWar
+namespace Sde.MazeGame.Painters.Map
 {
     using Sde.MazeGame.Models;
 

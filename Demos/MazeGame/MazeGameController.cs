@@ -1,66 +1,74 @@
-﻿// <copyright file="GameController.cs" company="Simon Bridewell">
+﻿// <copyright file="MazeGameController.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell.
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
 namespace Sde.MazeGame
 {
+    using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.Text;
-    using Sde.MazeGame.FogOfWar;
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Models;
-    using Sde.MazeGame.Painters;
+    using Sde.MazeGame.Painters.Map;
     using Sde.MazeGame.Painters.Pov;
     using Sde.MazeGame.Painters.Status;
 
     /// <summary>
     /// The controlling module for the maze game.
     /// </summary>
-    public class GameController(
+    public class MazeGameController(
         IConsole console,
         IStatusPainter statusPainter,
-        IMazePainter mazePainter,
-        IMazePainterPov mazePainter3D,
+        IMazePainterMap mazePainterMap,
+        IMazePainterPov mazePainterPov,
         MazeVisibilityUpdater mazeVisibilityUpdater,
-        MazeGameKeyPressMappings keyPressMappings)
-        : IGameController
+        MazeGameKeyPressMappings keyPressMappings,
+        IMazeGameRandomiser randomiser)
+        : IMazeGameController
     {
         /// <summary>
-        /// Gets the instance of the game which is currnetly being played.
+        /// Gets the instance of the game which is currently being played.
         /// </summary>
         public Game? CurrentGame { get; private set; }
 
         /// <inheritdoc/>
-        public void Play(string mazeFile)
+        public void Initialise(MazeGameOptions options)
         {
             console.Clear();
-            var maze = new MazeFactory().CreateFromFile(mazeFile);
+
+            var maze = new MazeFactory().CreateFromFile(options.MazeDataFile);
             var player = new Player
             {
-                FacingDirection = GetPlayersStartingDirection(),
-                Position = this.GetPlayersStartingPosition(maze),
+                FacingDirection = randomiser.GetDirection(),
+                Position = randomiser.GetPosition(maze),
             };
-            this.CurrentGame = new Game(maze, player);
-            var options = new MazeGameOptions()
-                .WithMazeOrigin(41, 3)
-                .WithStatusOrigin(0, 0);
-            mazePainter.Origin = options.MazeOrigin;
-            mazePainter.InnerSize = new ConsoleSize(maze.Width, maze.Height);
-            mazePainter.HasBorder = true;
-            mazePainter3D.Origin = new ConsolePoint(0, 3); // TODO: put painter sizes and origins in MazeGameOptions
-            mazePainter3D.InnerSize = new ConsoleSize(24, 24);
+            this.CurrentGame = new Game(maze, player) { Status = MazeGameStatus.NotStarted };
 
-            mazePainter3D.HasBorder = true; // TODO: tries to write above the top of the window
+            mazePainterMap.Origin = options.MapViewOrigin;
+            mazePainterMap.InnerSize = new ConsoleSize(maze.Width, maze.Height);
+            mazePainterMap.HasBorder = true;
+
+            mazePainterPov.Origin = options.PovViewOrigin;
+            mazePainterPov.HasBorder = true;
+
             statusPainter.Origin = options.StatusOrigin;
             statusPainter.InnerSize = new ConsoleSize(console.WindowWidth - options.StatusOrigin.X - 2, 1);
             statusPainter.HasBorder = true;
 
             this.UpdateVisibility(maze, player);
-            mazePainter.Paint(maze, player);
+            mazePainterMap.Paint(maze, player);
+            mazePainterPov.Render(maze, player);
             this.WritePositionStatusMessage(player);
             console.CursorVisible = false;
-            while (this.CurrentGame.ContinuePlaying && !this.CurrentGame.PlayerHasWon)
+        }
+
+        /// <inheritdoc/>
+        public void Play()
+        {
+            this.ThrowIfNotInitialised();
+            this.CurrentGame.Status = MazeGameStatus.InProgress;
+            while (this.CurrentGame.Status == MazeGameStatus.InProgress)
             {
                 var keyInfo = console.ReadKey(intercept: true);
                 keyPressMappings.Mappings.TryGetValue(keyInfo.Key, out var keyPressHandler);
@@ -75,19 +83,17 @@ namespace Sde.MazeGame
                 }
             }
 
-            console.CursorTop = maze.Height + 1;
+            console.CursorTop = this.CurrentGame.Maze.Height + 1;
             console.CursorLeft = 0;
             console.CursorVisible = true;
         }
 
-        /// <summary>
-        /// Turns the player to the left.
-        /// </summary>
-        /// <param name="maze">The maze that the player is in.</param>
-        /// <param name="player">The player.</param>
-        public void TurnPlayerLeft(Maze maze, Player player)
+        /// <inheritdoc/>
+        public void TurnPlayerLeft()
         {
-            // TODO: PlayerManager.TurnLeft and TurnRight methods?
+            this.ThrowIfNotInitialised();
+            var maze = this.CurrentGame.Maze;
+            var player = this.CurrentGame.Player;
             player.FacingDirection = player.FacingDirection switch
             {
                 Direction.North => Direction.West,
@@ -99,16 +105,15 @@ namespace Sde.MazeGame
 
             this.UpdateVisibility(maze, player);
             this.WritePositionStatusMessage(player);
-            mazePainter3D.Render(maze, player);
+            mazePainterPov.Render(maze, player);
         }
 
-        /// <summary>
-        /// Turns the player to the right.
-        /// </summary>
-        /// <param name="maze">The maze that the player is in.</param>
-        /// <param name="player">The player.</param>
-        public void TurnPlayerRight(Maze maze, Player player)
+        /// <inheritdoc/>
+        public void TurnPlayerRight()
         {
+            this.ThrowIfNotInitialised();
+            var maze = this.CurrentGame.Maze;
+            var player = this.CurrentGame.Player;
             player.FacingDirection = player.FacingDirection switch
             {
                 Direction.North => Direction.East,
@@ -120,20 +125,13 @@ namespace Sde.MazeGame
 
             this.UpdateVisibility(maze, player);
             this.WritePositionStatusMessage(player);
-            mazePainter3D.Render(maze, player);
+            mazePainterPov.Render(maze, player);
         }
 
-        /// <summary>
-        /// Attempts to move the player forward.
-        /// The player can only move forward if there isn't a wall in the way.
-        /// </summary>
+        /// <inheritdoc/>
         public void TryToMovePlayerForward()
         {
-            if (this.CurrentGame == null)
-            {
-                throw new InvalidOperationException("The game has not been started.");
-            }
-
+            this.ThrowIfNotInitialised();
             var player = this.CurrentGame.Player;
             var maze = this.CurrentGame.Maze;
             var newPosition = player.FacingDirection switch
@@ -144,14 +142,14 @@ namespace Sde.MazeGame
                 Direction.West => new ConsolePoint(player.Position.X - 1, player.Position.Y),
                 _ => player.Position,
             };
-            if (!maze.PositionIsWithinMaze(newPosition))
+            if (maze.GetMazePoint(newPosition).PointType == MazePointType.Exit)
             {
                 var msg = "Congratulations, you have escaped the maze! Press space to continue.";
                 statusPainter.Paint(msg, ConsoleOutputType.Prompt);
-                this.CurrentGame.PlayerHasWon = true;
+                this.CurrentGame.Status = MazeGameStatus.Won;
                 char spaceKey = '\0';
-                mazePainter.Reset();
-                mazePainter3D.Reset();
+                mazePainterMap.Reset();
+                mazePainterPov.Reset();
                 statusPainter.Reset();
                 while (spaceKey != ' ')
                 {
@@ -163,11 +161,11 @@ namespace Sde.MazeGame
 
             if (maze.GetMazePoint(newPosition).PointType == MazePointType.Path)
             {
-                mazePainter.ErasePlayer(player);
+                mazePainterMap.ErasePlayer(player);
                 player.Position = newPosition;
                 this.UpdateVisibility(maze, player);
                 this.WritePositionStatusMessage(player);
-                mazePainter3D.Render(maze, player);
+                mazePainterPov.Render(maze, player);
             }
             else
             {
@@ -176,42 +174,24 @@ namespace Sde.MazeGame
             }
         }
 
-        /// <summary>
-        /// Quits the game.
-        /// </summary>
+        /// <inheritdoc/>
         public void Quit()
         {
-            if (this.CurrentGame == null)
-            {
-                throw new InvalidOperationException("The game has not been started.");
-            }
-
+            this.ThrowIfNotInitialised();
             console.CursorTop = this.CurrentGame.Maze.Height + 1;
             statusPainter.Paint("Thank you for playing!");
-            this.CurrentGame.ContinuePlaying = false;
-            mazePainter.Reset();
-            mazePainter3D.Reset();
+            this.CurrentGame.Status = MazeGameStatus.Lost;
+            mazePainterMap.Reset();
+            mazePainterPov.Reset();
             statusPainter.Reset();
         }
 
-        private static Direction GetPlayersStartingDirection()
+        [MemberNotNull(nameof(CurrentGame))]
+        private void ThrowIfNotInitialised()
         {
-            var random = new Random();
-            var direction = (Direction)random.Next(0, 4);
-            return direction;
-        }
-
-        private ConsolePoint GetPlayersStartingPosition(Maze maze)
-        {
-            var x = new Random().Next(0, maze.Width);
-            var y = new Random().Next(0, maze.Height);
-            if (maze.GetMazePoint(x, y).PointType == MazePointType.Path)
+            if (this.CurrentGame == null)
             {
-                return new ConsolePoint(x, y);
-            }
-            else
-            {
-                return this.GetPlayersStartingPosition(maze);
+                throw new InvalidOperationException("The game has not been initialised. Call Initialise() first.");
             }
         }
 
@@ -226,12 +206,12 @@ namespace Sde.MazeGame
             var updateRequired = mazeVisibilityUpdater.UpdateVisibility(maze, player);
             if (updateRequired)
             {
-                mazePainter.Paint(maze, player);
+                mazePainterMap.Paint(maze, player);
             }
             else
             {
-                mazePainter.ErasePlayer(player);
-                mazePainter.PaintPlayer(player);
+                mazePainterMap.ErasePlayer(player);
+                mazePainterMap.PaintPlayer(player);
             }
         }
     }

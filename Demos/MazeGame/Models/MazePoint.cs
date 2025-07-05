@@ -5,9 +5,12 @@
 
 namespace Sde.MazeGame.Models
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a single location in a two-dimensional maze.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class MazePoint
     {
         /// <summary>
@@ -20,5 +23,11 @@ namespace Sde.MazeGame.Models
         /// Gets or sets the type of this point, e.g. is it a wall or a corridor.
         /// </summary>
         public MazePointType PointType { get; set; }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"MazePoint(Explored: {this.Explored}, PointType: {this.PointType})";
+        }
     }
 }

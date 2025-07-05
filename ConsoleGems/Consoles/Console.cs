@@ -54,7 +54,7 @@ namespace Sde.ConsoleGems.Consoles
         [ExcludeFromCodeCoverage]
         public int WindowHeight { get => System.Console.WindowHeight; set => System.Console.WindowHeight = value; }
 
-#endregion
+        #endregion
 
         #region methods
 

@@ -2671,7 +2671,13 @@ namespace Sde.MazeGame.Test.Painters.Pov
             };
 
             // Act
-            sectionRenderer.RenderSectionAllWall(painter, testCase.sectionNumber, testCase.leftOrRight, testCase.forwardDistance);
+            sectionRenderer.RenderSectionAllWall(
+                painter,
+                testCase.sectionNumber,
+                testCase.leftOrRight,
+                testCase.forwardDistance,
+                '▓',
+                Direction.North);
 
             // Assert
             var actualCharacters = painter.PublicScreenBuffer.ToStringArray();
@@ -2682,6 +2688,54 @@ namespace Sde.MazeGame.Test.Painters.Pov
 
             actualCharacters.Should().BeEquivalentTo(testCase.expectedCharacters, options =>
                 options.WithStrictOrdering());
+        }
+
+        /// <summary>
+        /// Tests that the RenderSectionAllWall method paints perpendicular walls with the correct colours.
+        /// </summary>
+        /// <param name="facingDirection">The direction the player is facing.</param>
+        /// <param name="expectedOutputType">The expected colour.</param>
+        [Theory]
+        [InlineData(Direction.North, ConsoleOutputType.Red)]
+        [InlineData(Direction.South, ConsoleOutputType.Green)]
+        [InlineData(Direction.East, ConsoleOutputType.Yellow)]
+        [InlineData(Direction.West, ConsoleOutputType.Blue)]
+        [InlineData((Direction)999, ConsoleOutputType.Default)] // Test for an invalid direction
+        public void RenderSectionAllWall_PaintsWallsTheCorrectColours(Direction facingDirection, ConsoleOutputType expectedOutputType)
+        {
+            // Arrange
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var mockColumnRenderer = new Mock<IColumnRenderer>();
+            var sectionRenderer = new SectionRenderer(mockColumnRenderer.Object);
+            var painter = new MazePainterPovProxy(mockConsole.Object, mockBorderPainter.Object, sectionRenderer)
+            {
+                InnerSize = new ConsoleSize(
+                    MazePainterPovConstants.PainterInnerWidth,
+                    MazePainterPovConstants.PainterInnerHeight),
+            };
+            var sectionNumber = 1;
+            var columnsInSection = MazePainterPovConstants.SectionWidths[sectionNumber];
+
+            // Act
+            sectionRenderer.RenderSectionAllWall(
+                painter,
+                sectionNumber: sectionNumber,
+                leftOrRight: LeftOrRight.Left,
+                forwardDistance: 1,
+                '▓',
+                playerFacingDirection: facingDirection);
+
+            // Assert
+            painter.Paint();
+            mockColumnRenderer.Verify(
+                m => m.RenderPerpendicularWallColumn(
+                    painter,
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    '▓',
+                    expectedOutputType),
+                Times.Exactly(columnsInSection));
         }
 
         /// <summary>
@@ -2707,7 +2761,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             };
 
             // Act
-            sectionRenderer.RenderSection(painter, testCase.sectionNumber, testCase.forwardView);
+            sectionRenderer.RenderSection(painter, testCase.sectionNumber, testCase.forwardView, Direction.North);
 
             // Assert
             var actualCharacters = painter.PublicScreenBuffer.ToStringArray();

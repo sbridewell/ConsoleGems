@@ -35,7 +35,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
 
         private static readonly Maze DefaultMaze = new MazeFactory().CreateFromStringArray([
             "##############", // 0
-            "#          # #", // 1
+            "E          # #", // 1
             "# ######## # #", // 2
             "# #   # ## # #", // 3
             "# # # # ## # #", // 4
@@ -70,10 +70,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             this.painterProxy = new MazePainterPovProxy(
                 this.mockConsole.Object,
                 this.mockBorderPainter.Object,
-                this.sectionRenderer)
-            {
-                InnerSize = new ConsoleSize(24, 24), // TODO: shouldn't need to pass the size to painterProxy
-            };
+                this.sectionRenderer);
         }
 
         #region public static test case names
@@ -1057,63 +1054,37 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "▓░○○○○○○○○○○○○○○○○○○○○░▓",
                         "○○○○○○○○○○○○○○○○○○○○○○○○",
                     ]),
-
-                // TODO: test case for this
-                //  ###
-                // ##
-                // →  #
-                // ####
-                // Looks like this
-                // ░
-                // ░░
-                // ░░░
-                // ░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-                // ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-                // ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-                // ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-                // ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-                // ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-                // ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-                // ░░░░░▓▓▓▓▓▓▓▓▓▓▓▓
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░
-                // ░░░
-                // ░░
-                // ░
-                // But should probably look like this
-                // ░
-                // ░░
-                // ░░░
-                // ░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░░  ▓▓▓▓▓▓▓▓▓
-                // ░░░░░░░ ▓▓▓▓▓▓▓▓▓
-                // ░░░░░░░░▓▓▓▓▓▓▓▓▓
-                // ░░░░░░░░▓▓▓▓▓▓▓▓▓
-                // ░░░░░░░░▓▓▓▓▓▓▓▓▓
-                // ░░░░░░░░▓▓▓▓▓▓▓▓▓
-                // ░░░░░░░ ▓▓▓▓▓▓▓▓▓
-                // ░░░░░░  ▓▓▓▓▓▓▓▓▓
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░░
-                // ░░░░
-                // ░░░
-                // ░░
-                // ░
-                // This would require a significantly more complex ForwardView
+                ["Exit is in view"] = new RenderForwardViewTestCase(
+                    new ForwardView(
+                        DefaultMaze,
+                        new Player { Position = new ConsolePoint(3, 1), FacingDirection = Direction.West },
+                        5),
+                    [
+                        "░●●●●●●●●●●●●●●●●●●●●●●░",
+                        "░░●●●●●●●●●●●●●●●●●●●●░░",
+                        "░░░●●●●●●●●●●●●●●●●●●░░░",
+                        "░░░░●●●●●●●●●●●●●●●●░░░░",
+                        "░░░░░●●●●●●●●●●●●●●░░░░░",
+                        "░░░░░●●●●●●●●●●●●●░░░░░░",
+                        "░░░░░●●●●●●●●●●●●░░░░░░░",
+                        "░░░░░●●●●●●●●●●●░░░░░░░░",
+                        "░░░░░▓▓▓♥♥♥♥♥♥♥♥░░░░░░░░",
+                        "░░░░░▓▓▓♥♥♥♥♥♥♥♥░░░░░░░░",
+                        "░░░░░▓▓▓♥♥♥♥♥♥♥♥░░░░░░░░",
+                        "░░░░░▓▓▓♥♥♥♥♥♥♥♥░░░░░░░░",
+                        "░░░░░▓▓▓♥♥♥♥♥♥♥♥░░░░░░░░",
+                        "░░░░░▓▓▓♥♥♥♥♥♥♥♥░░░░░░░░",
+                        "░░░░░▓▓▓♥♥♥♥♥♥♥♥░░░░░░░░",
+                        "░░░░░▓▓▓♥♥♥♥♥♥♥♥░░░░░░░░",
+                        "░░░░░○○○○○○○○○○○░░░░░░░░",
+                        "░░░░░○○○○○○○○○○○○░░░░░░░",
+                        "░░░░░○○○○○○○○○○○○○░░░░░░",
+                        "░░░░░○○○○○○○○○○○○○○░░░░░",
+                        "░░░░○○○○○○○○○○○○○○○○░░░░",
+                        "░░░○○○○○○○○○○○○○○○○○○░░░",
+                        "░░○○○○○○○○○○○○○○○○○○○○░░",
+                        "░○○○○○○○○○○○○○○○○○○○○○○░",
+                    ]),
             };
 
         /// <summary>
@@ -1129,7 +1100,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             var testCase = RenderForwardViewTestCases[testCaseName];
 
             // Act
-            this.painterProxy.CallRenderForwardView(testCase.forwardView);
+            this.painterProxy.CallRenderForwardView(testCase.forwardView, Direction.North);
 
             // Assert
             var actualCharacters = this.painterProxy.PublicScreenBuffer.ToStringArray();

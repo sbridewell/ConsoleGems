@@ -1,19 +1,17 @@
-﻿// <copyright file="IMazePainter.cs" company="Simon Bridewell">
+﻿// <copyright file="IMazePainterMap.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell.
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.Painters
+namespace Sde.MazeGame.Painters.Map
 {
     using Sde.ConsoleGems.FullScreen;
     using Sde.MazeGame.Models;
 
-    // TODO: contents of console window are mangled when window is moved from one screen to another
-
     /// <summary>
-    /// Interface for painting a maze to the console window.
+    /// Interface for painting the map view of a maze to the console window.
     /// </summary>
-    public interface IMazePainter : IPainter
+    public interface IMazePainterMap : IPainter
     {
         /// <summary>
         /// Paints the supplied maze to the console window.

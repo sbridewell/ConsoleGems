@@ -25,6 +25,7 @@ namespace Sde.MazeGame.Painters.Pov
         /// Writes the supplied forward view to the screen buffer.
         /// </summary>
         /// <param name="forwardView">View of the maze from the player's point of view.</param>
-        void RenderForwardView(ForwardView forwardView);
+        /// <param name="playerFacingDirection">The direction the player is facing.</param>
+        void RenderForwardView(ForwardView forwardView, Direction playerFacingDirection);
     }
 }

@@ -96,7 +96,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
         /// <inheritdoc/>
         public void WriteLine(string textToWrite = "", ConsoleOutputType outputType = ConsoleOutputType.Default)
         {
-            throw new NotImplementedException();
+            this.Write(textToWrite + Environment.NewLine, outputType);
         }
 
         /// <inheritdoc/>

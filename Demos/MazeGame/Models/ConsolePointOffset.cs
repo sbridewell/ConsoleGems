@@ -5,9 +5,12 @@
 
 namespace Sde.MazeGame.Models
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Represents a point relative to the player's current position.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ConsolePointOffset(int dx, int dy)
     {
         /// <summary>

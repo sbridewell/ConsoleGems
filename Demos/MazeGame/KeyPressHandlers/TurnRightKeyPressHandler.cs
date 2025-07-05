@@ -12,11 +12,9 @@ namespace Sde.MazeGame.KeyPressHandlers
         : IKeyPressHandler
     {
         /// <inheritdoc/>
-        public void Handle(ConsoleKeyInfo keyInfo, GameController controller)
+        public void Handle(ConsoleKeyInfo keyInfo, IMazeGameController controller)
         {
-            // TODO: shouldn't need to pass the controller to its own methods
-            ArgumentNullException.ThrowIfNull(controller.CurrentGame);
-            controller.TurnPlayerRight(controller.CurrentGame.Maze, controller.CurrentGame.Player);
+            controller.TurnPlayerRight();
         }
     }
 }

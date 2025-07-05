@@ -5,7 +5,9 @@
 
 namespace Sde.MazeGame.Painters.Pov
 {
+    using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;
+    using Sde.MazeGame.Models;
 
     /// <summary>
     /// Interface for rendering a single column of a player's point of view in a maze game.
@@ -23,7 +25,8 @@ namespace Sde.MazeGame.Painters.Pov
         /// <param name="wallIsPerpendicular">
         /// True if the wall in this section is perpendicular to the player.
         /// </param>
-        public void RenderColumn(IMazePainterPov painter, int screenX, bool wallIsPerpendicular);
+        /// <param name="playerFacingDirection">The direction the player is facing.</param>
+        public void RenderColumn(IMazePainterPov painter, int screenX, bool wallIsPerpendicular, Direction playerFacingDirection);
 
         /// <summary>
         /// Writes a single column of ceiling characters to the screen buffer.
@@ -52,6 +55,18 @@ namespace Sde.MazeGame.Painters.Pov
         /// </param>
         /// <param name="screenX">Horizonal coordinate of the column to render.</param>
         /// <param name="sectionIndent">Vertical indent where the wall meets the ceiling / wall.</param>
-        public void RenderPerpendicularWallColumn(IMazePainterPov painter, int screenX, int sectionIndent);
+        /// <param name="wallChar">
+        /// The character to represent the wall - this could be a solid block for a regular
+        /// wall or a heart to represent the exit.
+        /// </param>
+        /// <param name="wallColour">
+        /// The colour of the wall, represented as a <see cref="ConsoleOutputType"/>.
+        /// </param>
+        public void RenderPerpendicularWallColumn(
+            IMazePainterPov painter,
+            int screenX,
+            int sectionIndent,
+            char wallChar,
+            ConsoleOutputType wallColour);
     }
 }

@@ -1,89 +1,26 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: Build, run unit tests and check code coverage
 permissions: read-all
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "epic/*" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "epic/*" ]
 
 jobs:
-  build:
 
-    runs-on: windows-latest
+  build_and_test_consolegems:
+    uses: ./.github/workflows/BuildAndTest.yml
+    with:
+      FOLDER_UNDER_TEST: "ConsoleGems"
+      MODULE_UNDER_TEST: "Sde.ConsoleGems"
+      TEST_FOLDER: "ConsoleGems.Test"
+      TEST_PROJECT: "ConsoleGems.Test.csproj"
 
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-        
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Directory structure
-      run: Get-ChildItem -Recurse -Directory
-      
-    - name: Build
-      run: dotnet build --no-restore
-      
-    - name: Run tests with code coverage but skip integration tests
-      run: dotnet test --no-build --verbosity normal --filter "Category!=Integration" --results-directory .\\TestResults --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-
-    - name: Display test results directory
-      run: dir -r ./TestResults
-
-    - name: Report code coverage
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
-      with:
-        # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
-        reports: ./TestResults/**/*.xml
-        # The directory where the generated report should be saved.
-        #targetdir: # default is coveragereport
-        # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, Html_BlueRed_Summary, JsonSummary, Latex, LatexSummary, lcov, MHtml, SvgChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
-        #reporttypes: # optional, default is HtmlInline;Cobertura
-        # Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.
-        #sourcedirs: # optional, default is 
-        # Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.
-        #historydir: # optional, default is 
-        # Default directory for installing the dotnet tool.
-        #toolpath: # optional, default is reportgeneratortool
-        # Optional plugin files for custom reports or custom history storage (separated by semicolon).
-        #plugins: # optional, default is 
-        # Optional list of assemblies that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #assemblyfilters: # optional, default is +*
-        # Optional list of classes that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #classfilters: # optional, default is +*
-        # Optional list of files that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #filefilters: # optional, default is +*
-        # Optional list of assemblies that should be included or excluded in the risk hotspots. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #riskhotspotassemblyfilters: # optional, default is +*
-        # Optional list of classes that should be included or excluded in the risk hotspots. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
-        #riskhotspotclassfilters: # optional, default is +*
-        # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
-        #verbosity: # optional, default is Info
-        # Optional title.
-        title: ConsoleGems
-        # Optional tag or build version.
-        #tag: # optional, default is ${{ github.run_number }}_${{ github.run_id }}
-        # Optional license for PRO version. Get your license here: https://reportgenerator.io/pro
-        #license: # optional, default is 
-        # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings
-        #customSettings: # optional, default is 
-
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v4.6.1
-      with:
-        name: coverage-report
-        path: coveragereport
-
-    - name: Fail if code coverage is less than 80%
-      run: powershell.exe -File ./.github/workflows/FailIfInsufficientCodeCoverage.ps1 -Verbose
-
-    - name: Run integration tests
-      run: dotnet test --no-build --verbosity normal --filter "Category=Integration"
+  build_and_test_mazegame:
+    uses: ./.github/workflows/BuildAndTest.yml
+    with:
+      FOLDER_UNDER_TEST: "Demos/MazeGame"
+      MODULE_UNDER_TEST: "Sde.MazeGame"
+      TEST_FOLDER: "Demos/MazeGame.Test"
+      TEST_PROJECT: "MazeGame.Test.csproj"

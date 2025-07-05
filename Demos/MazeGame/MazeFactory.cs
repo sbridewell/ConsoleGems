@@ -68,7 +68,13 @@ namespace Sde.MazeGame
                     var point = new MazePoint
                     {
                         Explored = false,
-                        PointType = lines[y][x] == '#' ? MazePointType.Wall : MazePointType.Path,
+                        PointType = lines[y][x] switch
+                        {
+                            '#' => MazePointType.Wall,
+                            ' ' => MazePointType.Path,
+                            'E' => MazePointType.Exit,
+                            _ => MazePointType.Path,
+                        },
                     };
                     maze.SetMazePoint(new ConsolePoint(x, y), point);
                 }
@@ -81,7 +87,6 @@ namespace Sde.MazeGame
                     if (lines[y][x] == ' ' && lines[y + 1][x] == ' '
                         && lines[y][x + 1] == ' ' && lines[y + 1][x + 1] == ' ')
                     {
-                        // This is a 2x2 square of corridors, so mark it as a corridor
                         var msg = "Found a 2x2 square of corridors at "
                             + $"({x}, {y}). This cannot be rendered correctly in the 3D view.";
                         throw new ArgumentException(msg, nameof(lines));

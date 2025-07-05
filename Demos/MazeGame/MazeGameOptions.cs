@@ -5,6 +5,7 @@
 
 namespace Sde.MazeGame
 {
+    using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Text;
 
     /// <summary>
@@ -12,30 +13,49 @@ namespace Sde.MazeGame
     /// </summary>
     public class MazeGameOptions
     {
+        // TODO: IFluentOptions with Validate() method to check all properties are initialised?
+
         /// <summary>
         /// Gets the top left corner of the maze within the console window.
         /// </summary>
-        public ConsolePoint MazeOrigin { get; private set; } = new ConsolePoint(10, 10);
+        public ConsolePoint MapViewOrigin { get; private set; }
+
+        /// <summary>
+        /// Gets the top left corner of the point of view (POV) view of the maze within the console window.
+        /// </summary>
+        public ConsolePoint PovViewOrigin { get; private set; }
 
         /// <summary>
         /// Gets the top left corner of the status area within the console window.
         /// </summary>
-        public ConsolePoint StatusOrigin { get; private set; } = new ConsolePoint(0, 0);
+        public ConsolePoint StatusOrigin { get; private set; }
 
         /// <summary>
-        /// Gets the relative path to the file containing the maze data.
+        /// Gets the path to a file containing the data from which the maze is constructed.
         /// </summary>
-        public string MazeFile { get; private set; } = @"Data\10x10.txt";
+        public string MazeDataFile { get; private set; } = string.Empty;
 
         /// <summary>
-        /// Sets the top left corner of the maze within the console window.
+        /// Sets the top left corner of the map view of the maze within the console window.
         /// </summary>
         /// <param name="x">Horizontal coordinate.</param>
         /// <param name="y">Vertical coordinate.</param>
         /// <returns>The updated options.</returns>
-        public MazeGameOptions WithMazeOrigin(int x, int y)
+        public MazeGameOptions WithMapViewOrigin(int x, int y)
         {
-            this.MazeOrigin = new ConsolePoint(x, y);
+            this.MapViewOrigin = new ConsolePoint(x, y);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the top left corner of the point-of-view view of the maze within the console window.
+        /// </summary>
+        /// <param name="x">Horizontal coordinate.</param>
+        /// <param name="y">Vertical coordinate.</param>
+        /// <returns>The updated options.</returns>
+        public MazeGameOptions WithPovViewOrigin(int x, int y)
+        {
+            this.PovViewOrigin = new ConsolePoint(x, y);
             return this;
         }
 
@@ -49,6 +69,27 @@ namespace Sde.MazeGame
         {
             this.StatusOrigin = new ConsolePoint(x, y);
             return this;
+        }
+
+        /// <summary>
+        /// Sets the path to a file containing the data from which the maze is constructed.
+        /// </summary>
+        /// <param name="path">Path to the maze data file.</param>
+        /// <returns>The updated options.</returns>
+        public MazeGameOptions WithMazeDataFile(string path)
+        {
+            this.MazeDataFile = path;
+            return this;
+        }
+
+        /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
+        public override string ToString()
+        {
+            return $"MapViewOrigin: {this.MapViewOrigin}, " +
+                   $"PovViewOrigin: {this.PovViewOrigin}, " +
+                   $"StatusOrigin: {this.StatusOrigin}, " +
+                   $"MazeDataFile: {this.MazeDataFile}";
         }
     }
 }
