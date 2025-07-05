@@ -24,3 +24,11 @@ jobs:
       MODULE_UNDER_TEST: "Sde.MazeGame"
       TEST_FOLDER: "Demos/MazeGame.Test"
       TEST_PROJECT: "MazeGame.Test.csproj"
+
+  build_and_test_snakegame:
+    uses: ./.github/workflows/BuildAndTest.yml
+    with:
+      FOLDER_UNDER_TEST: "Demos/SnakeGame"
+      MODULE_UNDER_TEST: "Sde.SnakeGame"
+      TEST_FOLDER: "Demos/SnakeGame.Test"
+      TEST_PROJECT: "SnakeGame.Test.csproj"
