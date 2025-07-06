@@ -7,6 +7,7 @@ namespace Sde.SnakeGame
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.Extensions.DependencyInjection;
+    using Sde.ConsoleGems.Painters;
 
     /// <summary>
     /// Extension methods for <see cref="IServiceCollection"/> to register services for the Snake Game.
@@ -23,6 +24,8 @@ namespace Sde.SnakeGame
             this IServiceCollection services)
         {
             services.AddSingleton<ISnakeGameController, SnakeGameController>();
+            services.AddSingleton<IStatusPainter, StatusPainter>();
+            services.AddSingleton<ISnakeGamePainter, SnakeGamePainter>();
             return services;
         }
     }

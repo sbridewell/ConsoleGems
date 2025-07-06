@@ -38,6 +38,11 @@ namespace Sde.ConsoleGems.Consoles
         /// </summary>
         int WindowHeight { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether a key press is available in the input stream.
+        /// </summary>
+        bool KeyAvailable { get; }
+
         #endregion
 
         #region methods
