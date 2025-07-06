@@ -80,7 +80,53 @@ namespace Sde.ConsoleGems.Test.FullScreen
             // Act
             for (var i = 0; i < text.Length; i++)
             {
-                painter.PublicWriteToScreenBuffer(i, lineNumber, text[i], ConsoleOutputType.Default);
+                painter.WriteToScreenBuffer(i, lineNumber, text[i], ConsoleOutputType.Default);
+            }
+
+            // Assert
+            painter.PublicScreenBuffer.ToStringArray()[lineNumber].Should().Be(text);
+            mockConsole.VerifyNoOtherCalls();
+        }
+
+        /// <summary>
+        /// Tests that the WriteToScreenBuffer method writes to the screen buffer correctly,
+        /// and does not make any calls to the <see cref="IConsole"/>.
+        /// </summary>
+        /// <param name="lineNumber">
+        /// The line number in the screen buffer to write to.
+        /// </param>
+        /// <param name="text">The text to write.</param>
+        /// <param name="hasBorder">True to draw a border around the painter's content.</param>
+        [InlineData(0, "Hello world", true)]
+        [InlineData(1, "ConsoleGems", true)]
+        [InlineData(2, "Hurrah!!!!!", true)]
+        [InlineData(3, "That's all.", true)]
+        [InlineData(0, "Hello world", false)]
+        [InlineData(1, "ConsoleGems", false)]
+        [InlineData(2, "Hurrah!!!!!", false)]
+        [InlineData(3, "That's all.", false)]
+        [Theory]
+        public void WriteToScreenBuffer_UsingConsolePoint_WritesToBuffer(
+            int lineNumber,
+            string text,
+            bool hasBorder)
+        {
+            // Arrange
+            var mockConsole = new Mock<IConsole>();
+            var mockBorderPainter = new Mock<IBorderPainter>();
+            var position = new ConsolePoint(1, 2);
+            var size = new ConsoleSize(11, 4);
+            var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object)
+            {
+                Origin = position,
+                InnerSize = size,
+                HasBorder = hasBorder,
+            };
+
+            // Act
+            for (var i = 0; i < text.Length; i++)
+            {
+                painter.WriteToScreenBuffer(new ConsolePoint(i, lineNumber), text[i], ConsoleOutputType.Default);
             }
 
             // Assert
@@ -90,7 +136,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
 
         /// <summary>
         /// Tests that the correct exception is thrown when the
-        /// <see cref="Painter.WriteToScreenBuffer"/> method
+        /// <see cref="Painter.WriteToScreenBuffer(int, int, char, ConsoleOutputType)"/> method
         /// is passed a X coordinate which is outside the horizontal range
         /// of the are of the console window which the painter is responsible
         /// for.
@@ -120,7 +166,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             };
 
             // Act
-            var action = () => painter.PublicWriteToScreenBuffer(x, 0, 'a', ConsoleOutputType.Default);
+            var action = () => painter.WriteToScreenBuffer(x, 0, 'a', ConsoleOutputType.Default);
 
             // Assert
             var ex = action.Should().ThrowExactly<ArgumentOutOfRangeException>().Which;
@@ -130,7 +176,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
 
         /// <summary>
         /// Tests that the correct exception is thrown when the
-        /// <see cref="Painter.WriteToScreenBuffer"/> method
+        /// <see cref="Painter.WriteToScreenBuffer(int, int, char, ConsoleOutputType)"/> method
         /// is passed a Y coordinate which is outside the vertical range
         /// of the are of the console window which the painter is responsible
         /// for.
@@ -160,7 +206,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             };
 
             // Act
-            var action = () => painter.PublicWriteToScreenBuffer(0, lineNumber, 'a', ConsoleOutputType.Default);
+            var action = () => painter.WriteToScreenBuffer(0, lineNumber, 'a', ConsoleOutputType.Default);
 
             // Assert
             var ex = action.Should().ThrowExactly<ArgumentOutOfRangeException>().Which;
@@ -182,7 +228,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             var painter = new TestPainter(mockConsole.Object, mockBorderPainter.Object);
 
             // Act
-            var actionn = () => painter.PublicWriteToScreenBuffer(0, 0, 'a', ConsoleOutputType.Default);
+            var actionn = () => painter.WriteToScreenBuffer(0, 0, 'a', ConsoleOutputType.Default);
 
             // Assert
             var ex = actionn.Should().ThrowExactly<InvalidOperationException>().Which;
@@ -223,7 +269,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 var lineToWrite = linesToWrite[y];
                 for (var x = 0; x < lineToWrite.Length; x++)
                 {
-                    painter.PublicWriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
+                    painter.WriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
                 }
             }
 
@@ -272,7 +318,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 var lineToWrite = linesToWrite[y];
                 for (var x = 0; x < lineToWrite.Length; x++)
                 {
-                    painter.PublicWriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
+                    painter.WriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
                 }
             }
 
@@ -354,7 +400,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             {
                 for (var x = 0; x < innerWidth; x++)
                 {
-                    painter.PublicWriteToScreenBuffer(x, y, 'X', ConsoleOutputType.Default);
+                    painter.WriteToScreenBuffer(x, y, 'X', ConsoleOutputType.Default);
                 }
             }
 
@@ -407,7 +453,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 var lineToWrite = linesToWrite[y];
                 for (var x = 0; x < lineToWrite.Length; x++)
                 {
-                    painter.PublicWriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
+                    painter.WriteToScreenBuffer(x, y, lineToWrite[x], ConsoleOutputType.Default);
                 }
             }
 

@@ -66,6 +66,25 @@ namespace Sde.ConsoleGems.FullScreen
         /// Writes a character to the screen buffer at the specified coordinates.
         /// The console window is not written to until the Paint method is called.
         /// </summary>
+        /// <param name="position">
+        /// The position to write at, relative to the top-left corner of the painter.
+        /// </param>
+        /// <param name="character">The character to paint.</param>
+        /// <param name="outputType">
+        /// The <see cref="ConsoleOutputType"/> to use to render the character.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The X or Y coordinates are outside the bounds of the painter's area.
+        /// </exception>
+        public void WriteToScreenBuffer(ConsolePoint position, char character, ConsoleOutputType outputType)
+        {
+            this.WriteToScreenBuffer(position.X, position.Y, character, outputType);
+        }
+
+        /// <summary>
+        /// Writes a character to the screen buffer at the specified coordinates.
+        /// The console window is not written to until the Paint method is called.
+        /// </summary>
         /// <param name="x">
         /// The horizontal coordinate of the character, relative to the left edge
         /// of the painter.
