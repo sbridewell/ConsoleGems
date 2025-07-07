@@ -171,7 +171,7 @@ namespace SnakeGame.Test
         /// Tests that the HasRunIntoOwnTail property returns true when the snake runs into its own tail.
         /// </summary>
         [Fact]
-        public void HasRunIntoOwnTail_ReturnsCorrectValue()
+        public void HasRunIntoOwnTail_ReturnsTrue_WhenRunningIntoTail()
         {
             // Arrange
             var snake = new Snake();
@@ -191,6 +191,43 @@ namespace SnakeGame.Test
 
             // Assert
             hasRunIntoTail.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// Tests that the HasRunIntoOwnTail property returns false when the snake is not running into its own tail.
+        /// </summary>
+        [Fact]
+        public void HasRunIntoOwnTail_ReturnsFalse_WhenNotRunningIntoTail()
+        {
+            // Arrange
+            var snake = new Snake();
+            snake.Initialise(new ConsolePoint(5, 5));
+            snake.CurrentDirection = Direction.Up;
+            snake.MoveForward(); // Move to (5, 4)
+            snake.MoveForward(); // Move to (5, 3)
+
+            // Act
+            var hasRunIntoTail = snake.HasRunIntoOwnTail;
+
+            // Assert
+            hasRunIntoTail.Should().BeFalse();
+        }
+
+        /// <summary>
+        /// Tests that the HasRunIntoOwnTail property returns false when the snake has only one segment.
+        /// </summary>
+        [Fact]
+        public void HasRunIntoOwnTail_ReturnsFalse_WhenSnakeHasOnlyOneSegment()
+        {
+            // Arrange
+            var snake = new Snake();
+            snake.Initialise(new ConsolePoint(5, 5));
+
+            // Act
+            var hasRunIntoTail = snake.HasRunIntoOwnTail;
+
+            // Assert
+            hasRunIntoTail.Should().BeFalse();
         }
     }
 }
