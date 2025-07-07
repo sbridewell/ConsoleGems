@@ -107,5 +107,90 @@ namespace SnakeGame.Test
             snake.Segments.Count.Should().Be(2);
             snake.Segments.Last().Should().Be(snake.Position);
         }
+
+        /// <summary>
+        /// Test case for the IsWithin method to check if the snake is within a rectangle.
+        /// </summary>
+        [Fact]
+        public void IsWithin_ReturnsCorrectValue()
+        {
+            // Arrange
+            var snake = new Snake();
+            snake.Initialise(new ConsolePoint(5, 5));
+            snake.CurrentDirection = Direction.Up;
+            snake.MoveForward(); // Move to (5, 4)
+            var rectangle = new ConsoleRectangle(new ConsolePoint(4, 3), new ConsoleSize(3, 3)); // Rectangle covering (4, 3) to (6, 5)
+
+            // Act
+            var result = snake.IsWithin(rectangle);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// Test case for the OccupiesPoint method to check if the snake occupies a specific point.
+        /// </summary>
+        [Fact]
+        public void OccupiesPoint_ReturnsCorrectValue()
+        {
+            // Arrange
+            var snake = new Snake();
+            snake.Initialise(new ConsolePoint(5, 5));
+            snake.CurrentDirection = Direction.Up;
+            snake.MoveForward(); // Move to (5, 4)
+            var pointToTest = new ConsolePoint(5, 4);
+
+            // Act
+            var result = snake.OccupiesPoint(pointToTest);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// Tests that the length property returns the correct number of segments in the snake.
+        /// </summary>
+        [Fact]
+        public void Length_ReturnsNumberOfSegments()
+        {
+            // Arrange
+            var snake = new Snake();
+            snake.Initialise(new ConsolePoint(5, 5));
+            snake.MoveForward(); // Move to (5, 4)
+            snake.MoveForward(); // Move to (5, 3)
+
+            // Act
+            var length = snake.Length;
+
+            // Assert
+            length.Should().Be(3); // Initial position + 2 moves
+        }
+
+        /// <summary>
+        /// Tests that the HasRunIntoOwnTail property returns true when the snake runs into its own tail.
+        /// </summary>
+        [Fact]
+        public void HasRunIntoOwnTail_ReturnsCorrectValue()
+        {
+            // Arrange
+            var snake = new Snake();
+            snake.Initialise(new ConsolePoint(5, 5));
+            snake.CurrentDirection = Direction.Up;
+            snake.MoveForward(); // Move to (5, 4)
+            snake.MoveForward(); // Move to (5, 3)
+            snake.ChangeDirection(Direction.Right);
+            snake.MoveForward(); // Move to (6, 3)
+            snake.ChangeDirection(Direction.Down);
+            snake.MoveForward(); // Move to (6, 4)
+            snake.ChangeDirection(Direction.Left);
+            snake.MoveForward(); // Move to (5, 4) - runs into its own tail
+
+            // Act
+            var hasRunIntoTail = snake.HasRunIntoOwnTail;
+
+            // Assert
+            hasRunIntoTail.Should().BeTrue();
+        }
     }
 }
