@@ -5,9 +5,12 @@
 
 namespace Sde.SnakeGame
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The controlling module for the snake game.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class SnakeGameController(IGame game)
         : ISnakeGameController
     {
