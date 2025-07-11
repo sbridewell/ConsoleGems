@@ -15,6 +15,40 @@ namespace SnakeGame.Test
     public class SnakeTest
     {
         /// <summary>
+        /// Tests that the <see cref="Snake.HeadPosition"/> property returns a zero position when the snake has no
+        /// segments.
+        /// </summary>
+        [Fact]
+        public void HeadPosition_SnakeHasNoSegments_ReturnsZeroPosition()
+        {
+            // Arrange
+            var snake = new Snake();
+
+            // Act
+            var headPosition = snake.HeadPosition;
+
+            // Assert
+            headPosition.Should().Be(new ConsolePoint(0, 0));
+        }
+
+        /// <summary>
+        /// Tests that the <see cref="Snake.TailPosition"/> property returns a zero position when the snake has no
+        /// segments.
+        /// </summary>
+        [Fact]
+        public void TailPosition_SnakeHasNoSegments_ReturnsZeroPosition()
+        {
+            // Arrange
+            var snake = new Snake();
+
+            // Act
+            var tailPosition = snake.TailPosition;
+
+            // Assert
+            tailPosition.Should().Be(new ConsolePoint(0, 0));
+        }
+
+        /// <summary>
         /// Test case for the Initialise method.
         /// </summary>
         [Fact]
