@@ -17,6 +17,6 @@ namespace Sde.SnakeGame
         /// </summary>
         /// <param name="game">The snake game instance.</param>
         /// <returns>The position for the food.</returns>
-        ConsolePoint GetFoodPosition(Game game);
+        ConsolePoint GetFoodPosition(IGame game);
     }
 }

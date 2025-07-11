@@ -14,10 +14,10 @@ namespace Sde.SnakeGame
     [ExcludeFromCodeCoverage]
     public class SnakeGameRandomiser : ISnakeGameRandomiser
     {
-        private static readonly Random Random = new ();
+        private static readonly Random TheRandom = new ();
 
         /// <inheritdoc/>
-        public ConsolePoint GetFoodPosition(Game game)
+        public ConsolePoint GetFoodPosition(IGame game)
         {
             ConsolePoint foodPosition;
             do
@@ -31,8 +31,8 @@ namespace Sde.SnakeGame
         private static ConsolePoint GetCandidateFoodPosition()
         {
             return new ConsolePoint(
-                Random.Next(0, Game.PlayingSurfaceWidth),
-                Random.Next(0, Game.PlayingSurfaceHeight));
+                TheRandom.Next(0, Game.PlayingSurfaceWidth),
+                TheRandom.Next(0, Game.PlayingSurfaceHeight));
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Sde.SnakeGame
         void MoveForward();
 
         /// <summary>
-        /// Removes the tail segment of the sname.
+        /// Removes the tail segment of the snake.
         /// This should be called in conjunction with the MoveForward method,
         /// unless the snake has just eaten food, in which case the tail should
         /// not be removed.

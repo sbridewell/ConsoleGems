@@ -15,7 +15,7 @@ namespace Sde.SnakeGame
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the Maze Game services to the specified <see cref="IServiceCollection"/>.
+        /// Adds the Snake Game services to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <param name="services">The service collection to add the services to.</param>
         /// <returns>The updated service collection.</returns>

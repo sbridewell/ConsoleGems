@@ -16,6 +16,11 @@ namespace Sde.SnakeGame
         bool GameOver { get; }
 
         /// <summary>
+        /// Gets the snake controlled by the player.
+        /// </summary>
+        ISnake Snake { get; }
+
+        /// <summary>
         /// Initialises the game.
         /// </summary>
         void Initialise();
