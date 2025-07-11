@@ -28,8 +28,9 @@ namespace SnakeGame.Test
             snake.Initialise(initialPosition);
 
             // Assert
-            snake.Segments.Count.Should().Be(1);
-            snake.Segments.Peek().Should().Be(initialPosition);
+            snake.Length.Should().Be(1);
+            snake.HeadPosition.Should().Be(initialPosition);
+            snake.TailPosition.Should().Be(initialPosition);
         }
 
         /// <summary>
@@ -95,7 +96,8 @@ namespace SnakeGame.Test
         {
             // Arrange
             var snake = new Snake();
-            snake.Initialise(new ConsolePoint(5, 5));
+            var initialPosition = new ConsolePoint(5, 5);
+            snake.Initialise(initialPosition);
             snake.CurrentDirection = direction;
             var expectedNewPosition = new ConsolePoint(newX, newY);
 
@@ -103,9 +105,49 @@ namespace SnakeGame.Test
             snake.MoveForward();
 
             // Assert
-            snake.Position.Should().Be(expectedNewPosition);
-            snake.Segments.Count.Should().Be(2);
-            snake.Segments.Last().Should().Be(snake.Position);
+            snake.HeadPosition.Should().Be(expectedNewPosition);
+            snake.Length.Should().Be(2);
+            snake.TailPosition.Should().Be(initialPosition);
+        }
+
+        /// <summary>
+        /// Tests that the MoveForward method throws an exception when the direction is invalid.
+        /// </summary>
+        [Fact]
+        public void MoveForward_InvalidDirection_Throws()
+        {
+            // Arrange
+            var snake = new Snake();
+            snake.Initialise(new ConsolePoint(5, 5));
+            snake.CurrentDirection = (Direction)99; // Invalid direction
+
+            // Act
+            var action = () => snake.MoveForward();
+
+            // Assert
+            var ex = action.Should().Throw<InvalidOperationException>().Which;
+            ex.Message.Should().Be("Invalid direction");
+        }
+
+        /// <summary>
+        /// Tests that the TrimTail method removes the trailing segment of the snake.
+        /// </summary>
+        [Fact]
+        public void TrimTail_TrimsTailSegment()
+        {
+            // Arrange
+            var snake = new Snake();
+            snake.Initialise(new ConsolePoint(5, 5));
+            snake.CurrentDirection = Direction.Up;
+            snake.MoveForward(); // Move to (5, 4)
+            snake.MoveForward(); // Move to (5, 3)
+
+            // Act
+            snake.TrimTail();
+
+            // Assert
+            snake.Length.Should().Be(2); // Initial position + 1 move
+            snake.TailPosition.Should().Be(new ConsolePoint(5, 4)); // Tail should be at (5, 4)
         }
 
         /// <summary>

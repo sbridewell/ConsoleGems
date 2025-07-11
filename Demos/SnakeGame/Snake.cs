@@ -10,55 +10,34 @@ namespace Sde.SnakeGame
     /// <summary>
     /// Represents the snake controlled by the player.
     /// </summary>
-    public class Snake
+    public class Snake : ISnake
     {
-        // TODO: can we make Segments private?
+        private readonly Queue<ConsolePoint> segments = new ();
 
-        /// <summary>
-        /// Gets the segments of the snake.
-        /// </summary>
-        /// <remarks>
-        /// This is implemented as a <see cref="Queue{ConsolePoint}"/> so that as the snake
-        /// moves forward, we can simply enqueue the new head position and dequeue the tail
-        /// position.
-        /// </remarks>
-        public Queue<ConsolePoint> Segments { get; } = new ();
+        /// <inheritdoc/>
+        public ConsolePoint HeadPosition => this.segments.Count > 0 ? this.segments.Last() : new ConsolePoint(0, 0);
 
-        /// <summary>
-        /// Gets or sets the current position of the snake's head.
-        /// </summary>
-        public ConsolePoint Position { get; set; }
+        /// <inheritdoc/>
+        public ConsolePoint TailPosition => this.segments.Count > 0 ? this.segments.Peek() : this.HeadPosition;
 
-        /// <summary>
-        /// Gets or sets the current direction of the snake.
-        /// </summary>
+        /// <inheritdoc/>
         public Direction CurrentDirection { get; set; }
 
-        /// <summary>
-        /// Gets the length of the snake.
-        /// </summary>
-        public int Length => this.Segments.Count;
+        /// <inheritdoc/>
+        public int Length => this.segments.Count;
 
-        /// <summary>
-        /// Gets a value indicating whether the snake has run into its own tail.
-        /// </summary>
+        /// <inheritdoc/>
         public bool HasRunIntoOwnTail =>
-            this.Segments.Count > 1 && this.Segments.Take(this.Segments.Count - 1).Contains(this.Position);
+            this.segments.Count > 1 && this.segments.Take(this.segments.Count - 1).Contains(this.HeadPosition);
 
-        /// <summary>
-        /// Initialises the snake by resetting its length and moving it to the initial position.
-        /// </summary>
-        /// <param name="initialPosition">The snake's starting position.</param>
+        /// <inheritdoc/>
         public void Initialise(ConsolePoint initialPosition)
         {
-            this.Segments.Clear();
-            this.Segments.Enqueue(initialPosition);
+            this.segments.Clear();
+            this.segments.Enqueue(initialPosition);
         }
 
-        /// <summary>
-        /// Changes the snake's direction of travel, unless the new direction is the opposite of the current direction.
-        /// </summary>
-        /// <param name="newDirection">The new direction.</param>
+        /// <inheritdoc/>
         public void ChangeDirection(Direction newDirection)
         {
             if ((this.CurrentDirection == Direction.Up && newDirection == Direction.Down) ||
@@ -72,50 +51,37 @@ namespace Sde.SnakeGame
             this.CurrentDirection = newDirection;
         }
 
-        /// <summary>
-        /// Moves the snake forward by one position.
-        /// </summary>
+        /// <inheritdoc/>
         public void MoveForward()
         {
-            var head = this.Segments.Last();
-            switch (this.CurrentDirection)
+            var head = this.segments.Last();
+            var newHeadPosition = this.CurrentDirection switch
             {
-                case Direction.Up:
-                    this.Position = new ConsolePoint(head.X, head.Y - 1);
-                    break;
-                case Direction.Down:
-                    this.Position = new ConsolePoint(head.X, head.Y + 1);
-                    break;
-                case Direction.Left:
-                    this.Position = new ConsolePoint(head.X - 1, head.Y);
-                    break;
-                case Direction.Right:
-                    this.Position = new ConsolePoint(head.X + 1, head.Y);
-                    break;
-            }
-
-            this.Segments.Enqueue(this.Position); // Add the new head segment
+                Direction.Up => new ConsolePoint(head.X, head.Y - 1),
+                Direction.Down => new ConsolePoint(head.X, head.Y + 1),
+                Direction.Left => new ConsolePoint(head.X - 1, head.Y),
+                Direction.Right => new ConsolePoint(head.X + 1, head.Y),
+                _ => throw new InvalidOperationException("Invalid direction")
+            };
+            this.segments.Enqueue(newHeadPosition); // Add the new head segment
         }
 
-        /// <summary>
-        /// Determines whether the head of the snake is within the supplied rectangle.
-        /// This can be used to test whether the snake has hit a wall.
-        /// </summary>
-        /// <param name="rectangle">The rectangle.</param>
-        /// <returns>True if the snake's head is within the rectangle.</returns>
-        public bool IsWithin(ConsoleRectangle rectangle)
+        /// <inheritdoc/>
+        public void TrimTail()
         {
-            return rectangle.Contains(this.Position);
+            this.segments.Dequeue();
         }
 
-        /// <summary>
-        /// Determines whether the supplied point is occupied by the snake.
-        /// </summary>
-        /// <param name="point">The point to test.</param>
-        /// <returns>True if the point contains part of the snake.</returns>
+        /// <inheritdoc/>
+        public bool IsWithin(ConsoleRectangle playingSurface)
+        {
+            return playingSurface.Contains(this.HeadPosition);
+        }
+
+        /// <inheritdoc/>
         public bool OccupiesPoint(ConsolePoint point)
         {
-            return this.Segments.Contains(point);
+            return this.segments.Contains(point);
         }
     }
 }

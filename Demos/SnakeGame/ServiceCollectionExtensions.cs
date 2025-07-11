@@ -26,6 +26,9 @@ namespace Sde.SnakeGame
             services.AddSingleton<ISnakeGameController, SnakeGameController>();
             services.AddSingleton<IStatusPainter, StatusPainter>();
             services.AddSingleton<ISnakeGamePainter, SnakeGamePainter>();
+            services.AddSingleton<IGame, Game>();
+            services.AddSingleton<ISnake, Snake>();
+            services.AddSingleton<ISnakeGameRandomiser, SnakeGameRandomiser>();
             return services;
         }
     }
