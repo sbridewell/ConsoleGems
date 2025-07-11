@@ -7,6 +7,7 @@ namespace Sde.ConsoleGems.GamesDemo
 {
     using Microsoft.Extensions.DependencyInjection;
     using Sde.MazeGame;
+    using Sde.SnakeGame;
 
     /// <summary>
     /// Class containing the main entry point into the program.
@@ -26,6 +27,7 @@ namespace Sde.ConsoleGems.GamesDemo
                 .UseAutoComplete();
             services.AddConsoleGems(options);
             services.AddMazeGame();
+            services.AddSnakeGame();
 
             var provider = services.BuildServiceProvider();
             var mainMenu = provider.GetRequiredService<MainMenu>();

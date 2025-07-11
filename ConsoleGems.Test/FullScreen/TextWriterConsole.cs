@@ -49,6 +49,11 @@ namespace Sde.ConsoleGems.Test.FullScreen
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether a key press is available in the input stream.
+        /// </summary>
+        public bool KeyAvailable { get => throw new NotImplementedException(); }
+
         /// <inheritdoc/>
         public void Clear()
         {
