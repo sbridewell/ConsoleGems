@@ -3,13 +3,13 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.MazeGame.Test.Painters.Status
+namespace Sde.ConsoleGems.Test.Painters
 {
     using Moq;
     using Sde.ConsoleGems.Consoles;
     using Sde.ConsoleGems.FullScreen;
+    using Sde.ConsoleGems.Painters;
     using Sde.ConsoleGems.Text;
-    using Sde.MazeGame.Painters.Status;
 
     /// <summary>
     /// Unit tests for the <see cref="StatusPainter"/> class.

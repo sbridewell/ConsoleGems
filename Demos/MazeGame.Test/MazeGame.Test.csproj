@@ -59,4 +59,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Painters\Status\" />
+  </ItemGroup>
+
 </Project>

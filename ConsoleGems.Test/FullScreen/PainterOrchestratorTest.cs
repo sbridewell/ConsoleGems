@@ -248,7 +248,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
             {
                 for (var x = 0; x < painterChars[y].Length; x++)
                 {
-                    painter.PublicWriteToScreenBuffer(x, y, painterChars[y][x], ConsoleOutputType.Default);
+                    painter.WriteToScreenBuffer(x, y, painterChars[y][x], ConsoleOutputType.Default);
                 }
             }
         }

@@ -82,6 +82,11 @@ namespace Sde.ConsoleGems.Test.FullScreen
         /// </summary>
         public int WindowHeight { get => windowSize.Height; set => _ = value; }
 
+        /// <summary>
+        /// Gets a value indicating whether a key press is available in the input stream.
+        /// </summary>
+        public bool KeyAvailable { get => throw new NotImplementedException(); }
+
         #region Read methods - not implemented
 
         /// <summary>

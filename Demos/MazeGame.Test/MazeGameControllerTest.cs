@@ -8,13 +8,12 @@ namespace Sde.MazeGame.Test
     using FluentAssertions;
     using Moq;
     using Sde.ConsoleGems.Consoles;
+    using Sde.ConsoleGems.Painters;
     using Sde.ConsoleGems.Text;
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Models;
     using Sde.MazeGame.Painters.Map;
     using Sde.MazeGame.Painters.Pov;
-    using Sde.MazeGame.Painters.Status;
-    using Xunit.Sdk;
 
     /// <summary>
     /// Unit tests for the <see cref="MazeGameController"/> class.

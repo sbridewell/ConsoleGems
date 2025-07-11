@@ -8,11 +8,11 @@ namespace Sde.MazeGame
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.Extensions.DependencyInjection;
     using Sde.ConsoleGems.FullScreen;
+    using Sde.ConsoleGems.Painters;
     using Sde.MazeGame.CharacterProviders;
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Painters.Map;
     using Sde.MazeGame.Painters.Pov;
-    using Sde.MazeGame.Painters.Status;
 
     /// <summary>
     /// Extension methods for <see cref="IServiceCollection"/> to register services for the Maze Game.

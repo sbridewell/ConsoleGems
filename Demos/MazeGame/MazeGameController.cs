@@ -7,12 +7,12 @@ namespace Sde.MazeGame
 {
     using System.Diagnostics.CodeAnalysis;
     using Sde.ConsoleGems.Consoles;
+    using Sde.ConsoleGems.Painters;
     using Sde.ConsoleGems.Text;
     using Sde.MazeGame.KeyPressHandlers;
     using Sde.MazeGame.Models;
     using Sde.MazeGame.Painters.Map;
     using Sde.MazeGame.Painters.Pov;
-    using Sde.MazeGame.Painters.Status;
 
     /// <summary>
     /// The controlling module for the maze game.
