@@ -10,14 +10,12 @@ namespace Sde.ConsoleGems.Test.Text
     /// </summary>
     public class ConsolePointTest
     {
-        private record ConsolePointTestCase(ConsolePoint first, ConsolePoint second, bool shouldBeEqual);
-
         /// <summary>
         /// Gets the names of the test cases.
         /// </summary>
-        public static TheoryData<string> ConsolePointTestCaseNames => new (ConsolePointTestCases.Keys);
+        public static TheoryData<string> ConsolePointTestCaseNames => new(ConsolePointTestCases.Keys);
 
-        private static Dictionary<string, ConsolePointTestCase> ConsolePointTestCases => new ()
+        private static Dictionary<string, ConsolePointTestCase> ConsolePointTestCases => new()
         {
             { "Equality1", new ConsolePointTestCase(new ConsolePoint(0, 1), new ConsolePoint(0, 1), true) },
             { "Equality2", new ConsolePointTestCase(new ConsolePoint(1, 0), new ConsolePoint(1, 0), true) },
@@ -37,14 +35,14 @@ namespace Sde.ConsoleGems.Test.Text
         {
             // Arrange
             var testCase = ConsolePointTestCases[testCaseName];
-            var first = testCase.first;
-            var second = testCase.second;
+            var first = testCase.First;
+            var second = testCase.Second;
 
             // Act
             var result = first.Equals(second);
 
             // Assert
-            result.Should().Be(testCase.shouldBeEqual);
+            result.Should().Be(testCase.ShouldBeEqual);
         }
 
         /// <summary>
@@ -57,14 +55,14 @@ namespace Sde.ConsoleGems.Test.Text
         {
             // Arrange
             var testCase = ConsolePointTestCases[testCaseName];
-            var first = testCase.first;
-            var second = testCase.second;
+            var first = testCase.First;
+            var second = testCase.Second;
 
             // Act
             var result = first != second;
 
             // Assert
-            result.Should().Be(!testCase.shouldBeEqual);
+            result.Should().Be(!testCase.ShouldBeEqual);
         }
 
         /// <summary>
@@ -83,5 +81,7 @@ namespace Sde.ConsoleGems.Test.Text
             // Assert
             result.Should().BeFalse();
         }
+
+        private record ConsolePointTestCase(ConsolePoint First, ConsolePoint Second, bool ShouldBeEqual);
     }
 }

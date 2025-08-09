@@ -10,14 +10,14 @@ namespace Sde.ConsoleGems.Test.Consoles
     /// </summary>
     public class ColourfulConsoleTest : ConsoleTest
     {
-        private readonly Mock<IConsoleColourManager> mockConsoleColourManager = new ();
+        private readonly Mock<IConsoleColourManager> mockConsoleColourManager = new();
 
         /// <summary>
         /// Gets the expected relationships between
         /// <see cref="ConsoleOutputType"/> members and the
         /// corresponding <see cref="ConsoleColours"/>.
         /// </summary>
-        public static TheoryData<ConsoleOutputType, ConsoleColours> OutputTypesAndColours => new ()
+        public static TheoryData<ConsoleOutputType, ConsoleColours> OutputTypesAndColours => new()
         {
             { ConsoleOutputType.Default, ConsoleColours.Default },
             { ConsoleOutputType.Prompt, ConsoleColours.Prompt },

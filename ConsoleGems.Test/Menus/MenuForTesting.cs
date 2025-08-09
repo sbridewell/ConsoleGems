@@ -26,8 +26,8 @@ namespace Sde.ConsoleGems.Test.Menus
         /// <inheritdoc/>
         public override List<MenuItem> MenuItems =>
         [
-            new () { Key = "mock1", Description = "Mock command 1", Command = command1 },
-            new () { Key = "back", Description = "Return to previous menu", Command = exitCurrentMenuCommand },
+            new() { Key = "mock1", Description = "Mock command 1", Command = command1 },
+            new() { Key = "back", Description = "Return to previous menu", Command = exitCurrentMenuCommand },
         ];
     }
 }

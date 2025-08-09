@@ -12,15 +12,11 @@ namespace Sde.ConsoleGems.Test.FullScreen
     /// </summary>
     public class PainterOrchestratorTest(ITestOutputHelper output)
     {
-        private record OverlappingPaintersTestCase(List<IPainter> painters);
-
-        private record WindowTooSmallTestCase(List<ConsoleRectangle> painterRectangles, Mock<IConsole> mockConsole, ConsoleSize initialWindowSize);
-
         private static readonly Mock<IConsole> MockConsole = new Mock<IConsole>();
 
         private static readonly Mock<IBorderPainter> MockBorderPainter = new Mock<IBorderPainter>();
 
-        private static readonly Dictionary<string, OverlappingPaintersTestCase> OverlappingPaintersTestData = new ()
+        private static readonly Dictionary<string, OverlappingPaintersTestCase> OverlappingPaintersTestData = new()
         {
             ["Two overlapping painters"] = new OverlappingPaintersTestCase(
                 new List<IPainter>
@@ -94,7 +90,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 }),
         };
 
-        private static readonly Dictionary<string, WindowTooSmallTestCase> WindowTooSmallTestData = new ()
+        private static readonly Dictionary<string, WindowTooSmallTestCase> WindowTooSmallTestData = new()
         {
             ["Window not wide enough"] = new WindowTooSmallTestCase(
                 new List<ConsoleRectangle>
@@ -118,13 +114,13 @@ namespace Sde.ConsoleGems.Test.FullScreen
         /// Gets the names of the test cases for overlapping painters.
         /// </summary>
         public static TheoryData<string> OverlappingPainterTestCaseNames
-            => new (OverlappingPaintersTestData.Keys);
+            => new(OverlappingPaintersTestData.Keys);
 
         /// <summary>
         /// Gets the names of the test cases for a window too small to contain its painters.
         /// </summary>
         public static TheoryData<string> WindowTooSmallTestCaseNames
-            => new (WindowTooSmallTestData.Keys);
+            => new(WindowTooSmallTestData.Keys);
 
         /// <summary>
         /// Not really a unit test, instead it writes to the test output window using
@@ -194,7 +190,7 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 mockConsole.Setup(m => m.WindowHeight).Returns(10);
                 mockConsole.Setup(m => m.WindowWidth).Returns(10);
                 var orchestrator = new PainterOrchestrator(mockConsole.Object);
-                orchestrator.Painters.AddRange(testCase.painters);
+                orchestrator.Painters.AddRange(testCase.Painters);
 
                 // Act
                 var action = () => orchestrator.Paint();
@@ -217,16 +213,16 @@ namespace Sde.ConsoleGems.Test.FullScreen
         {
             // Arrange
             var testCase = WindowTooSmallTestData[testCaseName];
-            testCase.mockConsole.SetupSequence(m => m.WindowHeight)
-                .Returns(testCase.initialWindowSize.Height)
-                .Returns(testCase.painterRectangles.Max(p => p.Bottom + 1));
-            testCase.mockConsole.SetupSequence(m => m.WindowWidth)
-                .Returns(testCase.initialWindowSize.Width)
-                .Returns(testCase.painterRectangles.Max(p => p.Right + 1));
-            var orchestrator = new PainterOrchestrator(testCase.mockConsole.Object);
-            foreach (var rect in testCase.painterRectangles)
+            testCase.TheMockConsole.SetupSequence(m => m.WindowHeight)
+                .Returns(testCase.InitialWindowSize.Height)
+                .Returns(testCase.PainterRectangles.Max(p => p.Bottom + 1));
+            testCase.TheMockConsole.SetupSequence(m => m.WindowWidth)
+                .Returns(testCase.InitialWindowSize.Width)
+                .Returns(testCase.PainterRectangles.Max(p => p.Right + 1));
+            var orchestrator = new PainterOrchestrator(testCase.TheMockConsole.Object);
+            foreach (var rect in testCase.PainterRectangles)
             {
-                orchestrator.Painters.Add(new TestPainter(testCase.mockConsole.Object, MockBorderPainter.Object)
+                orchestrator.Painters.Add(new TestPainter(testCase.TheMockConsole.Object, MockBorderPainter.Object)
                 {
                     Origin = rect.Origin,
                     InnerSize = rect.Size,
@@ -238,8 +234,8 @@ namespace Sde.ConsoleGems.Test.FullScreen
             orchestrator.Paint();
 
             // Assert
-            testCase.mockConsole.Verify(m => m.Write(It.IsRegex("Please resize the console window"), ConsoleOutputType.Error), Times.Once);
-            testCase.mockConsole.Verify(m => m.Write(It.IsRegex("Current window size is"), ConsoleOutputType.Error), Times.Once);
+            testCase.TheMockConsole.Verify(m => m.Write(It.IsRegex("Please resize the console window"), ConsoleOutputType.Error), Times.Once);
+            testCase.TheMockConsole.Verify(m => m.Write(It.IsRegex("Current window size is"), ConsoleOutputType.Error), Times.Once);
         }
 
         private static void WriteToScreenBuffer(char[][] painterChars, TestPainter painter)
@@ -252,5 +248,12 @@ namespace Sde.ConsoleGems.Test.FullScreen
                 }
             }
         }
+
+        private record OverlappingPaintersTestCase(List<IPainter> Painters);
+
+        private record WindowTooSmallTestCase(
+            List<ConsoleRectangle> PainterRectangles,
+            Mock<IConsole> TheMockConsole,
+            ConsoleSize InitialWindowSize);
     }
 }
