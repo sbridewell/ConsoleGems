@@ -14,7 +14,7 @@ namespace Sde.ConsoleGems.FullScreen
     {
         private readonly IConsole console;
         private readonly ConsolePixel[,] screenBuffer;
-        private readonly HashSet<int> dirtyLines = new ();
+        private readonly HashSet<int> dirtyLines = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScreenBuffer"/> class with the specified console, width, and height.

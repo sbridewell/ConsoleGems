@@ -14,7 +14,7 @@ namespace Sde.ConsoleGems.FullScreen
         : IPainterOrchestrator
     {
         /// <inheritdoc/>
-        public List<IPainter> Painters { get; } = new ();
+        public List<IPainter> Painters { get; } = new();
 
         /// <inheritdoc/>
         public void Paint()

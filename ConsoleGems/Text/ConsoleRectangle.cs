@@ -70,7 +70,7 @@ namespace Sde.ConsoleGems.Text
                 _ when pointToTest.Y < this.Y => false,
                 _ when pointToTest.X >= this.X + this.Width => false,
                 _ when pointToTest.Y >= this.Y + this.Height => false,
-                _ => true
+                _ => true,
             };
         }
 
@@ -97,7 +97,7 @@ namespace Sde.ConsoleGems.Text
 
                 // Neither rectangle contains any of the corners of the other, so the rectangles
                 // don't overlap.
-                _ => false
+                _ => false,
             };
         }
 
