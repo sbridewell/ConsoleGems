@@ -13,6 +13,9 @@ $coverageFilename = ($coverageFilenames | Select-Object -First 1).FullName;
 Write-Verbose "Coverage filename: $coverageFilename";
 $coverageFileContent = Get-Content $coverageFilename;
 
+# Write-Verbose "Coverage file content:";
+# Write-Verbose ($coverageFileContent | Out-String);
+
 Write-Verbose "Cast content of $coverageFilename file to XML";
 $coverageXml = [xml]$coverageFileContent;
 
@@ -30,9 +33,9 @@ if ($null -eq $moduleResult) {
     throw "No module found called '$ModuleUnderTest'";
 }
 
-# Write-Verbose "Get Method elements from module";
-# $methods = $moduleResult.GetElementsByTagName("Method");
-# Write-Verbose $methods;
+Write-Verbose "Get Method elements from module";
+$methods = $moduleResult.GetElementsByTagName("Method");
+# Write-Verbose $methods; # TODO: write something more meaningful than "METHOD METHOD METHOD"
 
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";
