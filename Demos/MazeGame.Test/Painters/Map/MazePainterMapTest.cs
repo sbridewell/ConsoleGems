@@ -21,13 +21,13 @@ namespace Sde.MazeGame.Test.Painters.Map
     public class MazePainterMapTest
     {
         private readonly ITestOutputHelper output;
-        private readonly MazeFactory factory = new ();
+        private readonly MazeFactory factory = new();
         private readonly Maze maze;
-        private readonly Player player = new () { Position = new ConsolePoint(5, 5) };
-        private readonly Mock<IConsole> mockConsole = new ();
-        private readonly Mock<IBorderPainter> mockBorderPainter = new ();
+        private readonly Player player = new() { Position = new ConsolePoint(5, 5) };
+        private readonly Mock<IConsole> mockConsole = new();
+        private readonly Mock<IBorderPainter> mockBorderPainter = new();
         private readonly IWallCharacterProvider wallCharacterProvider = new LinesWallCharacterProvider();
-        private readonly Mock<IPlayerCharacterProvider> mockPlayerCharacterProvider = new ();
+        private readonly Mock<IPlayerCharacterProvider> mockPlayerCharacterProvider = new();
         private readonly MazePainterMapProxy painter;
 
         /// <summary>

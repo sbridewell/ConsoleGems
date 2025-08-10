@@ -20,51 +20,23 @@ namespace Sde.MazeGame.Test.Painters.Pov
     /// </summary>
     public class SectionRendererTest(ITestOutputHelper output)
     {
-        [SuppressMessage(
-            "Style",
-            "IDE1006:Naming Styles",
-            Justification = "Contradicts SA1313 which is a warning rather than info")]
-        private record RenderSectionTestCase(
-            bool wallToTheSide,
-            int sectionNumber,
-            ForwardView forwardView,
-            string[] expectedCharacters);
-
-        [SuppressMessage(
-            "Style",
-            "IDE1006:Naming Styles",
-            Justification = "Contradicts SA1313 which is a warning rather than info")]
-        private record RenderSectionAllWallTestCase(
-            int sectionNumber,
-            LeftOrRight leftOrRight,
-            int forwardDistance,
-            string[] expectedCharacters);
-
-        [SuppressMessage(
-            "Style",
-            "IDE1006:Naming Styles",
-            Justification = "Contradicts SA1313 which is a warning rather than info")]
-        private record RenderSectionTooFarTestCase(
-            LeftOrRight leftOrRight,
-            string[] expectedCharacters);
-
         /// <summary>
         /// Gets the names of the test cases for the RenderSection method.
         /// </summary>
         public static TheoryData<string> RenderSectionTestCaseNames
-            => new (RenderSectionTestCases.Keys);
+            => new(RenderSectionTestCases.Keys);
 
         /// <summary>
         /// Gets the names of the test cases for the RenderSectionAllWall method.
         /// </summary>
         public static TheoryData<string> RenderSectionAllWallTestCaseNames
-            => new (RenderSectionAllWallTestCases.Keys);
+            => new(RenderSectionAllWallTestCases.Keys);
 
         /// <summary>
         /// Gets the names of the test cases for the RenderSectionTooFar method.
         /// </summary>
         public static TheoryData<string> RenderSectionTooFarTestCaseNames
-            => new (RenderSectionTooFarTestCases.Keys);
+            => new(RenderSectionTooFarTestCases.Keys);
 
         /// <summary>
         /// Gets the test cases for the RenderSection method.
@@ -74,11 +46,11 @@ namespace Sde.MazeGame.Test.Painters.Pov
             "SA1118:Parameter should not span multiple lines",
             Justification = "This format is nice and readable")]
         private static Dictionary<string, RenderSectionTestCase> RenderSectionTestCases
-            => new ()
+            => new()
             {
                 ["Perpendicular section 0"] = new RenderSectionTestCase(
-                    wallToTheSide: false,
-                    sectionNumber: 0,
+                    WallToTheSide: false,
+                    SectionNumber: 0,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "   "]),
                         new Player() { Position = new ConsolePoint(1, 1), FacingDirection = Direction.North },
@@ -110,8 +82,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "○                      ○",
                     ]),
                 ["Perpendicular section 1"] = new RenderSectionTestCase(
-                    wallToTheSide: false,
-                    sectionNumber: 1,
+                    WallToTheSide: false,
+                    SectionNumber: 1,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "   ", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 2), FacingDirection = Direction.North },
@@ -143,8 +115,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○○○○              ○○○○ ",
                     ]),
                 ["Perpendicular section 2"] = new RenderSectionTestCase(
-                    wallToTheSide: false,
-                    sectionNumber: 2,
+                    WallToTheSide: false,
+                    SectionNumber: 2,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "   ", "# #", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 3), FacingDirection = Direction.North },
@@ -176,8 +148,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○○○        ○○○     ",
                     ]),
                 ["Perpendicular section 3"] = new RenderSectionTestCase(
-                    wallToTheSide: false,
-                    sectionNumber: 3,
+                    WallToTheSide: false,
+                    SectionNumber: 3,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "   ", "# #", "# #", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 4), FacingDirection = Direction.North },
@@ -209,8 +181,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○○    ○○        ",
                     ]),
                 ["Perpendicular section 4"] = new RenderSectionTestCase(
-                    wallToTheSide: false,
-                    sectionNumber: 4,
+                    WallToTheSide: false,
+                    SectionNumber: 4,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "   ", "# #", "# #", "# #", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 5), FacingDirection = Direction.North },
@@ -242,8 +214,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○  ○          ",
                     ]),
                 ["Parallel section 0"] = new RenderSectionTestCase(
-                    wallToTheSide: true,
-                    sectionNumber: 0,
+                    WallToTheSide: true,
+                    SectionNumber: 0,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 1), FacingDirection = Direction.North },
@@ -275,8 +247,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "░                      ░",
                     ]),
                 ["Parallel section 1"] = new RenderSectionTestCase(
-                    wallToTheSide: true,
-                    sectionNumber: 1,
+                    WallToTheSide: true,
+                    SectionNumber: 1,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "# #", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 2), FacingDirection = Direction.North },
@@ -308,8 +280,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○○○○              ○○○○ ",
                     ]),
                 ["Parallel section 2"] = new RenderSectionTestCase(
-                    wallToTheSide: true,
-                    sectionNumber: 2,
+                    WallToTheSide: true,
+                    SectionNumber: 2,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "# #", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 2), FacingDirection = Direction.North },
@@ -341,8 +313,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○○○        ○○○     ",
                     ]),
                 ["Parallel section 3"] = new RenderSectionTestCase(
-                    wallToTheSide: true,
-                    sectionNumber: 3,
+                    WallToTheSide: true,
+                    SectionNumber: 3,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "# #", "# #", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 3), FacingDirection = Direction.North },
@@ -374,8 +346,8 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○○    ○○        ",
                     ]),
                 ["Parallel section 4"] = new RenderSectionTestCase(
-                    wallToTheSide: true,
-                    sectionNumber: 4,
+                    WallToTheSide: true,
+                    SectionNumber: 4,
                     new ForwardView(
                         new MazeFactory().CreateFromStringArray(["# #", "# #", "# #", "# #", "# #"]),
                         new Player() { Position = new ConsolePoint(1, 4), FacingDirection = Direction.North },
@@ -416,12 +388,12 @@ namespace Sde.MazeGame.Test.Painters.Pov
             "SA1118:Parameter should not span multiple lines",
             Justification = "This format is nice and readable")]
         private static Dictionary<string, RenderSectionAllWallTestCase> RenderSectionAllWallTestCases
-            => new ()
+            => new()
             {
                 ["Section 0 left, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Left,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "●                       ",
                         "▓                       ",
@@ -449,9 +421,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "○                       ",
                     ]),
                 ["Section 0 right, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Right,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "                       ●",
                         "                       ▓",
@@ -479,9 +451,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                       ○",
                     ]),
                 ["Section 0 left, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Left,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "●                       ",
                         "●                       ",
@@ -509,9 +481,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "○                       ",
                     ]),
                 ["Section 0 right, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Right,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "                       ●",
                         "                       ●",
@@ -539,9 +511,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                       ○",
                     ]),
                 ["Section 0 left, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Left,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "●                       ",
                         "●                       ",
@@ -569,9 +541,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "○                       ",
                     ]),
                 ["Section 0 right, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Right,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "                       ●",
                         "                       ●",
@@ -599,9 +571,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                       ○",
                     ]),
                 ["Section 0 left, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Left,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "●                       ",
                         "●                       ",
@@ -629,9 +601,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "○                       ",
                     ]),
                 ["Section 0 right, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Right,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "                       ●",
                         "                       ●",
@@ -659,9 +631,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                       ○",
                     ]),
                 ["Section 0 left, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Left,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "●                       ",
                         "●                       ",
@@ -689,9 +661,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "○                       ",
                     ]),
                 ["Section 0 right, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Right,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "                       ●",
                         "                       ●",
@@ -719,9 +691,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                       ○",
                     ]),
                 ["Section 0 left, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Left,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "●                       ",
                         "●                       ",
@@ -749,9 +721,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "○                       ",
                     ]),
                 ["Section 0 right, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 0,
+                    SectionNumber: 0,
                     LeftOrRight.Right,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "                       ●",
                         "                       ●",
@@ -779,9 +751,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                       ○",
                     ]),
                 ["Section 1 left, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Left,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         " ●●●●                   ",
                         " ▓▓▓▓                   ",
@@ -809,9 +781,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○○○○                   ",
                     ]),
                 ["Section 1 right, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Right,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "                   ●●●● ",
                         "                   ▓▓▓▓ ",
@@ -839,9 +811,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                   ○○○○ ",
                     ]),
                 ["Section 1 left, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Left,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         " ●●●●                   ",
                         " ●●●●                   ",
@@ -869,9 +841,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○○○○                   ",
                     ]),
                 ["Section 1 right, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Right,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "                   ●●●● ",
                         "                   ●●●● ",
@@ -899,9 +871,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                   ○○○○ ",
                     ]),
                 ["Section 1 left, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Left,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         " ●●●●                   ",
                         " ●●●●                   ",
@@ -929,9 +901,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○○○○                   ",
                     ]),
                 ["Section 1 right, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Right,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "                   ●●●● ",
                         "                   ●●●● ",
@@ -959,9 +931,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                   ○○○○ ",
                     ]),
                 ["Section 1 left, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Left,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         " ●●●●                   ",
                         " ●●●●                   ",
@@ -989,9 +961,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○○○○                   ",
                     ]),
                 ["Section 1 right, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Right,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "                   ●●●● ",
                         "                   ●●●● ",
@@ -1019,9 +991,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                   ○○○○ ",
                     ]),
                 ["Section 1 left, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Left,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         " ●●●●                   ",
                         " ●●●●                   ",
@@ -1049,9 +1021,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○○○○                   ",
                     ]),
                 ["Section 1 right, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Right,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "                   ●●●● ",
                         "                   ●●●● ",
@@ -1079,9 +1051,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                   ○○○○ ",
                     ]),
                 ["Section 1 left, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Left,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         " ●●●●                   ",
                         " ●●●●                   ",
@@ -1109,9 +1081,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○○○○                   ",
                     ]),
                 ["Section 1 right, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 1,
+                    SectionNumber: 1,
                     LeftOrRight.Right,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "                   ●●●● ",
                         "                   ●●●● ",
@@ -1139,9 +1111,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                   ○○○○ ",
                     ]),
                 ["Section 2 left, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Left,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "     ●●●                ",
                         "     ▓▓▓                ",
@@ -1169,9 +1141,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○○○                ",
                     ]),
                 ["Section 2 right, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Right,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "                ●●●     ",
                         "                ▓▓▓     ",
@@ -1199,9 +1171,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                ○○○     ",
                     ]),
                 ["Section 2 left, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Left,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "     ●●●                ",
                         "     ●●●                ",
@@ -1229,9 +1201,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○○○                ",
                     ]),
                 ["Section 2 right, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Right,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "                ●●●     ",
                         "                ●●●     ",
@@ -1259,9 +1231,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                ○○○     ",
                     ]),
                 ["Section 2 left, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Left,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "     ●●●                ",
                         "     ●●●                ",
@@ -1289,9 +1261,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○○○                ",
                     ]),
                 ["Section 2 right, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Right,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "                ●●●     ",
                         "                ●●●     ",
@@ -1319,9 +1291,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                ○○○     ",
                     ]),
                 ["Section 2 left, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Left,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "     ●●●                ",
                         "     ●●●                ",
@@ -1349,9 +1321,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○○○                ",
                     ]),
                 ["Section 2 right, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Right,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "                ●●●     ",
                         "                ●●●     ",
@@ -1379,9 +1351,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                ○○○     ",
                     ]),
                 ["Section 2 left, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Left,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "     ●●●                ",
                         "     ●●●                ",
@@ -1409,9 +1381,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○○○                ",
                     ]),
                 ["Section 2 right, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Right,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "                ●●●     ",
                         "                ●●●     ",
@@ -1439,9 +1411,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                ○○○     ",
                     ]),
                 ["Section 2 left, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Left,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "     ●●●                ",
                         "     ●●●                ",
@@ -1469,9 +1441,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○○○                ",
                     ]),
                 ["Section 2 right, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 2,
+                    SectionNumber: 2,
                     LeftOrRight.Right,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "                ●●●     ",
                         "                ●●●     ",
@@ -1499,9 +1471,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                ○○○     ",
                     ]),
                 ["Section 3 left, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Left,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "        ●●              ",
                         "        ▓▓              ",
@@ -1529,9 +1501,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○○              ",
                     ]),
                 ["Section 3 right, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Right,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "              ●●        ",
                         "              ▓▓        ",
@@ -1559,9 +1531,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "              ○○        ",
                     ]),
                 ["Section 3 left, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Left,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "        ●●              ",
                         "        ●●              ",
@@ -1589,9 +1561,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○○              ",
                     ]),
                 ["Section 3 right, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Right,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "              ●●        ",
                         "              ●●        ",
@@ -1619,9 +1591,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "              ○○        ",
                     ]),
                 ["Section 3 left, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Left,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "        ●●              ",
                         "        ●●              ",
@@ -1649,9 +1621,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○○              ",
                     ]),
                 ["Section 3 right, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Right,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "              ●●        ",
                         "              ●●        ",
@@ -1679,9 +1651,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "              ○○        ",
                     ]),
                 ["Section 3 left, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Left,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "        ●●              ",
                         "        ●●              ",
@@ -1709,9 +1681,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○○              ",
                     ]),
                 ["Section 3 right, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Right,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "              ●●        ",
                         "              ●●        ",
@@ -1739,9 +1711,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "              ○○        ",
                     ]),
                 ["Section 3 left, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Left,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "        ●●              ",
                         "        ●●              ",
@@ -1769,9 +1741,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○○              ",
                     ]),
                 ["Section 3 right, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Right,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "              ●●        ",
                         "              ●●        ",
@@ -1799,9 +1771,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "              ○○        ",
                     ]),
                 ["Section 3 left, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Left,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "        ●●              ",
                         "        ●●              ",
@@ -1829,9 +1801,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○○              ",
                     ]),
                 ["Section 3 right, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 3,
+                    SectionNumber: 3,
                     LeftOrRight.Right,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "              ●●        ",
                         "              ●●        ",
@@ -1859,9 +1831,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "              ○○        ",
                     ]),
                 ["Section 4 left, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Left,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "          ●             ",
                         "          ▓             ",
@@ -1889,9 +1861,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○             ",
                     ]),
                 ["Section 4 right, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Right,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "             ●          ",
                         "             ▓          ",
@@ -1919,9 +1891,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "             ○          ",
                     ]),
                 ["Section 4 left, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Left,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "          ●             ",
                         "          ●             ",
@@ -1949,9 +1921,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○             ",
                     ]),
                 ["Section 4 right, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Right,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "             ●          ",
                         "             ●          ",
@@ -1979,9 +1951,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "             ○          ",
                     ]),
                 ["Section 4 left, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Left,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "          ●             ",
                         "          ●             ",
@@ -2009,9 +1981,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○             ",
                     ]),
                 ["Section 4 right, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Right,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "             ●          ",
                         "             ●          ",
@@ -2039,9 +2011,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "             ○          ",
                     ]),
                 ["Section 4 left, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Left,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "          ●             ",
                         "          ●             ",
@@ -2069,9 +2041,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○             ",
                     ]),
                 ["Section 4 right, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Right,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "             ●          ",
                         "             ●          ",
@@ -2099,9 +2071,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "             ○          ",
                     ]),
                 ["Section 4 left, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Left,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "          ●             ",
                         "          ●             ",
@@ -2129,9 +2101,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○             ",
                     ]),
                 ["Section 4 right, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Right,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "             ●          ",
                         "             ●          ",
@@ -2159,9 +2131,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "             ○          ",
                     ]),
                 ["Section 4 left, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Left,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "          ●             ",
                         "          ●             ",
@@ -2189,9 +2161,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○             ",
                     ]),
                 ["Section 4 right, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 4,
+                    SectionNumber: 4,
                     LeftOrRight.Right,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "             ●          ",
                         "             ●          ",
@@ -2219,9 +2191,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "             ○          ",
                     ]),
                 ["Section 5 left, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Left,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "           ●            ",
                         "           ▓            ",
@@ -2249,9 +2221,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "           ○            ",
                     ]),
                 ["Section 5 right, distance 2"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Right,
-                    forwardDistance: 2,
+                    ForwardDistance: 2,
                     [
                         "            ●           ",
                         "            ▓           ",
@@ -2279,9 +2251,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "            ○           ",
                     ]),
                 ["Section 5 left, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Left,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "           ●            ",
                         "           ●            ",
@@ -2309,9 +2281,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "           ○            ",
                     ]),
                 ["Section 5 right, distance 3"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Right,
-                    forwardDistance: 3,
+                    ForwardDistance: 3,
                     [
                         "            ●           ",
                         "            ●           ",
@@ -2339,9 +2311,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "            ○           ",
                     ]),
                 ["Section 5 left, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Left,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "           ●            ",
                         "           ●            ",
@@ -2369,9 +2341,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "           ○            ",
                     ]),
                 ["Section 5 right, distance 4"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Right,
-                    forwardDistance: 4,
+                    ForwardDistance: 4,
                     [
                         "            ●           ",
                         "            ●           ",
@@ -2399,9 +2371,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "            ○           ",
                     ]),
                 ["Section 5 left, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Left,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "           ●            ",
                         "           ●            ",
@@ -2429,9 +2401,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "           ○            ",
                     ]),
                 ["Section 5 right, distance 5"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Right,
-                    forwardDistance: 5,
+                    ForwardDistance: 5,
                     [
                         "            ●           ",
                         "            ●           ",
@@ -2459,9 +2431,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "            ○           ",
                     ]),
                 ["Section 5 left, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Left,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "           ●            ",
                         "           ●            ",
@@ -2489,9 +2461,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "           ○            ",
                     ]),
                 ["Section 5 right, distance 6"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Right,
-                    forwardDistance: 6,
+                    ForwardDistance: 6,
                     [
                         "            ●           ",
                         "            ●           ",
@@ -2519,9 +2491,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "            ○           ",
                     ]),
                 ["Section 5 left, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Left,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "           ●            ",
                         "           ●            ",
@@ -2549,9 +2521,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "           ○            ",
                     ]),
                 ["Section 5 right, distance 7"] = new RenderSectionAllWallTestCase(
-                    sectionNumber: 5,
+                    SectionNumber: 5,
                     LeftOrRight.Right,
-                    forwardDistance: 7,
+                    ForwardDistance: 7,
                     [
                         "            ●           ",
                         "            ●           ",
@@ -2588,7 +2560,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             "SA1118:Parameter should not span multiple lines",
             Justification = "This format is nice and readable")]
         private static Dictionary<string, RenderSectionTooFarTestCase> RenderSectionTooFarTestCases
-            => new ()
+            => new()
             {
                 ["Perpendicular section 5 left"] = new RenderSectionTooFarTestCase(
                     LeftOrRight.Left,
@@ -2673,9 +2645,9 @@ namespace Sde.MazeGame.Test.Painters.Pov
             // Act
             sectionRenderer.RenderSectionAllWall(
                 painter,
-                testCase.sectionNumber,
-                testCase.leftOrRight,
-                testCase.forwardDistance,
+                testCase.SectionNumber,
+                testCase.LeftOrRight,
+                testCase.ForwardDistance,
                 '▓',
                 Direction.North);
 
@@ -2686,7 +2658,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                 output.WriteLine(line);
             }
 
-            actualCharacters.Should().BeEquivalentTo(testCase.expectedCharacters, options =>
+            actualCharacters.Should().BeEquivalentTo(testCase.ExpectedCharacters, options =>
                 options.WithStrictOrdering());
         }
 
@@ -2761,7 +2733,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             };
 
             // Act
-            sectionRenderer.RenderSection(painter, testCase.sectionNumber, testCase.forwardView, Direction.North);
+            sectionRenderer.RenderSection(painter, testCase.SectionNumber, testCase.ForwardView, Direction.North);
 
             // Assert
             var actualCharacters = painter.PublicScreenBuffer.ToStringArray();
@@ -2770,7 +2742,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                 output.WriteLine(line);
             }
 
-            actualCharacters.Should().BeEquivalentTo(testCase.expectedCharacters, options =>
+            actualCharacters.Should().BeEquivalentTo(testCase.ExpectedCharacters, options =>
                 options.WithStrictOrdering());
         }
 
@@ -2797,7 +2769,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             };
 
             // Act
-            sectionRenderer.RenderSectionTooFar(painter, testCase.leftOrRight);
+            sectionRenderer.RenderSectionTooFar(painter, testCase.LeftOrRight);
 
             // Assert
             var actualCharacters = painter.PublicScreenBuffer.ToStringArray();
@@ -2806,8 +2778,24 @@ namespace Sde.MazeGame.Test.Painters.Pov
                 output.WriteLine(line);
             }
 
-            actualCharacters.Should().BeEquivalentTo(testCase.expectedCharacters, options =>
+            actualCharacters.Should().BeEquivalentTo(testCase.ExpectedCharacters, options =>
                 options.WithStrictOrdering());
         }
+
+        private record RenderSectionTestCase(
+            bool WallToTheSide,
+            int SectionNumber,
+            ForwardView ForwardView,
+            string[] ExpectedCharacters);
+
+        private record RenderSectionAllWallTestCase(
+            int SectionNumber,
+            LeftOrRight LeftOrRight,
+            int ForwardDistance,
+            string[] ExpectedCharacters);
+
+        private record RenderSectionTooFarTestCase(
+            LeftOrRight LeftOrRight,
+            string[] ExpectedCharacters);
     }
 }

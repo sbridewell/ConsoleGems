@@ -90,7 +90,19 @@ namespace Sde.ConsoleGems.Consoles
         }
 
         /// <inheritdoc/>
+        public virtual void Write(string textToWrite, ConsoleColours consoleColours)
+        {
+            System.Console.Write(textToWrite);
+        }
+
+        /// <inheritdoc/>
         public virtual void Write(char characterToWrite, ConsoleOutputType outputType = default)
+        {
+            System.Console.Write(characterToWrite);
+        }
+
+        /// <inheritdoc/>
+        public virtual void Write(char characterToWrite, ConsoleColours consoleColours)
         {
             System.Console.Write(characterToWrite);
         }

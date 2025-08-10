@@ -412,8 +412,8 @@ namespace Sde.ConsoleGems.Test
 
             public override List<MenuItem> MenuItems =>
             [
-                new () { Key = "a key", Description = "a description", Command = new Mock<ICommand>().Object, },
-                new () { Key = "child", Description = "Child menu", Command = childMenu.ShowCommand, },
+                new() { Key = "a key", Description = "a description", Command = new Mock<ICommand>().Object, },
+                new() { Key = "child", Description = "Child menu", Command = childMenu.ShowCommand, },
             ];
         }
 
@@ -434,7 +434,7 @@ namespace Sde.ConsoleGems.Test
 
             public override List<MenuItem> MenuItems =>
             [
-                new () { Key = "a key", Description = "a description", Command = new Mock<ICommand>().Object, },
+                new() { Key = "a key", Description = "a description", Command = new Mock<ICommand>().Object, },
             ];
         }
 

@@ -17,18 +17,6 @@ namespace Sde.MazeGame.Test.Painters.Pov
     /// </summary>
     public class ForwardViewTest
     {
-        [SuppressMessage(
-            "Style",
-            "IDE1006:Naming Styles",
-            Justification = "Contradicts SA1313 which is a warning rather than info")]
-        private record ForwardViewTestCase(
-            Maze maze,
-            Player player,
-            List<MPT> leftRow,
-            List<MPT> middleRow,
-            List<MPT> rightRow,
-            int visibleDistance);
-
         private static readonly Maze Maze3By3 = new MazeFactory().CreateFromStringArray(
             [
                 "###",
@@ -62,13 +50,13 @@ namespace Sde.MazeGame.Test.Painters.Pov
         /// Gets the names of the test cases.
         /// </summary>
         public static TheoryData<string> ForwardViewTestCaseNames
-            => new (ForwardViewTestCases.Keys);
+            => new(ForwardViewTestCases.Keys);
 
         /// <summary>
         /// Gets the test cases.
         /// </summary>
         private static Dictionary<string, ForwardViewTestCase> ForwardViewTestCases
-            => new ()
+            => new()
             {
                 ["Facing north into a top-left corner"] = new ForwardViewTestCase(
                     Maze5By5,
@@ -308,13 +296,21 @@ namespace Sde.MazeGame.Test.Painters.Pov
             var testCase = ForwardViewTestCases[testCaseName];
 
             // Act
-            var forwardView = new ForwardView(testCase.maze, testCase.player, testCase.visibleDistance);
+            var forwardView = new ForwardView(testCase.Maze, testCase.Player, testCase.VisibleDistance);
 
             // Assert
-            forwardView.VisibleDistance.Should().Be(testCase.visibleDistance);
-            forwardView.MiddleRow.Should().BeEquivalentTo(testCase.middleRow, options => options.WithStrictOrdering());
-            forwardView.LeftRow.Should().BeEquivalentTo(testCase.leftRow, options => options.WithStrictOrdering());
-            forwardView.RightRow.Should().BeEquivalentTo(testCase.rightRow, options => options.WithStrictOrdering());
+            forwardView.VisibleDistance.Should().Be(testCase.VisibleDistance);
+            forwardView.MiddleRow.Should().BeEquivalentTo(testCase.MiddleRow, options => options.WithStrictOrdering());
+            forwardView.LeftRow.Should().BeEquivalentTo(testCase.LeftRow, options => options.WithStrictOrdering());
+            forwardView.RightRow.Should().BeEquivalentTo(testCase.RightRow, options => options.WithStrictOrdering());
         }
+
+        private record ForwardViewTestCase(
+            Maze Maze,
+            Player Player,
+            List<MPT> LeftRow,
+            List<MPT> MiddleRow,
+            List<MPT> RightRow,
+            int VisibleDistance);
     }
 }

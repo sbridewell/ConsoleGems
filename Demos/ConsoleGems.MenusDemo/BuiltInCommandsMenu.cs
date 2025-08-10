@@ -40,12 +40,12 @@ namespace Sde.ConsoleGems.MenusDemo
         /// <inheritdoc/>
         public override List<MenuItem> MenuItems =>
         [
-            new () { Key = "pwd", Description = "Print the working directory", Command = pwdCommand },
-            new () { Key = "cwd", Description = "Change the working directory", Command = cwdCommand },
-            new () { Key = "dir", Description = "List the contents of the working directory", Command = dirCommand },
-            new () { Key = "file", Description = "Select a file", Command = selectAFileCommand },
-            new () { Key = "folder", Description = "Select a folder", Command = selectAFolderCommand },
-            new () { Key = "throw", Description = "Throw an exception", Command = throwExceptionCommand }
+            new() { Key = "pwd", Description = "Print the working directory", Command = pwdCommand },
+            new() { Key = "cwd", Description = "Change the working directory", Command = cwdCommand },
+            new() { Key = "dir", Description = "List the contents of the working directory", Command = dirCommand },
+            new() { Key = "file", Description = "Select a file", Command = selectAFileCommand },
+            new() { Key = "folder", Description = "Select a folder", Command = selectAFolderCommand },
+            new() { Key = "throw", Description = "Throw an exception", Command = throwExceptionCommand }
         ];
     }
 }

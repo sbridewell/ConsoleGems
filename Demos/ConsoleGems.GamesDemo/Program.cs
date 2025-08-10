@@ -5,7 +5,9 @@
 
 namespace Sde.ConsoleGems.GamesDemo
 {
+    using System.Runtime.Versioning;
     using Microsoft.Extensions.DependencyInjection;
+    using Sde.AsciiArt;
     using Sde.MazeGame;
     using Sde.SnakeGame;
 
@@ -18,16 +20,19 @@ namespace Sde.ConsoleGems.GamesDemo
         /// Main entry point into the program.
         /// </summary>
         /// <param name="args">Command-line arguments.</param>
+        [SupportedOSPlatform("windows")]
         public static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             var services = new ServiceCollection();
             var options = new ConsoleGemsOptions() { UseColours = true }
                 .UseMainMenu<MainMenu>()
-                .UseAutoComplete();
+                .UseAutoComplete()
+                .UseBuiltInPrompters();
             services.AddConsoleGems(options);
             services.AddMazeGame();
             services.AddSnakeGame();
+            services.AddAsciiArt();
 
             var provider = services.BuildServiceProvider();
             var mainMenu = provider.GetRequiredService<MainMenu>();

@@ -10,16 +10,16 @@ namespace Sde.ConsoleGems.Test.Menus
     /// </summary>
     public class MenuWriterTest
     {
-        private readonly Mock<ISharedMenuItemsProvider> mockSharedMenuItemsProvider = new ();
-        private readonly Mock<IGlobalMenuItemsProvider> mockGlobalMenuItemsProvider = new ();
-        private readonly Mock<ITextJustifier> mockTextJustifier = new ();
-        private readonly Mock<IConsole> mockConsole = new ();
-        private readonly ApplicationState applicationState = new ();
-        private readonly AsciiArtSettings asciiArtSettings = new ();
-        private readonly List<MenuItem> menuItems = new ()
+        private readonly Mock<ISharedMenuItemsProvider> mockSharedMenuItemsProvider = new();
+        private readonly Mock<IGlobalMenuItemsProvider> mockGlobalMenuItemsProvider = new();
+        private readonly Mock<ITextJustifier> mockTextJustifier = new();
+        private readonly Mock<IConsole> mockConsole = new();
+        private readonly ApplicationState applicationState = new();
+        private readonly AsciiArtSettings asciiArtSettings = new();
+        private readonly List<MenuItem> menuItems = new()
         {
-            new () { Key = "1", Description = "Item 1", Command = new Mock<ICommand>().Object },
-            new () { Key = "2abc", Description = "Item 2", Command = new Mock<ICommand>().Object },
+            new() { Key = "1", Description = "Item 1", Command = new Mock<ICommand>().Object },
+            new() { Key = "2abc", Description = "Item 2", Command = new Mock<ICommand>().Object },
         };
 
         /// <summary>

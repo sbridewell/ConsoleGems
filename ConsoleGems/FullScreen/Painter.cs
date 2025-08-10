@@ -33,7 +33,7 @@ namespace Sde.ConsoleGems.FullScreen
         public bool HasBorder { get; set; }
 
         /// <inheritdoc/>
-        public ConsoleSize OuterSize => new (
+        public ConsoleSize OuterSize => new(
             this.InnerSize.Width + (this.HasBorder ? 2 : 0),
             this.InnerSize.Height + (this.HasBorder ? 2 : 0));
 

@@ -10,11 +10,11 @@ namespace Sde.ConsoleGems.Test.Menus
     /// </summary>
     public class AbstractMenuTest
     {
-        private readonly Mock<IAutoCompleter> mockAutoCompleter = new ();
-        private readonly Mock<IConsole> mockConsole = new ();
-        private readonly Mock<IMenuWriter> mockMenuWriter = new ();
-        private readonly Mock<ICommand> mockCommand = new ();
-        private readonly ApplicationState applicationState = new ();
+        private readonly Mock<IAutoCompleter> mockAutoCompleter = new();
+        private readonly Mock<IConsole> mockConsole = new();
+        private readonly Mock<IMenuWriter> mockMenuWriter = new();
+        private readonly Mock<ICommand> mockCommand = new();
+        private readonly ApplicationState applicationState = new();
 
         /// <summary>
         /// Tests that the ShowCommand property returns a

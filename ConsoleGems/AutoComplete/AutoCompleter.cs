@@ -47,7 +47,7 @@ namespace Sde.ConsoleGems.AutoComplete
         public string ReadLine(List<string> suggestions, string prompt = "")
         {
             this.Suggestions = suggestions;
-            this.UserInputSB = new ();
+            this.UserInputSB = new();
             this.CursorPositionWithinUserInput = 0;
             console.Write(prompt, ConsoleOutputType.Prompt);
             var keyInfo = console.ReadKey(intercept: true);

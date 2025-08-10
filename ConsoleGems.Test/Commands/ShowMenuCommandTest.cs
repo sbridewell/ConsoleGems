@@ -12,11 +12,11 @@ namespace Sde.ConsoleGems.Test.Commands
     /// </summary>
     public class ShowMenuCommandTest
     {
-        private readonly Mock<IAutoCompleter> mockAutoCompleter = new ();
-        private readonly Mock<IMenuWriter> mockConsoleMenuWriter = new ();
-        private readonly Mock<IConsole> mockConsole = new ();
-        private readonly Mock<ICommand> mockCommand1 = new ();
-        private readonly ApplicationState applicationState = new ();
+        private readonly Mock<IAutoCompleter> mockAutoCompleter = new();
+        private readonly Mock<IMenuWriter> mockConsoleMenuWriter = new();
+        private readonly Mock<IConsole> mockConsole = new();
+        private readonly Mock<ICommand> mockCommand1 = new();
+        private readonly ApplicationState applicationState = new();
         private ExitCurrentMenuCommand? exitCurrentMenuCommand;
         private MenuForTesting? menu;
 

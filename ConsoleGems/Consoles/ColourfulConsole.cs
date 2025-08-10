@@ -52,10 +52,26 @@ namespace Sde.ConsoleGems.Consoles
         }
 
         /// <inheritdoc/>
+        public override void Write(string textToWrite, ConsoleColours consoleColours)
+        {
+            consoleColourManager.SetColours(consoleColours);
+            base.Write(textToWrite, consoleColours);
+            consoleColourManager.SetColours(ConsoleColours.Default);
+        }
+
+        /// <inheritdoc/>
         public override void Write(char characterToWrite, ConsoleOutputType outputType = ConsoleOutputType.Default)
         {
             this.SetColours(outputType);
             base.Write(characterToWrite, outputType);
+            consoleColourManager.SetColours(ConsoleColours.Default);
+        }
+
+        /// <inheritdoc/>
+        public override void Write(char characterToWrite, ConsoleColours consoleColours)
+        {
+            consoleColourManager.SetColours(consoleColours);
+            base.Write(characterToWrite, consoleColours);
             consoleColourManager.SetColours(ConsoleColours.Default);
         }
 

@@ -22,7 +22,8 @@ namespace Sde.ConsoleGems.GamesDemo
         IConsole console,
         ApplicationState applicationState,
         LaunchMazeGameCommand launchMazeGameCommand,
-        LaunchSnakeGameCommand launchSnakeGameCommand)
+        LaunchSnakeGameCommand launchSnakeGameCommand,
+        CreateAsciiArtCommand createAsciiArtCommand)
         : AbstractMenu(autoCompleter, menuWriter, console, applicationState)
     {
         /// <inheritdoc/>
@@ -32,19 +33,25 @@ namespace Sde.ConsoleGems.GamesDemo
         public override string Description => "A selection of classic games implemented as console applications.";
 
         /// <inheritdoc/>
-        public override List<MenuItem> MenuItems => new ()
+        public override List<MenuItem> MenuItems => new()
         {
-            new ()
+            new()
             {
                 Key = "m",
                 Description = "A simple maze game.",
                 Command = launchMazeGameCommand,
             },
-            new ()
+            new()
             {
                 Key = "s",
                 Description = "A snake game.",
                 Command = launchSnakeGameCommand,
+            },
+            new()
+            {
+                Key = "a",
+                Description = "Create ASCII art.",
+                Command = createAsciiArtCommand,
             },
         };
     }
