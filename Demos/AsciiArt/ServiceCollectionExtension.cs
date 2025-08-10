@@ -21,12 +21,13 @@ namespace Sde.AsciiArt
         /// <returns>The updated service collection.</returns>
         [SupportedOSPlatform("windows")]
         public static IServiceCollection AddAsciiArt(
-            this IServiceCollection services)
+            this IServiceCollection services,
+            string testImagesDirectory = "TestImages")
         {
             services.AddSingleton<IColourMapperPrompter, ColourMapperPrompter>();
             services.AddSingleton<ICharacterBlenderPrompter, CharacterBlenderPrompter>();
             services.AddSingleton<IAsciiArtGenerator, AsciiArtGenerator>();
-            Directory.SetCurrentDirectory("TestImages");
+            services.AddSingleton<string>(provider => testImagesDirectory);
             return services;
         }
     }
