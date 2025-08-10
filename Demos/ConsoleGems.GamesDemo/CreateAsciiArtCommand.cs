@@ -31,45 +31,30 @@ namespace Sde.ConsoleGems.GamesDemo
         IAsciiArtGenerator asciiArtGenerator)
         : ICommand
     {
-        /// <summary>
-        /// Gets the console to render output to.
-        /// </summary>
-        protected IConsole Console { get; } = console;
-
-        /// <summary>
-        /// Gets the file prompter used to select image files.
-        /// </summary>
-        protected IFilePrompter Prompter { get; } = prompter;
-
-        /// <summary>
-        /// Gets the colour mapper prompter used to select a colour mapping strategy.
-        /// </summary>
-        protected IColourMapperPrompter ColourMapperPrompter { get; } = colourMapperPrompter;
-
         private readonly IAsciiArtGenerator asciiArtGenerator = asciiArtGenerator;
 
         /// <inheritdoc/>
         [SupportedOSPlatform("windows")]
         public void Execute()
         {
-            var imagePath = Prompter.Prompt(
+            var imagePath = prompter.Prompt(
                 new DirectoryInfo(Environment.CurrentDirectory),
                 "Select an image file to render as ASCII art: ",
                 true);
 
             // Prompt for quality mode
-            Console.WriteLine("Select quality mode:");
-            Console.WriteLine("  1. Fast (uses selected strategies)");
-            Console.WriteLine("  2. Best quality (tries all combinations)");
+            console.WriteLine("Select quality mode:");
+            console.WriteLine("  1. Fast (uses selected strategies)");
+            console.WriteLine("  2. Best quality (tries all combinations)");
             int qualityMode = 0;
             while (qualityMode != 1 && qualityMode != 2)
             {
-                Console.Write("Enter the number of your choice: ");
-                var input = Console.ReadLine();
+                console.Write("Enter the number of your choice: ");
+                var input = console.ReadLine();
                 int.TryParse(input, out qualityMode);
                 if (qualityMode != 1 && qualityMode != 2)
                 {
-                    Console.WriteLine("Invalid selection. Please try again.");
+                    console.WriteLine("Invalid selection. Please try again.");
                 }
             }
 
@@ -123,20 +108,20 @@ namespace Sde.ConsoleGems.GamesDemo
             if (qualityMode == 1)
             {
                 // Prompt once for colour mapping strategy
-                var selectedMapper = ColourMapperPrompter.Prompt(colourOptions);
-                var characterBlenderPrompter = new CharacterBlenderPrompter(Console);
+                var selectedMapper = colourMapperPrompter.Prompt(colourOptions);
+                var characterBlenderPrompter = new CharacterBlenderPrompter(console);
                 var selectedCharacterBlender = characterBlenderPrompter.Prompt(blenderOptions);
                 cellMapper = new SimpleCellMapper(selectedMapper, selectedMapper, selectedCharacterBlender);
             }
             else
             {
                 // Prompt for character blender when best quality mode is selected
-                var characterBlenderPrompter = new CharacterBlenderPrompter(Console);
+                var characterBlenderPrompter = new CharacterBlenderPrompter(console);
                 var selectedCharacterBlender = characterBlenderPrompter.Prompt(blenderOptions);
                 cellMapper = new BlendingCellMapper(selectedCharacterBlender);
             }
 
-            asciiArtGenerator.RenderImageAsAsciiArt(imagePath.FullName, Console, cellMapper);
+            asciiArtGenerator.RenderImageAsAsciiArt(imagePath.FullName, console, cellMapper);
         }
     }
 }
