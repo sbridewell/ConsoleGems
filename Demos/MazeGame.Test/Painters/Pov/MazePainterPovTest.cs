@@ -21,18 +21,6 @@ namespace Sde.MazeGame.Test.Painters.Pov
     /// </summary>
     public class MazePainterPovTest
     {
-        #region private record test case shapes
-
-        [SuppressMessage(
-            "Style",
-            "IDE1006:Naming Styles",
-            Justification = "Contradicts SA1313 which is a warning rather than info")]
-        private record RenderForwardViewTestCase(
-            ForwardView forwardView,
-            string[] expectedCharacters);
-
-        #endregion
-
         private static readonly Maze DefaultMaze = new MazeFactory().CreateFromStringArray([
             "##############", // 0
             "E          # #", // 1
@@ -79,7 +67,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
         /// Gets the names of the test cases for the RenderForwardView method.
         /// </summary>
         public static TheoryData<string> RenderForwardViewTestCaseNames
-            => new (RenderForwardViewTestCases.Keys);
+            => new(RenderForwardViewTestCases.Keys);
 
         #endregion
 
@@ -91,7 +79,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             "SA1118:Parameter should not span multiple lines",
             Justification = "This format is nice and readable")]
         private static Dictionary<string, RenderForwardViewTestCase> RenderForwardViewTestCases
-            => new ()
+            => new()
             {
                 ["Cul-de-sac, at end, facing north"] = new RenderForwardViewTestCase(
                     new ForwardView(
@@ -1100,7 +1088,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             var testCase = RenderForwardViewTestCases[testCaseName];
 
             // Act
-            this.painterProxy.CallRenderForwardView(testCase.forwardView, Direction.North);
+            this.painterProxy.CallRenderForwardView(testCase.ForwardView, Direction.North);
 
             // Assert
             var actualCharacters = this.painterProxy.PublicScreenBuffer.ToStringArray();
@@ -1109,9 +1097,13 @@ namespace Sde.MazeGame.Test.Painters.Pov
                 this.output.WriteLine(line);
             }
 
-            this.output.WriteLine(testCase.forwardView.ToString());
-            actualCharacters.Should().BeEquivalentTo(testCase.expectedCharacters, options =>
+            this.output.WriteLine(testCase.ForwardView.ToString());
+            actualCharacters.Should().BeEquivalentTo(testCase.ExpectedCharacters, options =>
                 options.WithStrictOrdering());
         }
+
+        private record RenderForwardViewTestCase(
+            ForwardView ForwardView,
+            string[] ExpectedCharacters);
     }
 }

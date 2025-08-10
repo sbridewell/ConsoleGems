@@ -12,7 +12,7 @@ namespace Sde.SnakeGame
     /// </summary>
     public class Snake : ISnake
     {
-        private readonly Queue<ConsolePoint> segments = new ();
+        private readonly Queue<ConsolePoint> segments = new();
 
         /// <inheritdoc/>
         public ConsolePoint HeadPosition => this.segments.Count > 0 ? this.segments.Last() : new ConsolePoint(0, 0);
@@ -61,7 +61,7 @@ namespace Sde.SnakeGame
                 Direction.Down => new ConsolePoint(head.X, head.Y + 1),
                 Direction.Left => new ConsolePoint(head.X - 1, head.Y),
                 Direction.Right => new ConsolePoint(head.X + 1, head.Y),
-                _ => throw new InvalidOperationException("Invalid direction")
+                _ => throw new InvalidOperationException("Invalid direction"),
             };
             this.segments.Enqueue(newHeadPosition); // Add the new head segment
         }

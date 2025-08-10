@@ -17,9 +17,9 @@ namespace Sde.MazeGame.Painters.Pov
     /// </summary>
     public class ForwardView
     {
-        private readonly List<MazePointType> leftRow = new ();
-        private readonly List<MazePointType> middleRow = new ();
-        private readonly List<MazePointType> rightRow = new ();
+        private readonly List<MazePointType> leftRow = new();
+        private readonly List<MazePointType> middleRow = new();
+        private readonly List<MazePointType> rightRow = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ForwardView"/> class.

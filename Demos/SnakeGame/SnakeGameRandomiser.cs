@@ -14,7 +14,7 @@ namespace Sde.SnakeGame
     [ExcludeFromCodeCoverage]
     public class SnakeGameRandomiser : ISnakeGameRandomiser
     {
-        private static readonly Random TheRandom = new ();
+        private static readonly Random TheRandom = new();
 
         /// <inheritdoc/>
         public ConsolePoint GetFoodPosition(IGame game)

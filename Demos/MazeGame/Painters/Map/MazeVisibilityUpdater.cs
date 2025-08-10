@@ -48,8 +48,8 @@ namespace Sde.MazeGame.Painters.Map
                 double dy = 0;
                 for (var i = 0; i <= visibleDistance; i++)
                 {
-                    dx += direction.dx;
-                    dy += direction.dy;
+                    dx += direction.Dx;
+                    dy += direction.Dy;
                     var xToCheck = (int)Math.Round(player.Position.X + dx);
                     var yToCheck = (int)Math.Round(player.Position.Y + dy);
                     var pointToCheck = new ConsolePoint(xToCheck, yToCheck);

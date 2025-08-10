@@ -27,9 +27,9 @@ if ($null -eq $moduleResult) {
     throw "No module found called '$ModuleUnderTest'";
 }
 
-Write-Verbose "Get Method elements from module";
-$methods = $moduleResult.GetElementsByTagName("Method");
-Write-Verbose $methods;
+# Write-Verbose "Get Method elements from module";
+# $methods = $moduleResult.GetElementsByTagName("Method");
+# Write-Verbose $methods;
 
 $methodCount = ($methods | Measure-Object).Count;
 Write-Verbose "Found $methodCount methods";
