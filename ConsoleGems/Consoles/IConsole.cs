@@ -72,6 +72,13 @@ namespace Sde.ConsoleGems.Consoles
         void Write(string textToWrite, ConsoleOutputType outputType = default);
 
         /// <summary>
+        /// Writes the supplied text to the console without a terminating line break.
+        /// </summary>
+        /// <param name="textToWrite">The text to write.</param>
+        /// <param name="consoleColours">The foreground and background colours to use.</param>
+        void Write(string textToWrite, ConsoleColours consoleColours);
+
+        /// <summary>
         /// Writes the supplied character to the console without a terminating line break.
         /// </summary>
         /// <param name="characterToWrite">The character to write.</param>
@@ -79,6 +86,13 @@ namespace Sde.ConsoleGems.Consoles
         /// Indicates the type of output and therefore how it should be formatted.
         /// </param>
         void Write(char characterToWrite, ConsoleOutputType outputType = default);
+
+        /// <summary>
+        /// Writes the supplied character to the console without a terminating line break.
+        /// </summary>
+        /// <param name="characterToWrite">The character to write.</param>
+        /// <param name="consoleColours">The foreground and background colours to use.</param>
+        void Write(char characterToWrite, ConsoleColours consoleColours);
 
         /// <summary>
         /// Writes the supplied text to the console with a terminating line break.

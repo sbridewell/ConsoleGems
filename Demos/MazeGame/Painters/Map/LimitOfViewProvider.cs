@@ -21,7 +21,7 @@ namespace Sde.MazeGame.Painters.Map
         public LimitOfViewProvider(int visibleDistance)
         {
             this.VisibleDistance = visibleDistance;
-            this.LimitOfView = new ();
+            this.LimitOfView = new();
             for (var dy = -visibleDistance; dy <= visibleDistance; dy++)
             {
                 for (var dx = -visibleDistance; dx <= visibleDistance; dx++)

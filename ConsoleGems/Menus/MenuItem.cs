@@ -14,16 +14,16 @@ namespace Sde.ConsoleGems.Menus
         /// <summary>
         /// Gets or sets the key entered by the user to select the menu item.
         /// </summary>
-        required public string Key { get; set; }
+        public required string Key { get; set; }
 
         /// <summary>
         /// Gets or sets the description of the menu item.
         /// </summary>
-        required public string Description { get; set; }
+        public required string Description { get; set; }
 
         /// <summary>
         /// Gets or  sets the command to execute when the menu item is selected.
         /// </summary>
-        required public ICommand Command { get; set; }
+        public required ICommand Command { get; set; }
     }
 }

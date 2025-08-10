@@ -13,7 +13,7 @@ namespace Sde.MazeGame.KeyPressHandlers
         /// <summary>
         /// Gets the mapping of key presses to handlers.
         /// </summary>
-        public Dictionary<ConsoleKey, IKeyPressHandler> Mappings { get; } = new ()
+        public Dictionary<ConsoleKey, IKeyPressHandler> Mappings { get; } = new()
         {
             { ConsoleKey.LeftArrow, new TurnLeftKeyPressHandler() },
             { ConsoleKey.RightArrow, new TurnRightKeyPressHandler() },

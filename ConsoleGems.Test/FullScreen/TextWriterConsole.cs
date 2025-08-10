@@ -92,10 +92,29 @@ namespace Sde.ConsoleGems.Test.FullScreen
         }
 
         /// <inheritdoc/>
+        public void Write(string textToWrite, ConsoleColours consoleColours)
+        {
+            for (var i = 0; i < textToWrite.Length; i++)
+            {
+                if (this.CursorLeft < this.WindowWidth && this.CursorTop < this.WindowHeight)
+                {
+                    this.output[this.CursorLeft, this.CursorTop] = textToWrite[i];
+                    this.CursorLeft++;
+                }
+            }
+        }
+
+        /// <inheritdoc/>
         public void Write(char characterToWrite, ConsoleOutputType outputType = ConsoleOutputType.Default)
         {
             this.output[this.CursorLeft, this.CursorTop] = characterToWrite;
             this.CursorLeft++;
+        }
+
+        /// <inheritdoc/>
+        public void Write(char characterToWrite, ConsoleColours consoleColours)
+        {
+            this.Write(characterToWrite, ConsoleOutputType.Default);
         }
 
         /// <inheritdoc/>

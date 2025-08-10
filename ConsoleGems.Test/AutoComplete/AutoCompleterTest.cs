@@ -10,9 +10,9 @@ namespace Sde.ConsoleGems.Test.AutoComplete
     /// </summary>
     public class AutoCompleterTest
     {
-        private readonly Mock<IConsole> mockConsole = new ();
-        private readonly Mock<IAutoCompleteMatcher> mockMatcher = new ();
-        private readonly DummyKeyPressMappings dummyAutoCompleteKeyPressMappings = new ();
+        private readonly Mock<IConsole> mockConsole = new();
+        private readonly Mock<IAutoCompleteMatcher> mockMatcher = new();
+        private readonly DummyKeyPressMappings dummyAutoCompleteKeyPressMappings = new();
 
         private readonly List<string> suggestions =
         [
@@ -56,12 +56,12 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // An example of basic typing
                     {
                         [
-                            new ('a', ConsoleKey.NoName),
-                            new ('p', ConsoleKey.NoName),
-                            new ('p', ConsoleKey.NoName),
-                            new ('l', ConsoleKey.NoName),
-                            new ('e', ConsoleKey.NoName),
-                            new (' ', ConsoleKey.Enter),
+                            new('a', ConsoleKey.NoName),
+                            new('p', ConsoleKey.NoName),
+                            new('p', ConsoleKey.NoName),
+                            new('l', ConsoleKey.NoName),
+                            new('e', ConsoleKey.NoName),
+                            new(' ', ConsoleKey.Enter),
                         ],
                         string.Empty, // clipboard
                         "apple" // expected user input
@@ -70,13 +70,13 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Entering a capital letter
                     {
                         [
-                            new ('B', ConsoleKey.None),
-                            new ('a', ConsoleKey.None),
-                            new ('n', ConsoleKey.None),
-                            new ('a', ConsoleKey.None),
-                            new ('n', ConsoleKey.None),
-                            new ('a', ConsoleKey.None),
-                            new (' ', ConsoleKey.Enter),
+                            new('B', ConsoleKey.None),
+                            new('a', ConsoleKey.None),
+                            new('n', ConsoleKey.None),
+                            new('a', ConsoleKey.None),
+                            new('n', ConsoleKey.None),
+                            new('a', ConsoleKey.None),
+                            new(' ', ConsoleKey.Enter),
                         ],
                         string.Empty,
                         "Banana"
@@ -85,11 +85,11 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Use left arrow to add a missing letter
                     {
                         [
-                            new ('c', ConsoleKey.None),
-                            new ('t', ConsoleKey.None),
-                            new (' ', ConsoleKey.LeftArrow),
-                            new ('a', ConsoleKey.None),
-                            new (' ', ConsoleKey.Enter),
+                            new('c', ConsoleKey.None),
+                            new('t', ConsoleKey.None),
+                            new(' ', ConsoleKey.LeftArrow),
+                            new('a', ConsoleKey.None),
+                            new(' ', ConsoleKey.Enter),
                         ],
                         string.Empty,
                         "cat"
@@ -98,14 +98,14 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Use left and right arrow to add a missing letter
                     {
                         [
-                            new ('d', ConsoleKey.None),
-                            new ('g', ConsoleKey.None),
-                            new (' ', ConsoleKey.LeftArrow),
-                            new (' ', ConsoleKey.LeftArrow),
-                            new (' ', ConsoleKey.RightArrow),
-                            new ('o', ConsoleKey.None),
-                            new (' ', ConsoleKey.RightArrow),
-                            new (' ', ConsoleKey.Enter),
+                            new('d', ConsoleKey.None),
+                            new('g', ConsoleKey.None),
+                            new(' ', ConsoleKey.LeftArrow),
+                            new(' ', ConsoleKey.LeftArrow),
+                            new(' ', ConsoleKey.RightArrow),
+                            new('o', ConsoleKey.None),
+                            new(' ', ConsoleKey.RightArrow),
+                            new(' ', ConsoleKey.Enter),
                         ],
                         string.Empty,
                         "dog"
@@ -114,12 +114,12 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Using home and right arrow to add a missing letter
                     {
                         [
-                            new ('e', ConsoleKey.None),
-                            new ('d', ConsoleKey.None),
-                            new (' ', ConsoleKey.Home),
-                            new (' ', ConsoleKey.RightArrow),
-                            new ('n', ConsoleKey.None),
-                            new (' ', ConsoleKey.Enter),
+                            new('e', ConsoleKey.None),
+                            new('d', ConsoleKey.None),
+                            new(' ', ConsoleKey.Home),
+                            new(' ', ConsoleKey.RightArrow),
+                            new('n', ConsoleKey.None),
+                            new(' ', ConsoleKey.Enter),
                         ],
                         string.Empty,
                         "end"
@@ -128,14 +128,14 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Using left arrow, end and left arrow to add a missing character
                     {
                         [
-                            new ('f', ConsoleKey.None),
-                            new ('i', ConsoleKey.None),
-                            new ('h', ConsoleKey.None),
-                            new (' ', ConsoleKey.LeftArrow),
-                            new (' ', ConsoleKey.End),
-                            new (' ', ConsoleKey.LeftArrow),
-                            new ('s', ConsoleKey.None),
-                            new (' ', ConsoleKey.Enter),
+                            new('f', ConsoleKey.None),
+                            new('i', ConsoleKey.None),
+                            new('h', ConsoleKey.None),
+                            new(' ', ConsoleKey.LeftArrow),
+                            new(' ', ConsoleKey.End),
+                            new(' ', ConsoleKey.LeftArrow),
+                            new('s', ConsoleKey.None),
+                            new(' ', ConsoleKey.Enter),
                         ],
                         string.Empty,
                         "fish"
@@ -144,15 +144,15 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Using left arrow, and backspace to correct a character
                     {
                         [
-                            new ('g', ConsoleKey.None),
-                            new ('r', ConsoleKey.None),
-                            new ('a', ConsoleKey.None),
-                            new ('o', ConsoleKey.None),
-                            new ('e', ConsoleKey.None),
-                            new (' ', ConsoleKey.LeftArrow),
-                            new (' ', ConsoleKey.Backspace),
-                            new ('p', ConsoleKey.None),
-                            new (' ', ConsoleKey.Enter),
+                            new('g', ConsoleKey.None),
+                            new('r', ConsoleKey.None),
+                            new('a', ConsoleKey.None),
+                            new('o', ConsoleKey.None),
+                            new('e', ConsoleKey.None),
+                            new(' ', ConsoleKey.LeftArrow),
+                            new(' ', ConsoleKey.Backspace),
+                            new('p', ConsoleKey.None),
+                            new(' ', ConsoleKey.Enter),
                         ],
                         string.Empty,
                         "grape"
@@ -161,19 +161,19 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Using left arrow and delete to correct a character
                     {
                         [
-                            new ('h', ConsoleKey.None),
-                            new ('o', ConsoleKey.None),
-                            new ('n', ConsoleKey.None),
-                            new ('e', ConsoleKey.None),
-                            new ('y', ConsoleKey.None),
-                            new ('d', ConsoleKey.None),
-                            new ('r', ConsoleKey.None),
-                            new ('w', ConsoleKey.None),
-                            new (' ', ConsoleKey.LeftArrow),
-                            new (' ', ConsoleKey.LeftArrow),
-                            new (' ', ConsoleKey.Delete),
-                            new ('e', ConsoleKey.None),
-                            new (' ', ConsoleKey.Enter),
+                            new('h', ConsoleKey.None),
+                            new('o', ConsoleKey.None),
+                            new('n', ConsoleKey.None),
+                            new('e', ConsoleKey.None),
+                            new('y', ConsoleKey.None),
+                            new('d', ConsoleKey.None),
+                            new('r', ConsoleKey.None),
+                            new('w', ConsoleKey.None),
+                            new(' ', ConsoleKey.LeftArrow),
+                            new(' ', ConsoleKey.LeftArrow),
+                            new(' ', ConsoleKey.Delete),
+                            new('e', ConsoleKey.None),
+                            new(' ', ConsoleKey.Enter),
                         ],
                         string.Empty,
                         "honeydew"
@@ -182,12 +182,12 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Using control-v to paste text
                     {
                         [
-                            new ('l', ConsoleKey.None, false, false, false),
-                            new ('e', ConsoleKey.None, false, false, false),
-                            new ('n', ConsoleKey.None, false, false, false),
-                            new (' ', ConsoleKey.LeftArrow, false, false, false),
-                            new (' ', ConsoleKey.V, false, false, control: true),
-                            new (' ', ConsoleKey.Enter, false, false, false),
+                            new('l', ConsoleKey.None, false, false, false),
+                            new('e', ConsoleKey.None, false, false, false),
+                            new('n', ConsoleKey.None, false, false, false),
+                            new(' ', ConsoleKey.LeftArrow, false, false, false),
+                            new(' ', ConsoleKey.V, false, false, control: true),
+                            new(' ', ConsoleKey.Enter, false, false, false),
                         ],
                         "mo", // clipboard
                         "lemon" // expected user input
@@ -196,9 +196,9 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Using tab with some previous input to select next suggestion
                     {
                         [
-                            new ('m', ConsoleKey.None, false, false, false),
-                            new (' ', ConsoleKey.Tab, false, false, false),
-                            new (' ', ConsoleKey.Enter, false, false, false),
+                            new('m', ConsoleKey.None, false, false, false),
+                            new(' ', ConsoleKey.Tab, false, false, false),
+                            new(' ', ConsoleKey.Enter, false, false, false),
                         ],
                         string.Empty, // clipboard
                         "mango" // expected user input
@@ -207,10 +207,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Using tab twice with some previous input to select next suggestion but one
                     {
                         [
-                            new ('m', ConsoleKey.None, false, false, false),
-                            new (' ', ConsoleKey.Tab, false, false, false),
-                            new (' ', ConsoleKey.Tab, false, false, false),
-                            new (' ', ConsoleKey.Enter, false, false, false),
+                            new('m', ConsoleKey.None, false, false, false),
+                            new(' ', ConsoleKey.Tab, false, false, false),
+                            new(' ', ConsoleKey.Tab, false, false, false),
+                            new(' ', ConsoleKey.Enter, false, false, false),
                         ],
                         string.Empty, // clipboard
                         "nectarine" // expected user input
@@ -219,10 +219,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                     // Using tab then shift-tab with no previous input to select last suggestion
                     {
                         [
-                            new ('p', ConsoleKey.None, false, false, false),
-                            new (' ', ConsoleKey.Tab, false, false, false),
-                            new (' ', ConsoleKey.Tab, shift: true, false, false),
-                            new (' ', ConsoleKey.Enter, false, false, false),
+                            new('p', ConsoleKey.None, false, false, false),
+                            new(' ', ConsoleKey.Tab, false, false, false),
+                            new(' ', ConsoleKey.Tab, shift: true, false, false),
+                            new(' ', ConsoleKey.Enter, false, false, false),
                         ],
                         string.Empty, // clipboard
                         "orange" // expected user input
@@ -374,12 +374,12 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             var prompt = "12345";
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
-                new () { Character = '6', Key = ConsoleKey.NoName },
-                new () { Character = '7', Key = ConsoleKey.NoName },
-                new () { Character = '8', Key = ConsoleKey.NoName },
-                new () { Character = '9', Key = ConsoleKey.NoName },
-                new () { Character = '0', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
+                new() { Character = '6', Key = ConsoleKey.NoName },
+                new() { Character = '7', Key = ConsoleKey.NoName },
+                new() { Character = '8', Key = ConsoleKey.NoName },
+                new() { Character = '9', Key = ConsoleKey.NoName },
+                new() { Character = '0', Key = ConsoleKey.NoName },
+                new() { Character = ' ', Key = ConsoleKey.Enter },
             };
             var expectedOutput = "67890"; // last keypress has not been ignored
             var autoCompleter = new AutoCompleter(
@@ -405,10 +405,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             this.mockConsole.Setup(c => c.WindowWidth).Returns(120);
             var keys = new List<ConsoleKeyInfoWrapper>
             {
-                new ('a', ConsoleKey.A),
-                new ('b', ConsoleKey.B),
-                new ('q', ConsoleKey.Q),
-                new (' ', ConsoleKey.Enter),
+                new('a', ConsoleKey.A),
+                new('b', ConsoleKey.B),
+                new('q', ConsoleKey.Q),
+                new(' ', ConsoleKey.Enter),
             };
             var autoCompleter = new AutoCompleter(
                 this.dummyAutoCompleteKeyPressMappings,
@@ -461,7 +461,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
             var keyPressMappings = this.dummyAutoCompleteKeyPressMappings;
             var autoCompleter = new AutoCompleter(keyPressMappings, this.mockMatcher.Object, this.mockConsole.Object);
             var prompt = "What is the meaning of life? ";
-            var userInput = new List<ConsoleKeyInfoWrapper> { new () { Character = ' ', Key = ConsoleKey.Enter } };
+            var userInput = new List<ConsoleKeyInfoWrapper> { new() { Character = ' ', Key = ConsoleKey.Enter } };
             this.SendKeysToConsole(userInput);
 
             // Act
@@ -488,11 +488,11 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
-                new () { Character = 's', Key = ConsoleKey.NoName },
-                new () { Character = 'o', Key = ConsoleKey.NoName },
-                new () { Character = 'm', Key = ConsoleKey.NoName },
-                new () { Character = 'e', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
+                new() { Character = 's', Key = ConsoleKey.NoName },
+                new() { Character = 'o', Key = ConsoleKey.NoName },
+                new() { Character = 'm', Key = ConsoleKey.NoName },
+                new() { Character = 'e', Key = ConsoleKey.NoName },
+                new() { Character = ' ', Key = ConsoleKey.Enter },
             };
             this.SendKeysToConsole(userInput);
 
@@ -648,10 +648,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = '2', Key = ConsoleKey.NoName },
-                new () { Character = '3', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
+                new() { Character = '1', Key = ConsoleKey.NoName },
+                new() { Character = '2', Key = ConsoleKey.NoName },
+                new() { Character = '3', Key = ConsoleKey.NoName },
+                new() { Character = ' ', Key = ConsoleKey.Enter },
             };
             this.SendKeysToConsole(userInput);
             autoCompleter.ReadLine(this.suggestions, string.Empty);
@@ -680,10 +680,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = '2', Key = ConsoleKey.NoName },
-                new () { Character = '3', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
+                new() { Character = '1', Key = ConsoleKey.NoName },
+                new() { Character = '2', Key = ConsoleKey.NoName },
+                new() { Character = '3', Key = ConsoleKey.NoName },
+                new() { Character = ' ', Key = ConsoleKey.Enter },
             };
             this.SendKeysToConsole(userInput);
             autoCompleter.ReadLine(this.suggestions, string.Empty);
@@ -735,7 +735,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
-                new () { Character = ' ', Key = ConsoleKey.Enter },
+                new() { Character = ' ', Key = ConsoleKey.Enter },
             };
             this.SendKeysToConsole(userInput);
             autoCompleter.ReadLine(this.suggestions, string.Empty);
@@ -866,7 +866,7 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
-                new () { Character = ' ', Key = ConsoleKey.Enter },
+                new() { Character = ' ', Key = ConsoleKey.Enter },
             };
             this.SendKeysToConsole(userInput);
             autoCompleter.ReadLine(this.suggestions, string.Empty);
@@ -1107,10 +1107,10 @@ namespace Sde.ConsoleGems.Test.AutoComplete
                 this.mockConsole.Object);
             var userInput = new List<ConsoleKeyInfoWrapper>
             {
-                new () { Character = '1', Key = ConsoleKey.NoName },
-                new () { Character = '2', Key = ConsoleKey.NoName },
-                new () { Character = '3', Key = ConsoleKey.NoName },
-                new () { Character = ' ', Key = ConsoleKey.Enter },
+                new() { Character = '1', Key = ConsoleKey.NoName },
+                new() { Character = '2', Key = ConsoleKey.NoName },
+                new() { Character = '3', Key = ConsoleKey.NoName },
+                new() { Character = ' ', Key = ConsoleKey.Enter },
             };
             this.SendKeysToConsole(userInput);
             autoCompleter.ReadLine(this.suggestions, string.Empty);

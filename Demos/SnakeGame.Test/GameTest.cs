@@ -18,11 +18,11 @@ namespace SnakeGame.Test
     /// </summary>
     public class GameTest
     {
-        private readonly Mock<IConsole> mockConsole = new ();
-        private readonly Mock<IStatusPainter> mockStatusPainter = new ();
-        private readonly Mock<ISnakeGamePainter> mockSnakeGamePainter = new ();
-        private readonly Mock<ISnake> mockSnake = new ();
-        private readonly Mock<ISnakeGameRandomiser> mockSnakeGameRandomiser = new ();
+        private readonly Mock<IConsole> mockConsole = new();
+        private readonly Mock<IStatusPainter> mockStatusPainter = new();
+        private readonly Mock<ISnakeGamePainter> mockSnakeGamePainter = new();
+        private readonly Mock<ISnake> mockSnake = new();
+        private readonly Mock<ISnakeGameRandomiser> mockSnakeGameRandomiser = new();
 
         /// <summary>
         /// Tests that the Initialise method initialises the game correctly.

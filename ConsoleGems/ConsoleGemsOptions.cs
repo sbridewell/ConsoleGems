@@ -62,7 +62,7 @@ namespace Sde.ConsoleGems
         /// <summary>
         /// Gets the prompters that the application can use.
         /// </summary>
-        public Dictionary<Type, Type> Prompters { get; } = new ();
+        public Dictionary<Type, Type> Prompters { get; } = new();
 
         /// <summary>
         /// Configures ConsoleGems to use auto-complete.

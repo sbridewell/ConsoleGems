@@ -20,15 +20,13 @@ namespace Sde.MazeGame.Test
     /// </summary>
     public class MazeGameControllerTest
     {
-        private record MoveForwardTestCase(Maze maze, ConsolePoint playerPosition, Direction facingDirection);
-
-        private readonly Mock<IConsole> mockConsole = new ();
-        private readonly Mock<IStatusPainter> mockStatusPainter = new ();
-        private readonly Mock<IMazePainterMap> mockMazePainterMap = new ();
-        private readonly Mock<IMazePainterPov> mockMazePainterPov = new ();
-        private readonly Mock<ILimitOfViewProvider> mockLimitOfViewProvider = new ();
+        private readonly Mock<IConsole> mockConsole = new();
+        private readonly Mock<IStatusPainter> mockStatusPainter = new();
+        private readonly Mock<IMazePainterMap> mockMazePainterMap = new();
+        private readonly Mock<IMazePainterPov> mockMazePainterPov = new();
+        private readonly Mock<ILimitOfViewProvider> mockLimitOfViewProvider = new();
         private readonly MazeVisibilityUpdater mazeVisibilityUpdater;
-        private readonly Mock<IMazeGameRandomiser> mockMazeGameRandomiser = new ();
+        private readonly Mock<IMazeGameRandomiser> mockMazeGameRandomiser = new();
         private readonly MazeGameOptions options = new MazeGameOptions()
             .WithMapViewOrigin(0, 0)
             .WithPovViewOrigin(1, 1)
@@ -43,14 +41,14 @@ namespace Sde.MazeGame.Test
             this.mockLimitOfViewProvider.SetupGet(p => p.VisibleDistance).Returns(5);
             this.mockLimitOfViewProvider.SetupGet(p => p.LimitOfView).Returns(new List<ConsolePointOffset>()
             {
-                new (1, 0),
-                new (0, 1),
-                new (-1, 0),
-                new (0, -1),
-                new (1, 1),
-                new (-1, -1),
-                new (1, -1),
-                new (-1, 1),
+                new(1, 0),
+                new(0, 1),
+                new(-1, 0),
+                new(0, -1),
+                new(1, 1),
+                new(-1, -1),
+                new(1, -1),
+                new(-1, 1),
             });
             this.mazeVisibilityUpdater = new MazeVisibilityUpdater(this.mockLimitOfViewProvider.Object);
         }
@@ -59,13 +57,13 @@ namespace Sde.MazeGame.Test
         /// Gets the names of the test cases for the player being unable to move forward.
         /// </summary>
         public static TheoryData<string> PlayerCannotMoveForwardTestCaseNames
-            => new (PlayerCannotMoveForwardTestData.Keys.ToList());
+            => new(PlayerCannotMoveForwardTestData.Keys.ToList());
 
         /// <summary>
         /// Gets the names of the test cases for the player being able to move forward.
         /// </summary>
         public static TheoryData<string> PlayerCanMoveForwardTestCaseNames
-            => new (PlayerCanMoveForwardTestData.Keys.ToList());
+            => new(PlayerCanMoveForwardTestData.Keys.ToList());
 
         private static Dictionary<string, MoveForwardTestCase> PlayerCannotMoveForwardTestData =>
             new Dictionary<string, MoveForwardTestCase>
@@ -163,15 +161,18 @@ namespace Sde.MazeGame.Test
             this.mockStatusPainter.Verify(
                 m => m.Paint(
                     It.Is<string>(s => s.Contains("Use left and right arrows to turn, up arrow to move forward and Q to quit.")),
-                    ConsoleOutputType.Error), Times.Once);
+                    ConsoleOutputType.Error),
+                Times.Once);
             this.mockStatusPainter.Verify(
                 m => m.Paint(
                     It.Is<string>(s => s.Contains("Find your way out of the maze! You are facing " + controller.CurrentGame!.Player.FacingDirection)),
-                    ConsoleOutputType.Default), Times.AtLeastOnce);
+                    ConsoleOutputType.Default),
+                Times.AtLeastOnce);
             this.mockStatusPainter.Verify(
                 m => m.Paint(
                     It.Is<string>(s => s.Contains("Thank you for playing")),
-                    ConsoleOutputType.Default), Times.Once);
+                    ConsoleOutputType.Default),
+                Times.Once);
         }
 
         /// <summary>
@@ -257,15 +258,15 @@ namespace Sde.MazeGame.Test
                 .WithStatusOrigin(0, 0)
                 .WithMazeDataFile(@"MazeData\3x3.maze.txt");
             controller.Initialise(myOptions);
-            controller.CurrentGame!.Player.Position = testCase.playerPosition;
-            controller.CurrentGame.Player.FacingDirection = testCase.facingDirection;
+            controller.CurrentGame!.Player.Position = testCase.PlayerPosition;
+            controller.CurrentGame.Player.FacingDirection = testCase.FacingDirection;
 
             // Act
             controller.TryToMovePlayerForward();
 
             // Assert
-            controller.CurrentGame.Player.Position.Should().Be(testCase.playerPosition);
-            controller.CurrentGame.Player.FacingDirection.Should().Be(testCase.facingDirection);
+            controller.CurrentGame.Player.Position.Should().Be(testCase.PlayerPosition);
+            controller.CurrentGame.Player.FacingDirection.Should().Be(testCase.FacingDirection);
             this.mockStatusPainter.Verify(
                 m => m.Paint(
                     It.Is<string>(s => s.Contains("You can't move forward, there's a wall in the way.")),
@@ -311,20 +312,20 @@ namespace Sde.MazeGame.Test
             var testCase = PlayerCanMoveForwardTestData[testCaseName];
             var controller = this.InstantiateController();
             controller.Initialise(this.options);
-            controller.CurrentGame!.Player.Position = testCase.playerPosition;
-            controller.CurrentGame.Player.FacingDirection = testCase.facingDirection;
+            controller.CurrentGame!.Player.Position = testCase.PlayerPosition;
+            controller.CurrentGame.Player.FacingDirection = testCase.FacingDirection;
 
             // Act
             controller.TryToMovePlayerForward();
 
             // Assert
-            controller.CurrentGame.Player.Position.Should().NotBe(testCase.playerPosition);
-            controller.CurrentGame.Player.Position.X.Should().BeInRange(testCase.playerPosition.X - 1, testCase.playerPosition.X + 1);
-            controller.CurrentGame.Player.Position.Y.Should().BeInRange(testCase.playerPosition.Y - 1, testCase.playerPosition.Y + 1);
-            controller.CurrentGame.Player.FacingDirection.Should().Be(testCase.facingDirection);
+            controller.CurrentGame.Player.Position.Should().NotBe(testCase.PlayerPosition);
+            controller.CurrentGame.Player.Position.X.Should().BeInRange(testCase.PlayerPosition.X - 1, testCase.PlayerPosition.X + 1);
+            controller.CurrentGame.Player.Position.Y.Should().BeInRange(testCase.PlayerPosition.Y - 1, testCase.PlayerPosition.Y + 1);
+            controller.CurrentGame.Player.FacingDirection.Should().Be(testCase.FacingDirection);
             this.mockStatusPainter.Verify(
                 m => m.Paint(
-                    It.Is<string>(s => s.Contains("Find your way out of the maze! You are facing " + testCase.facingDirection.ToString())),
+                    It.Is<string>(s => s.Contains("Find your way out of the maze! You are facing " + testCase.FacingDirection.ToString())),
                     ConsoleOutputType.Default),
                 Times.AtLeastOnce);
         }
@@ -477,5 +478,7 @@ namespace Sde.MazeGame.Test
                 this.mockMazeGameRandomiser.Object);
             return controller;
         }
+
+        private record MoveForwardTestCase(Maze Maze, ConsolePoint PlayerPosition, Direction FacingDirection);
     }
 }

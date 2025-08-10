@@ -30,7 +30,7 @@ namespace Sde.MazeGame.Models
         /// <summary>
         /// Gets a vector representing one step in the direction of the offset.
         /// </summary>
-        public (double dx, double dy) Direction
+        public (double Dx, double Dy) Direction
         {
             get
             {

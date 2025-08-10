@@ -10,14 +10,14 @@ namespace Sde.ConsoleGems.Test.Consoles
     /// </summary>
     public class ColourfulConsoleTest : ConsoleTest
     {
-        private readonly Mock<IConsoleColourManager> mockConsoleColourManager = new ();
+        private readonly Mock<IConsoleColourManager> mockConsoleColourManager = new();
 
         /// <summary>
         /// Gets the expected relationships between
         /// <see cref="ConsoleOutputType"/> members and the
         /// corresponding <see cref="ConsoleColours"/>.
         /// </summary>
-        public static TheoryData<ConsoleOutputType, ConsoleColours> OutputTypesAndColours => new ()
+        public static TheoryData<ConsoleOutputType, ConsoleColours> OutputTypesAndColours => new()
         {
             { ConsoleOutputType.Default, ConsoleColours.Default },
             { ConsoleOutputType.Prompt, ConsoleColours.Prompt },
@@ -235,6 +235,48 @@ namespace Sde.ConsoleGems.Test.Consoles
                 // Assert
                 var ex = action.Should().Throw<InvalidOperationException>().Which;
                 ex.Message.Should().Contain($"The '{nameof(ConsoleColours)}' class does not have a public static property called '2147483647'.");
+            }
+        }
+
+        /// <summary>
+        /// Tests that Write(string, ConsoleColours) sets and resets colours as expected.
+        /// </summary>
+        [Fact]
+        public void Write_String_WithConsoleColours_SetsAndResetsColours()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                // Arrange
+                var console = new ColourfulConsole(this.mockConsoleColourManager.Object);
+                var colours = new ConsoleColours(ConsoleColor.Green, ConsoleColor.Black);
+
+                // Act
+                console.Write("TestString", colours);
+
+                // Assert
+                this.mockConsoleColourManager.Verify(m => m.SetColours(colours), Times.Once);
+                this.mockConsoleColourManager.Verify(m => m.SetColours(ConsoleColours.Default), Times.Once);
+            }
+        }
+
+        /// <summary>
+        /// Tests that Write(char, ConsoleColours) sets and resets colours as expected.
+        /// </summary>
+        [Fact]
+        public void Write_Char_WithConsoleColours_SetsAndResetsColours()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                // Arrange
+                var console = new ColourfulConsole(this.mockConsoleColourManager.Object);
+                var colours = new ConsoleColours(ConsoleColor.Red, ConsoleColor.Yellow);
+
+                // Act
+                console.Write('Z', colours);
+
+                // Assert
+                this.mockConsoleColourManager.Verify(m => m.SetColours(colours), Times.Once);
+                this.mockConsoleColourManager.Verify(m => m.SetColours(ConsoleColours.Default), Times.Once);
             }
         }
     }

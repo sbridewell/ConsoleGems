@@ -10,38 +10,20 @@ namespace Sde.ConsoleGems.Test.Text
     /// </summary>
     public class ConsoleRectangleTest
     {
-        private record PropertiesTestCase(
-            ConsoleSize size,
-            ConsolePoint origin,
-            int expectedWidth,
-            int expectedHeight,
-            int expectedX,
-            int expectedY,
-            int expectedRight,
-            int expectedBottom);
-
-        private record ContainsTestCase(
-            ConsolePoint origin,
-            ConsoleSize size,
-            ConsolePoint pointToTest,
-            bool expectedResult);
-
-        private record OverlapsWithTestCase(ConsoleRectangle rect1, ConsoleRectangle rect2, bool expectedResult);
-
         /// <summary>
         /// Gets the names of the test cases for the properties test.
         /// </summary>
-        public static TheoryData<string> PropertyTestCases => new (PropertiesTestData.Keys);
+        public static TheoryData<string> PropertyTestCases => new(PropertiesTestData.Keys);
 
         /// <summary>
         /// Gets the names of the test cases for the Contains test.
         /// </summary>
-        public static TheoryData<string> ContainsTestCases => new (ContainsTestData.Keys);
+        public static TheoryData<string> ContainsTestCases => new(ContainsTestData.Keys);
 
         /// <summary>
         /// Gets the names of the test cases for the OverlapsWith test.
         /// </summary>
-        public static TheoryData<string> OverlapsWithTestCases => new (OverlapsWithTestData.Keys);
+        public static TheoryData<string> OverlapsWithTestCases => new(OverlapsWithTestData.Keys);
 
         /// <summary>
         /// Gets a dictionary of test case names and test data for the properties test.
@@ -50,12 +32,12 @@ namespace Sde.ConsoleGems.Test.Text
         {
             get
             {
-                return new ()
+                return new()
                 {
-                    { "10x5", new (new ConsoleSize(10, 5), new ConsolePoint(0, 0), 10, 5, 0, 0, 9, 4) },
-                    { "20x10", new (new ConsoleSize(20, 10), new ConsolePoint(5, 5), 20, 10, 5, 5, 24, 14) },
-                    { "15x7", new (new ConsoleSize(15, 7), new ConsolePoint(2, 3), 15, 7, 2, 3, 16, 9) },
-                    { "30x15", new (new ConsoleSize(30, 15), new ConsolePoint(10, 10), 30, 15, 10, 10, 39, 24) },
+                    { "10x5", new(new ConsoleSize(10, 5), new ConsolePoint(0, 0), 10, 5, 0, 0, 9, 4) },
+                    { "20x10", new(new ConsoleSize(20, 10), new ConsolePoint(5, 5), 20, 10, 5, 5, 24, 14) },
+                    { "15x7", new(new ConsoleSize(15, 7), new ConsolePoint(2, 3), 15, 7, 2, 3, 16, 9) },
+                    { "30x15", new(new ConsoleSize(30, 15), new ConsolePoint(10, 10), 30, 15, 10, 10, 39, 24) },
                 };
             }
         }
@@ -67,24 +49,24 @@ namespace Sde.ConsoleGems.Test.Text
         {
             get
             {
-                return new ()
+                return new()
                 {
-                    { "0,0", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(0, 0), false) },
-                    { "0,1", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(0, 1), false) },
-                    { "0,2", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(0, 2), false) },
-                    { "0,3", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(0, 3), false) },
-                    { "1,0", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(1, 0), false) },
-                    { "1,1", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(1, 1), true) },
-                    { "1,2", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(1, 2), true) },
-                    { "1,3", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(1, 3), false) },
-                    { "2,0", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(2, 0), false) },
-                    { "2,1", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(2, 1), true) },
-                    { "2,2", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(2, 2), true) },
-                    { "2,3", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(2, 3), false) },
-                    { "3,0", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(3, 0), false) },
-                    { "3,1", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(3, 1), false) },
-                    { "3,2", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(3, 2), false) },
-                    { "3,3", new (new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(3, 3), false) },
+                    { "0,0", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(0, 0), false) },
+                    { "0,1", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(0, 1), false) },
+                    { "0,2", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(0, 2), false) },
+                    { "0,3", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(0, 3), false) },
+                    { "1,0", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(1, 0), false) },
+                    { "1,1", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(1, 1), true) },
+                    { "1,2", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(1, 2), true) },
+                    { "1,3", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(1, 3), false) },
+                    { "2,0", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(2, 0), false) },
+                    { "2,1", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(2, 1), true) },
+                    { "2,2", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(2, 2), true) },
+                    { "2,3", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(2, 3), false) },
+                    { "3,0", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(3, 0), false) },
+                    { "3,1", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(3, 1), false) },
+                    { "3,2", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(3, 2), false) },
+                    { "3,3", new(new ConsolePoint(1, 1), new ConsoleSize(2, 2), new ConsolePoint(3, 3), false) },
                 };
             }
         }
@@ -100,7 +82,7 @@ namespace Sde.ConsoleGems.Test.Text
         {
             get
             {
-                return new ()
+                return new()
                 {
                     #region test cases for adjacent rectangles
                     {
@@ -108,7 +90,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 1122
                          * 11   */
                         "Adjacent1",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(1, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(3, 0), new ConsoleSize(2, 2)),
                             false)
@@ -117,7 +99,7 @@ namespace Sde.ConsoleGems.Test.Text
                         /* 1122
                          * 1122 */
                         "Adjacent2",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(1, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(3, 1), new ConsoleSize(2, 2)),
                             false)
@@ -127,7 +109,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 1122
                          *   22 */
                         "Adjacent3",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(1, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(3, 2), new ConsoleSize(2, 2)),
                             false)
@@ -138,7 +120,7 @@ namespace Sde.ConsoleGems.Test.Text
                          *  22
                          *  22 */
                         "Adjacent4",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(1, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(2, 3), new ConsoleSize(2, 2)),
                             false)
@@ -149,7 +131,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 22
                          * 22 */
                         "Adjacent5",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(1, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(1, 3), new ConsoleSize(2, 2)),
                             false)
@@ -163,7 +145,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 11 22
                          * 11    */
                         "1Apart1",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(3, 0), new ConsoleSize(2, 2)),
                             false)
@@ -172,7 +154,7 @@ namespace Sde.ConsoleGems.Test.Text
                         /* 11 22
                          * 11 22 */
                         "1Apart2",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(3, 1), new ConsoleSize(2, 2)),
                             false)
@@ -182,7 +164,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 11 22
                          *    22 */
                         "1Apart3",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(3, 2), new ConsoleSize(2, 2)),
                             false)
@@ -194,7 +176,7 @@ namespace Sde.ConsoleGems.Test.Text
                          *  22
                          *  22 */
                         "1Apart4",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(1, 3), new ConsoleSize(2, 2)),
                             false)
@@ -206,7 +188,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 22
                          * 22 */
                         "1Apart5",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(0, 3), new ConsoleSize(2, 2)),
                             false)
@@ -218,7 +200,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 22
                          * 22 */
                         "1Apart6",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(1, 0), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(0, 3), new ConsoleSize(2, 2)),
                             false)
@@ -232,7 +214,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 1#2
                          * 11 */
                         "Overlap1",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 1), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(1, 0), new ConsoleSize(2, 2)),
                             true)
@@ -241,7 +223,7 @@ namespace Sde.ConsoleGems.Test.Text
                         /* 1#2
                          * 1#2 */
                         "Overlap2",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 0), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(1, 0), new ConsoleSize(2, 2)),
                             true)
@@ -251,7 +233,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * 1#2
                          *  22 */
                         "Overlap3",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 0), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(1, 1), new ConsoleSize(2, 2)),
                             true)
@@ -261,7 +243,7 @@ namespace Sde.ConsoleGems.Test.Text
                          * ##
                          * 22 */
                         "Overlap4",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 0), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(0, 1), new ConsoleSize(2, 2)),
                             true)
@@ -271,14 +253,14 @@ namespace Sde.ConsoleGems.Test.Text
                          * 2#1
                          * 22  */
                         "Overlap5",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(1, 0), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(0, 1), new ConsoleSize(2, 2)),
                             true)
                     },
                     {
                         "Full overlap",
-                        new (
+                        new(
                             new ConsoleRectangle(new ConsolePoint(0, 0), new ConsoleSize(2, 2)),
                             new ConsoleRectangle(new ConsolePoint(0, 0), new ConsoleSize(2, 2)),
                             true)
@@ -301,17 +283,17 @@ namespace Sde.ConsoleGems.Test.Text
             var testCase = PropertiesTestData[testCaseName];
 
             // Act
-            var rect = new ConsoleRectangle(testCase.origin, testCase.size);
+            var rect = new ConsoleRectangle(testCase.Origin, testCase.Size);
 
             // Assert
-            rect.Size.Should().Be(testCase.size);
-            rect.Origin.Should().Be(testCase.origin);
-            rect.Width.Should().Be(testCase.expectedWidth);
-            rect.Height.Should().Be(testCase.expectedHeight);
-            rect.X.Should().Be(testCase.expectedX);
-            rect.Y.Should().Be(testCase.expectedY);
-            rect.Right.Should().Be(testCase.expectedRight);
-            rect.Bottom.Should().Be(testCase.expectedBottom);
+            rect.Size.Should().Be(testCase.Size);
+            rect.Origin.Should().Be(testCase.Origin);
+            rect.Width.Should().Be(testCase.ExpectedWidth);
+            rect.Height.Should().Be(testCase.ExpectedHeight);
+            rect.X.Should().Be(testCase.ExpectedX);
+            rect.Y.Should().Be(testCase.ExpectedY);
+            rect.Right.Should().Be(testCase.ExpectedRight);
+            rect.Bottom.Should().Be(testCase.ExpectedBottom);
         }
 
         /// <summary>
@@ -324,13 +306,13 @@ namespace Sde.ConsoleGems.Test.Text
         {
             // Arrange
             var testCase = ContainsTestData[testCaseName];
-            var rect = new ConsoleRectangle(testCase.origin, testCase.size);
+            var rect = new ConsoleRectangle(testCase.Origin, testCase.Size);
 
             // Act
-            var result = rect.Contains(testCase.pointToTest);
+            var result = rect.Contains(testCase.PointToTest);
 
             // Assert
-            result.Should().Be(testCase.expectedResult);
+            result.Should().Be(testCase.ExpectedResult);
         }
 
         /// <summary>
@@ -345,12 +327,12 @@ namespace Sde.ConsoleGems.Test.Text
             var testCase = OverlapsWithTestData[testCaseName];
 
             // Act
-            var result1 = testCase.rect1.OverlapsWith(testCase.rect2);
-            var result2 = testCase.rect2.OverlapsWith(testCase.rect1);
+            var result1 = testCase.Rect1.OverlapsWith(testCase.Rect2);
+            var result2 = testCase.Rect2.OverlapsWith(testCase.Rect1);
 
             // Assert
-            result1.Should().Be(testCase.expectedResult);
-            result2.Should().Be(testCase.expectedResult);
+            result1.Should().Be(testCase.ExpectedResult);
+            result2.Should().Be(testCase.ExpectedResult);
         }
 
         /// <summary>
@@ -383,5 +365,23 @@ namespace Sde.ConsoleGems.Test.Text
             // Assert
             true.Should().Be(true);
         }
+
+        private record PropertiesTestCase(
+            ConsoleSize Size,
+            ConsolePoint Origin,
+            int ExpectedWidth,
+            int ExpectedHeight,
+            int ExpectedX,
+            int ExpectedY,
+            int ExpectedRight,
+            int ExpectedBottom);
+
+        private record ContainsTestCase(
+            ConsolePoint Origin,
+            ConsoleSize Size,
+            ConsolePoint PointToTest,
+            bool ExpectedResult);
+
+        private record OverlapsWithTestCase(ConsoleRectangle Rect1, ConsoleRectangle Rect2, bool ExpectedResult);
     }
 }

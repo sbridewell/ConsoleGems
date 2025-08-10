@@ -20,20 +20,11 @@ namespace Sde.MazeGame.Test.Painters.Pov
     /// </summary>
     public class ColumnRendererTest(ITestOutputHelper output)
     {
-        [SuppressMessage(
-            "Style",
-            "IDE1006:Naming Styles",
-            Justification = "Contradicts SA1313 which is a warning rather than info")]
-        private record RenderColumnTestCase(
-            bool isPerpendicular,
-            int screenX,
-            string[] expectedCharacters);
-
         /// <summary>
         /// Gets the names of the test cases for the RenderColumn method.
         /// </summary>
         public static TheoryData<string> RenderColumnTestData
-            => new (RenderColumnTestCases.Keys);
+            => new(RenderColumnTestCases.Keys);
 
         /// <summary>
         /// Gets the test cases for the RenderColumn method.
@@ -43,10 +34,10 @@ namespace Sde.MazeGame.Test.Painters.Pov
             "SA1118:Parameter should not span multiple lines",
             Justification = "This format is nice and readable")]
         private static Dictionary<string, RenderColumnTestCase> RenderColumnTestCases
-            => new ()
+            => new()
             {
                 ["Perpendicular column 0"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     0,
                     [
                         "●                       ",
@@ -75,7 +66,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "○                       ",
                     ]),
                 ["Perpendicular column 1"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     1,
                     [
                         " ●                      ",
@@ -104,7 +95,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○                      ",
                     ]),
                 ["Perpendicular column 2"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     2,
                     [
                         "  ●                     ",
@@ -133,7 +124,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "  ○                     ",
                     ]),
                 ["Perpendicular column 3"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     3,
                     [
                         "   ●                    ",
@@ -162,7 +153,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "   ○                    ",
                     ]),
                 ["Perpendicular column 4"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     4,
                     [
                         "    ●                   ",
@@ -191,7 +182,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "    ○                   ",
                     ]),
                 ["Perpendicular column 5"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     5,
                     [
                         "     ●                  ",
@@ -220,7 +211,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○                  ",
                     ]),
                 ["Perpendicular column 6"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     6,
                     [
                         "      ●                 ",
@@ -249,7 +240,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "      ○                 ",
                     ]),
                 ["Perpendicular column 7"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     7,
                     [
                         "       ●                ",
@@ -278,7 +269,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "       ○                ",
                     ]),
                 ["Perpendicular column 8"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     8,
                     [
                         "        ●               ",
@@ -307,7 +298,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○               ",
                     ]),
                 ["Perpendicular column 9"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     9,
                     [
                         "         ●              ",
@@ -336,7 +327,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "         ○              ",
                     ]),
                 ["Perpendicular column 10"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     10,
                     [
                         "          ●             ",
@@ -365,7 +356,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○             ",
                     ]),
                 ["Perpendicular column 11"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     11,
                     [
                         "           ●            ",
@@ -394,7 +385,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "           ○            ",
                     ]),
                 ["Perpendicular column 12"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     12,
                     [
                         "            ●           ",
@@ -423,7 +414,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "            ○           ",
                     ]),
                 ["Perpendicular column 13"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     13,
                     [
                         "             ●          ",
@@ -452,7 +443,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "             ○          ",
                     ]),
                 ["Perpendicular column 14"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     14,
                     [
                         "              ●         ",
@@ -481,7 +472,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "              ○         ",
                     ]),
                 ["Perpendicular column 15"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     15,
                     [
                         "               ●        ",
@@ -510,7 +501,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "               ○        ",
                     ]),
                 ["Perpendicular column 16"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     16,
                     [
                         "                ●       ",
@@ -539,7 +530,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                ○       ",
                     ]),
                 ["Perpendicular column 17"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     17,
                     [
                         "                 ●      ",
@@ -568,7 +559,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                 ○      ",
                     ]),
                 ["Perpendicular column 18"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     18,
                     [
                         "                  ●     ",
@@ -597,7 +588,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                  ○     ",
                     ]),
                 ["Perpendicular column 19"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     19,
                     [
                         "                   ●    ",
@@ -626,7 +617,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                   ○    ",
                     ]),
                 ["Perpendicular column 20"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     20,
                     [
                         "                    ●   ",
@@ -655,7 +646,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                    ○   ",
                     ]),
                 ["Perpendicular column 21"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     21,
                     [
                         "                     ●  ",
@@ -684,7 +675,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                     ○  ",
                     ]),
                 ["Perpendicular column 22"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     22,
                     [
                         "                      ● ",
@@ -713,7 +704,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                      ○ ",
                     ]),
                 ["Perpendicular column 23"] = new RenderColumnTestCase(
-                    isPerpendicular: true,
+                    IsPerpendicular: true,
                     23,
                     [
                         "                       ●",
@@ -742,7 +733,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                       ○",
                     ]),
                 ["Parallel column 0"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     0,
                     [
                         "░                       ",
@@ -771,7 +762,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "░                       ",
                     ]),
                 ["Parallel column 1"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     1,
                     [
                         " ●                      ",
@@ -800,7 +791,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         " ○                      ",
                     ]),
                 ["Parallel column 2"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     2,
                     [
                         "  ●                     ",
@@ -829,7 +820,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "  ○                     ",
                     ]),
                 ["Parallel column 3"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     3,
                     [
                         "   ●                    ",
@@ -858,7 +849,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "   ○                    ",
                     ]),
                 ["Parallel column 4"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     4,
                     [
                         "    ●                   ",
@@ -887,7 +878,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "    ○                   ",
                     ]),
                 ["Parallel column 5"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     5,
                     [
                         "     ●                  ",
@@ -916,7 +907,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "     ○                  ",
                     ]),
                 ["Parallel column 6"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     6,
                     [
                         "      ●                 ",
@@ -945,7 +936,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "      ○                 ",
                     ]),
                 ["Parallel column 7"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     7,
                     [
                         "       ●                ",
@@ -974,7 +965,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "       ○                ",
                     ]),
                 ["Parallel column 8"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     8,
                     [
                         "        ●               ",
@@ -1003,7 +994,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "        ○               ",
                     ]),
                 ["Parallel column 9"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     9,
                     [
                         "         ●              ",
@@ -1032,7 +1023,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "         ○              ",
                     ]),
                 ["Parallel column 10"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     10,
                     [
                         "          ●             ",
@@ -1061,7 +1052,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "          ○             ",
                     ]),
                 ["Parallel column 11"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     11,
                     [
                         "           ●            ",
@@ -1090,7 +1081,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "           ○            ",
                     ]),
                 ["Parallel column 12"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     12,
                     [
                         "            ●           ",
@@ -1119,7 +1110,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "            ○           ",
                     ]),
                 ["Parallel column 13"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     13,
                     [
                         "             ●          ",
@@ -1148,7 +1139,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "             ○          ",
                     ]),
                 ["Parallel column 14"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     14,
                     [
                         "              ●         ",
@@ -1177,7 +1168,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "              ○         ",
                     ]),
                 ["Parallel column 15"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     15,
                     [
                         "               ●        ",
@@ -1206,7 +1197,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "               ○        ",
                     ]),
                 ["Parallel column 16"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     16,
                     [
                         "                ●       ",
@@ -1235,7 +1226,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                ○       ",
                     ]),
                 ["Parallel column 17"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     17,
                     [
                         "                 ●      ",
@@ -1264,7 +1255,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                 ○      ",
                     ]),
                 ["Parallel column 18"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     18,
                     [
                         "                  ●     ",
@@ -1293,7 +1284,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                  ○     ",
                     ]),
                 ["Parallel column 19"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     19,
                     [
                         "                   ●    ",
@@ -1322,7 +1313,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                   ○    ",
                     ]),
                 ["Parallel column 20"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     20,
                     [
                         "                    ●   ",
@@ -1351,7 +1342,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                    ○   ",
                     ]),
                 ["Parallel column 21"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     21,
                     [
                         "                     ●  ",
@@ -1380,7 +1371,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                     ○  ",
                     ]),
                 ["Parallel column 22"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     22,
                     [
                         "                      ● ",
@@ -1409,7 +1400,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                         "                      ○ ",
                     ]),
                 ["Parallel column 23"] = new RenderColumnTestCase(
-                    isPerpendicular: false,
+                    IsPerpendicular: false,
                     23,
                     [
                         "                       ░",
@@ -1462,7 +1453,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
             };
 
             // Act
-            columnRenderer.RenderColumn(painter, testCase.screenX, testCase.isPerpendicular, Direction.North);
+            columnRenderer.RenderColumn(painter, testCase.ScreenX, testCase.IsPerpendicular, Direction.North);
 
             // Assert
             var actualCharacters = painter.PublicScreenBuffer.ToStringArray();
@@ -1471,7 +1462,7 @@ namespace Sde.MazeGame.Test.Painters.Pov
                 output.WriteLine(line);
             }
 
-            actualCharacters.Should().BeEquivalentTo(testCase.expectedCharacters, options =>
+            actualCharacters.Should().BeEquivalentTo(testCase.ExpectedCharacters, options =>
                 options.WithStrictOrdering());
         }
 
@@ -1590,5 +1581,10 @@ namespace Sde.MazeGame.Test.Painters.Pov
                 mockConsole.Verify(m => m.Write("░", expectedColour), Times.Exactly(24));
             }
         }
+
+        private record RenderColumnTestCase(
+            bool IsPerpendicular,
+            int ScreenX,
+            string[] ExpectedCharacters);
     }
 }

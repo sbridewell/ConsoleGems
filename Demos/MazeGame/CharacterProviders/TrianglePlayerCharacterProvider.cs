@@ -27,7 +27,7 @@ namespace Sde.MazeGame.CharacterProviders
                 Direction.East => this.playerFacingEastChar,
                 Direction.South => this.playerFacingSouthChar,
                 Direction.West => this.playerFacingWestChar,
-                _ => ' '
+                _ => ' ',
             };
         }
     }

@@ -15,12 +15,12 @@ namespace Sde.ConsoleGems.Test
         /// <see cref="System.Console"/> or <see cref="IConsole"/> implementations
         /// which are not mocked.
         /// </summary>
-        public static object ConsoleLock { get; } = new ();
+        public static object ConsoleLock { get; } = new();
 
         /// <summary>
         /// Gets an object which can be locked by unit tests which work with
         /// <see cref="TextCopy.ClipboardService"/>.
         /// </summary>
-        public static object ClipboardLock { get; } = new ();
+        public static object ClipboardLock { get; } = new();
     }
 }

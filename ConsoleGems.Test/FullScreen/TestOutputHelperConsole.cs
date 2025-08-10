@@ -136,6 +136,22 @@ namespace Sde.ConsoleGems.Test.FullScreen
         }
 
         /// <summary>
+        /// Writes the supplied text to the console without a terminating line break.
+        /// This is not written to the test output window until the <see cref="Flush"/> method
+        /// is called.
+        /// </summary>
+        /// <param name="textToWrite">The text to write.</param>
+        /// <param name="consoleColours">The parameter is not used.</param>
+        public void Write(string textToWrite, ConsoleColours consoleColours)
+        {
+            this.ThrowIfNotInitialised();
+            for (var y = 0; y < textToWrite.Length; y++)
+            {
+                this.Write(textToWrite[y], consoleColours);
+            }
+        }
+
+        /// <summary>
         /// Writes the supplied character to the screen buffer without a terminating line break.
         /// This is not written to the test output window until the <see cref="Flush"/> method
         /// is called.
@@ -143,6 +159,36 @@ namespace Sde.ConsoleGems.Test.FullScreen
         /// <param name="characterToWrite">The character to write.</param>
         /// <param name="outputType">The parameter is not used.</param>
         public void Write(char characterToWrite, ConsoleOutputType outputType = ConsoleOutputType.Default)
+        {
+            this.ThrowIfNotInitialised();
+            var tempString = this.ScreenBuffer[this.CursorTop].Insert(this.CursorLeft, characterToWrite.ToString());
+            this.ScreenBuffer[this.CursorTop] = tempString.Remove(this.WindowWidth);
+            if (this.CursorLeft == this.WindowWidth - 1)
+            {
+                this.CursorLeft = 0;
+                if (this.CursorTop == this.WindowHeight - 1)
+                {
+                    this.CursorTop = 0;
+                }
+                else
+                {
+                    this.CursorTop++;
+                }
+            }
+            else
+            {
+                this.CursorLeft++;
+            }
+        }
+
+        /// <summary>
+        /// Writes the supplied character to the screen buffer without a terminating line break.
+        /// This is not written to the test output window until the <see cref="Flush"/> method
+        /// is called.
+        /// </summary>
+        /// <param name="characterToWrite">The character to write.</param>
+        /// <param name="consoleColours">The parameter is not used.</param>
+        public void Write(char characterToWrite, ConsoleColours consoleColours)
         {
             this.ThrowIfNotInitialised();
             var tempString = this.ScreenBuffer[this.CursorTop].Insert(this.CursorLeft, characterToWrite.ToString());

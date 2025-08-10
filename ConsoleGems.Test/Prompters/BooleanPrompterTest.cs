@@ -10,8 +10,8 @@ namespace Sde.ConsoleGems.Test.Prompters
     /// </summary>
     public class BooleanPrompterTest
     {
-        private readonly Mock<IConsole> mockConsole = new ();
-        private readonly Mock<IAutoCompleter> mockAutoCompleter = new ();
+        private readonly Mock<IConsole> mockConsole = new();
+        private readonly Mock<IAutoCompleter> mockAutoCompleter = new();
 
         /// <summary>
         /// Tests that the Prompt method returns the correct response when the user enters a valid value

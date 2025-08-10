@@ -14,6 +14,6 @@ namespace Sde.ConsoleGems.Menus
     public class EmptySharedMenuItemsProvider : ISharedMenuItemsProvider
     {
         /// <inheritdoc/>
-        public List<MenuItem> MenuItems => new ();
+        public List<MenuItem> MenuItems => new();
     }
 }

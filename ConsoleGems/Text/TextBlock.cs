@@ -14,7 +14,7 @@ namespace Sde.ConsoleGems.Text
         /// <summary>
         /// Gets the text in the block.
         /// </summary>
-        public List<string> Lines { get; } = new ();
+        public List<string> Lines { get; } = new();
 
         /// <summary>
         /// Gets the width of the text block in characters.

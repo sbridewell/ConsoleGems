@@ -25,7 +25,7 @@ namespace Sde.ConsoleGems.Menus
         public abstract List<MenuItem> MenuItems { get; }
 
         /// <inheritdoc/>
-        public virtual ShowMenuCommand ShowCommand => new (
+        public virtual ShowMenuCommand ShowCommand => new(
             this,
             autoCompleter,
             menuWriter,
