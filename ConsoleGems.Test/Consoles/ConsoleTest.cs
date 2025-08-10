@@ -5,8 +5,13 @@
 
 namespace Sde.ConsoleGems.Test.Consoles
 {
+    using System.IO;
+    using FluentAssertions;
+    using Sde.ConsoleGems.Consoles;
+    using Xunit;
+
     /// <summary>
-    /// Unit tests for the <see cref="Console"/> class.
+    /// Unit tests for the <see cref="Sde.ConsoleGems.Consoles.Console"/> class, including all Write overloads.
     /// </summary>
     public class ConsoleTest
     {
@@ -145,6 +150,104 @@ namespace Sde.ConsoleGems.Test.Consoles
 
                     // Assert
                     sw.ToString().Should().Be("H");
+                }
+                finally
+                {
+                    System.Console.SetOut(originalOut);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests that Write(string, ConsoleOutputType) writes the correct string.
+        /// </summary>
+        [Fact]
+        public void Write_String_OutputType_WritesText()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                var console = new Sde.ConsoleGems.Consoles.Console();
+                using var sw = new StringWriter();
+                var originalOut = System.Console.Out;
+                System.Console.SetOut(sw);
+                try
+                {
+                    console.Write("Hello", ConsoleOutputType.Default);
+                    sw.ToString().Should().Be("Hello");
+                }
+                finally
+                {
+                    System.Console.SetOut(originalOut);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests that Write(string, ConsoleColours) writes the correct string.
+        /// </summary>
+        [Fact]
+        public void Write_String_ConsoleColours_WritesText()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                var console = new Sde.ConsoleGems.Consoles.Console();
+                using var sw = new StringWriter();
+                var originalOut = System.Console.Out;
+                System.Console.SetOut(sw);
+                try
+                {
+                    var colours = new ConsoleColours(ConsoleColor.White, ConsoleColor.Black);
+                    console.Write("World", colours);
+                    sw.ToString().Should().Be("World");
+                }
+                finally
+                {
+                    System.Console.SetOut(originalOut);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests that Write(char, ConsoleOutputType) writes the correct character.
+        /// </summary>
+        [Fact]
+        public void Write_Char_OutputType_WritesChar()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                var console = new Sde.ConsoleGems.Consoles.Console();
+                using var sw = new StringWriter();
+                var originalOut = System.Console.Out;
+                System.Console.SetOut(sw);
+                try
+                {
+                    console.Write('X', ConsoleOutputType.Default);
+                    sw.ToString().Should().Be("X");
+                }
+                finally
+                {
+                    System.Console.SetOut(originalOut);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tests that Write(char, ConsoleColours) writes the correct character.
+        /// </summary>
+        [Fact]
+        public void Write_Char_ConsoleColours_WritesChar()
+        {
+            lock (LockObjects.ConsoleLock)
+            {
+                var console = new Sde.ConsoleGems.Consoles.Console();
+                using var sw = new StringWriter();
+                var originalOut = System.Console.Out;
+                System.Console.SetOut(sw);
+                try
+                {
+                    var colours = new ConsoleColours(ConsoleColor.Yellow, ConsoleColor.Blue);
+                    console.Write('Y', colours);
+                    sw.ToString().Should().Be("Y");
                 }
                 finally
                 {
