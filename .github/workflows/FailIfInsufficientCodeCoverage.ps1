@@ -16,6 +16,9 @@ $coverageFileContent = Get-Content $coverageFilename;
 Write-Verbose "Cast content of $coverageFilename file to XML";
 $coverageXml = [xml]$coverageFileContent;
 
+Write-Verbose "Coverage XML content:";
+Write-Verbose ($coverageXml | Out-String);
+
 Write-Verbose "Get modules from coverage XML";
 $modules = $coverageXml.GetElementsByTagName("Module");
 Write-Verbose ($modules | Out-String);
