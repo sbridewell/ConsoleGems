@@ -6,7 +6,6 @@
 namespace Sde.ConsoleGems.GamesDemo
 {
     using System.Collections.Generic;
-    using Sde.AsciiArt;
     using Sde.ConsoleGems;
     using Sde.ConsoleGems.AutoComplete;
     using Sde.ConsoleGems.Consoles;

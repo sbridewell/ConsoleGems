@@ -3,7 +3,7 @@
 // Released under the MIT license - see LICENSE.txt in the repository root.
 // </copyright>
 
-namespace Sde.AsciiArt
+namespace Sde.ConsoleGems.GamesDemo
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +11,7 @@ namespace Sde.AsciiArt
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Versioning;
+    using Sde.AsciiArt;
     using Sde.AsciiArt.CellMappers;
     using Sde.AsciiArt.CharacterBlenders;
     using Sde.AsciiArt.ColourMappers;
@@ -23,66 +24,52 @@ namespace Sde.AsciiArt
     /// Command to create ASCII art from an image file and render it to the console.
     /// </summary>
     [SupportedOSPlatform("Windows")]
-    public class CreateAsciiArtCommand : ICommand
+    public class CreateAsciiArtCommand(
+        IConsole console,
+        IFilePrompter prompter,
+        IColourMapperPrompter colourMapperPrompter,
+        IAsciiArtGenerator asciiArtGenerator)
+        : ICommand
     {
-        private readonly IAsciiArtGenerator asciiArtGenerator;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CreateAsciiArtCommand"/> class.
-        /// </summary>
-        /// <param name="console">The console to render output to.</param>
-        /// <param name="prompter">The file prompter used to select image files.</param>
-        /// <param name="colourMapperPrompter">The colour mapper prompter used to select a colour mapping strategy.</param>
-        /// <param name="asciiArtGenerator">The ASCII art generator implementation.</param>
-        public CreateAsciiArtCommand(
-            IConsole console,
-            IFilePrompter prompter,
-            IColourMapperPrompter colourMapperPrompter,
-            IAsciiArtGenerator asciiArtGenerator)
-        {
-            this.Console = console;
-            this.Prompter = prompter;
-            this.ColourMapperPrompter = colourMapperPrompter;
-            this.asciiArtGenerator = asciiArtGenerator;
-        }
-
         /// <summary>
         /// Gets the console to render output to.
         /// </summary>
-        protected IConsole Console { get; }
+        protected IConsole Console { get; } = console;
 
         /// <summary>
         /// Gets the file prompter used to select image files.
         /// </summary>
-        protected IFilePrompter Prompter { get; }
+        protected IFilePrompter Prompter { get; } = prompter;
 
         /// <summary>
         /// Gets the colour mapper prompter used to select a colour mapping strategy.
         /// </summary>
-        protected IColourMapperPrompter ColourMapperPrompter { get; }
+        protected IColourMapperPrompter ColourMapperPrompter { get; } = colourMapperPrompter;
+
+        private readonly IAsciiArtGenerator asciiArtGenerator = asciiArtGenerator;
 
         /// <inheritdoc/>
         [SupportedOSPlatform("windows")]
         public void Execute()
         {
-            var imagePath = this.Prompter.Prompt(
+            var imagePath = Prompter.Prompt(
                 new DirectoryInfo(Environment.CurrentDirectory),
                 "Select an image file to render as ASCII art: ",
                 true);
 
             // Prompt for quality mode
-            this.Console.WriteLine("Select quality mode:");
-            this.Console.WriteLine("  1. Fast (uses selected strategies)");
-            this.Console.WriteLine("  2. Best quality (tries all combinations)");
+            Console.WriteLine("Select quality mode:");
+            Console.WriteLine("  1. Fast (uses selected strategies)");
+            Console.WriteLine("  2. Best quality (tries all combinations)");
             int qualityMode = 0;
             while (qualityMode != 1 && qualityMode != 2)
             {
-                this.Console.Write("Enter the number of your choice: ");
-                var input = this.Console.ReadLine();
+                Console.Write("Enter the number of your choice: ");
+                var input = Console.ReadLine();
                 int.TryParse(input, out qualityMode);
                 if (qualityMode != 1 && qualityMode != 2)
                 {
-                    this.Console.WriteLine("Invalid selection. Please try again.");
+                    Console.WriteLine("Invalid selection. Please try again.");
                 }
             }
 
@@ -136,20 +123,20 @@ namespace Sde.AsciiArt
             if (qualityMode == 1)
             {
                 // Prompt once for colour mapping strategy
-                var selectedMapper = this.ColourMapperPrompter.Prompt(colourOptions);
-                var characterBlenderPrompter = new CharacterBlenderPrompter(this.Console);
+                var selectedMapper = ColourMapperPrompter.Prompt(colourOptions);
+                var characterBlenderPrompter = new CharacterBlenderPrompter(Console);
                 var selectedCharacterBlender = characterBlenderPrompter.Prompt(blenderOptions);
                 cellMapper = new SimpleCellMapper(selectedMapper, selectedMapper, selectedCharacterBlender);
             }
             else
             {
                 // Prompt for character blender when best quality mode is selected
-                var characterBlenderPrompter = new CharacterBlenderPrompter(this.Console);
+                var characterBlenderPrompter = new CharacterBlenderPrompter(Console);
                 var selectedCharacterBlender = characterBlenderPrompter.Prompt(blenderOptions);
                 cellMapper = new BlendingCellMapper(selectedCharacterBlender);
             }
 
-            this.asciiArtGenerator.RenderImageAsAsciiArt(imagePath.FullName, this.Console, cellMapper);
+            asciiArtGenerator.RenderImageAsAsciiArt(imagePath.FullName, Console, cellMapper);
         }
     }
 }
