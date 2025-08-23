@@ -121,7 +121,7 @@ namespace Sde.ConsoleGems.GamesDemo
                 cellMapper = new BlendingCellMapper(selectedCharacterBlender);
             }
 
-            asciiArtGenerator.RenderImageAsAsciiArt(imagePath.FullName, console, cellMapper);
+            this.asciiArtGenerator.RenderImageAsAsciiArt(imagePath.FullName, console, cellMapper);
         }
     }
 }
